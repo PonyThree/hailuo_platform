@@ -1,0 +1,137 @@
+	.container{
+		margin-top: 40px;
+		height: auto;
+		overflow: hidden;
+	}
+	.text{
+		width:100%;
+		height: 60px;
+		line-height: 60px;
+		background: #F0F0F0;
+		margin-bottom: 40px;
+		color:#999;
+		font-size: 18px;
+		letter-spacing: 2px;
+		text-indent: 16px;
+	}
+	.form-box{
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+	}
+	.numbers{
+		float: left;
+		width: 80px;
+		height: 32px;
+	}
+	.numbers span{
+		display: inline-block;
+		width: 50px;
+		text-align: center;
+	}
+	.surplus{
+		width: 120px;
+		float: left;
+		margin-left: 100px;
+		height: 32px;
+	}
+	.surplus span{
+		display: inline-block;
+		width: 50px;
+		text-align: center;
+	}
+	.el-button--warning {
+	    color: #fff;
+	    background-color: #f56c6c;
+	    border-color: #f56c6c;
+	    position: relative;
+  		left:80px;
+  		bottom:33px;
+	}
+	.el-checkbox__input.is-checked+.el-checkbox__label {
+	    color: rgb(50, 65, 87);;
+	}
+	.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+	    background-color: rgb(50, 65, 87);
+	    border-color:rgb(50, 65, 87);
+	}
+	.el-checkbox__inner:hover {
+	    border-color: rgb(50, 65, 87);
+	}
+	.el-input.is-active .el-input__inner, .el-input__inner:focus {
+	    border-color: rgb(50, 65, 87);
+	}
+	.el-select .el-input__inner:focus {
+	    border-color: rgb(50, 65, 87);
+	}
+	.el-date-table td.today span {
+	    color: rgb(50, 65, 87);
+	}
+	.el-date-table td:hover span{
+	    background: rgb(50, 65, 87);
+	    color:#fff;
+	}
+	.el-date-table td.end-date span, .el-date-table td.start-date span {
+	    background-color: rgb(50, 65, 87);
+	}
+	.el-textarea__inner:focus {
+	    border-color: rgb(50, 65, 87);
+	}
+	.left{
+		float:left;
+		width: 40%;
+		margin-left: 100px;
+	}
+	.right{
+		float: left;
+		width: 50%;
+		margin-left: 50px;
+	}
+	.el-checkbox{
+		margin-left: 40px;
+	}
+	.el-upload.el-upload--text{
+		width: 150px;
+		height: 150px;
+		float: left;
+	}
+	.el-icon-plus.avatar-uploader-icon{
+		line-height: 150px;
+		text-align: center;
+	}
+	.el-button--danger {
+	    color: #fff;
+	    background-color: #999;
+	    border: none;
+	    float: left;
+	    margin-top: 55px;
+	    margin-left: 20px;
+	}
+	.el-button--danger:focus, .el-button--danger:hover {
+	    background: rgb(50, 65, 87);
+	    border-color: rgb(50, 65, 87);
+	    color: #fff;
+	}
+	.bottom-left{
+		width: 45%;
+		float: left;
+	}
+	.bottom-right{
+		width: 50%;
+		float: left;
+	}
+	.bottom{
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		text-align: center;
+		margin-top: 100px;
+		float: left;
+	}
+	.target{
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		margin-top: 50px;
+		margin-bottom: 30px;
+	}	
