@@ -12,11 +12,8 @@
 			</el-form-item>
 			
 			<el-form-item  label="适用活动类型:" style="margin-right: 30px;">
-                <el-select v-model="form.region" >
-                	<el-option key="aa" label="所有类型" value="aa"></el-option>
-                    <el-option key="bb" label="我要当团长" value="bb"></el-option>
-                    <el-option key="cc" label="三人拼团" value="cc"></el-option>
-                    <el-option key="dd" label="万人拼团" value="dd"></el-option>
+                <el-select v-model="form.typeTd" >
+                	<el-option v-for="item in typeList" :label="item.name" :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
             
@@ -81,9 +78,19 @@
 				form:{},
 				tableCoupon:[{}],
 				currentPage:1,
-
+				typeList:[]
 			}
-		},    
+		}, 
+		created(){
+			//获取活动类型
+			this.$axios.get("http://192.168.1.114:9919/productpack/selActivityType")
+				.then(res=>{
+					console.log(res.data)
+					if(res.data.code==0){
+						this.typeList=res.data.data
+					}
+				})
+		},
 		methods:{
 			//查询按钮
 			onSubmit(){

@@ -28,31 +28,31 @@
 			</el-table-column>
 			
 			<!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px" :label-position="labelPosition">
-                <el-form-item label="图片" style="width:92%;position: relative;">
-                    <el-upload class="avatar-uploader" action="http://192.168.1.140:9913/activityBanner/insert" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" style="width:92%;">
-						<img v-if="imageUrl" :src="imageUrl" class="avatar">
-						<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-					</el-upload>         
-					<el-button type="danger" icon="el-icon-delete" circle style="position: absolute;top:40%;margin: 0;left:101%"></el-button>
-                </el-form-item>
-                <el-form-item label="跳转链接">
-                    <el-input v-model="form.href"></el-input>
-                </el-form-item>
-                <el-form-item label="图片描述">
-                    <el-input v-model="form.description"></el-input>
-                </el-form-item>
-                <el-form-item label="排序">
-                    <el-input v-model="form.sort"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-            	
-            	<el-button type="primary" @click="saveEdit">保存</el-button>
-                <el-button @click="editVisible = false">取 消</el-button> 
-            </span>
-        </el-dialog>
+	        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+	            <el-form ref="form" :model="form" label-width="70px" :label-position="labelPosition">
+	                <el-form-item label="图片" style="width:92%;position: relative;">
+	                    <el-upload class="avatar-uploader" action="http://192.168.1.140:9913/activityBanner/insert" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" style="width:92%;">
+							<img v-if="imageUrl" :src="imageUrl" class="avatar">
+							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+						</el-upload>         
+						<el-button type="danger" icon="el-icon-delete" circle style="position: absolute;top:40%;margin: 0;left:101%"></el-button>
+	                </el-form-item>
+	                <el-form-item label="跳转链接">
+	                    <el-input v-model="form.href"></el-input>
+	                </el-form-item>
+	                <el-form-item label="图片描述">
+	                    <el-input v-model="form.description"></el-input>
+	                </el-form-item>
+	                <el-form-item label="排序">
+	                    <el-input v-model="form.sort"></el-input>
+	                </el-form-item>
+	            </el-form>
+	            <span slot="footer" class="dialog-footer">
+	            	
+	            	<el-button type="primary" @click="saveEdit">保存</el-button>
+	                <el-button @click="editVisible = false">取 消</el-button> 
+	            </span>
+	        </el-dialog>
 		</el-table>
 		
 		<!--分页器-->

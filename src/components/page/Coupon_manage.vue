@@ -8,10 +8,9 @@
 				<el-input v-model="form.name" style="width:260px"></el-input>
 			</el-form-item>
 			
-
-			<el-form-item label="适用活动类型:" prop="typeTd" style="margin-left: 100px;">
-				<el-select v-model="form.typeTd" placeholder="所有类型" style="width:260px">
-                    <el-option v-for="item in items" :label="item.name" :value="item.id"></el-option>
+			<el-form-item label="适用活动类型:" style="margin-left: 100px;">
+				<el-select v-model="form.activityTypeId" placeholder="所有类型" style="width:260px">
+                    <el-option v-for="item in typeList" :label="item.name" :value="item.id"></el-option>
                 </el-select>
 			</el-form-item>
 			
@@ -21,16 +20,25 @@
 		</el-form>
 		
 		<!--新增-->
-		<el-button class="btn" @click="addGift" style="margin-left: 10px;">新增礼券</el-button>
+		<el-button class="btn" @click="addGift" style="margin-left: 10px; width:120px;">新增礼券</el-button>
 		
 		<!--表格列表-->
 		<el-table :data="giftTable" border style="width: 100%;margin-left: 10px;">
-			<el-table-column prop="num" label="序号" align="center" width="50"></el-table-column>
+			<el-table-column prop="num" label="序号" align="center" width="50">
+				<template scope="scope">
+					<span>{{scope.$index+1}}</span>
+				</template>
+			</el-table-column>
 			<el-table-column prop="name" label="礼券名称" align="center" ></el-table-column>
-			<el-table-column prop="type" label="适用活动类型" align="center" ></el-table-column>
-			<el-table-column prop="value" label="礼券面额" align="center" ></el-table-column> 
-			<el-table-column prop="data" label="礼券有效期" align="center" ></el-table-column> 
-			<el-table-column prop="stock" label="礼券库存" align="center" ></el-table-column> 
+			<el-table-column prop="typeName" label="适用活动类型" align="center" ></el-table-column>
+			<el-table-column prop="money" label="礼券面额" align="center" ></el-table-column> 
+			<el-table-column prop="data" label="礼券有效期" align="center" >
+				<template slot-scope="scope">
+					<span>{{scope.row.startTime}}</span>~<p>{{scope.row.endTime}}</p>
+                </template>
+			</el-table-column>
+			
+			<el-table-column prop="num" label="礼券库存" align="center" ></el-table-column>
 			<el-table-column prop="operation" label="操作" align="center" width="250">
 				<template slot-scope="scope">
 					<el-button @click="revise">修改库存数量</el-button>
@@ -78,24 +86,50 @@
 				giftTable:[{}],
 				currentPage:1,
 				modify:false,
-				items:[]
+				typeList:[],
+				activityTypeId:''
+				
 			}
 		},
 		created(){
-			this.$axios.get("http://192.168.1.140:9919/productpack/selActivityType")
+			//获取活动类型
+			
+			this.$axios.get("http://192.168.1.114:9919/productpack/selActivityType")
 				.then(res=>{
-					console.log(res)
+					//console.log(res.data)
+					if(res.data.code==0){
+						this.typeList=res.data.data
+					}
 				})
+				
+				
+			this.$axios.post("http://192.168.1.114:9919/productpack/pageData")
+				.then(res=>{
+					//console.log(res.data)
+//					if(res.data.code==0){
+//						this.typeList=res.data.data
+//					}
+				})
+				
+				
 		},
 		methods:{
 			//查询按钮
 			onCheck(){
+				var params = new URLSearchParams();	
+                params.append('name', this.form.name);
+                params.append('activityTypeId', this.form.activityTypeId);
+				this.$axios.post("http://192.168.1.114:9919/productpack/pageData",params)
+					.then(res=>{
+					console.log(res.data)
+					
+				})
 				
 				
 			},
 			//新增礼券
 			addGift(){
-				
+				this.$router.push({ path: '/Added'}) 
 			},
 			//修改库存数量
 			revise(){
@@ -120,6 +154,8 @@
 		    handleCurrentChange(val) {
 		        
 		    },
+		    
+
 		}
 	}
 </script>

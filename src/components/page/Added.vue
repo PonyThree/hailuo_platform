@@ -10,16 +10,14 @@
 					</el-form-item>
 					
 					<el-form-item label="适用活动类型 :" style="margin-left: 35%;">
-                        <el-select v-model="form.reward" placeholder="所有类型">
-                            <el-option key="one" label="我要当团长" value="one"></el-option>
-                            <el-option key="two" label="三人拼团" value="two"></el-option>
-                            <el-option key="three" label="万人拼团" value="three"></el-option>
-                            <el-option key="four" label="第三方活动" value="four"></el-option>
+                        <el-select v-model="form.activityTypeId" placeholder="所有类型">
+                            <el-option v-for="item in typeList" :label="item.name" :value="item.id"></el-option>
+                          
                         </el-select>
                     </el-form-item>
 				
                     <el-form-item label="礼券面额 :" style="margin-left: 35%;">
-                        <el-input v-model="form.value" placeholder="请设置该礼券的面额" style="width:200px"></el-input>&nbsp;&nbsp;元 
+                        <el-input v-model="form.money" placeholder="请设置该礼券的面额" style="width:200px"></el-input>&nbsp;&nbsp;元 
                         <span style="display: inline-block;color:red;margin-left: 20px;">最高可设9,999,999元</span>
                     </el-form-item> 
                     
@@ -28,12 +26,15 @@
 					</el-form-item>    
                     
                     <el-form-item label="活动有效期 :" style="margin-left: 35%;">
-                        <el-date-picker v-model="form.data" :picker-options="pickerOptions" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="right" size="small" >
+                        <el-date-picker v-model="form.startTime" type="datetime" placeholder="选择开始日期时间">
+						</el-date-picker>
+						<span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+						<el-date-picker v-model="form.endTime" type="datetime"  placeholder="选择结束日期时间">
 						</el-date-picker>
                     </el-form-item>
                     
                     <el-form-item label="活动规则 :" style="margin-left: 35%;">
-                        <el-input type="textarea" v-model="form.rule" style="width:380px " :rows="5"></el-input>
+                        <el-input type="textarea" v-model="form.description" style="width:380px " :rows="5"></el-input>
                     </el-form-item>
 					
                     <div class="bottom">
@@ -56,8 +57,21 @@
 		name:"added",
 		data(){
 			return{
-				form:{},
+				form:{
+					
+				},
+				typeList:[]
 			}
+		},
+		created(){
+			//获取活动类型
+			this.$axios.get("http://192.168.1.114:9919/productpack/selActivityType")
+				.then(res=>{
+					//console.log(res.data)
+					if(res.data.code==0){
+						this.typeList=res.data.data
+					}
+				})
 		},
 		methods:{
 			//日期
@@ -65,12 +79,37 @@
 				
 			},
 			//提交按钮
-			onSubmit(){
-				
+			onSubmit() {
+
+					function formatDate(now) {
+						var year = now.getFullYear();
+						var month = now.getMonth() + 1;
+						var date = now.getDate();
+						var hour = now.getHours();
+						var minute = now.getMinutes();
+						var second = now.getSeconds();
+return year + "-" + month + "-" + date + " " + hour + ":" + minute;
+					}
+						
+					
+					var params = new URLSearchParams();
+					params.append('name', this.form.name);
+                params.append('activityTypeId', this.form.activityTypeId);
+                params.append('num', this.form.num);
+                params.append('money', this.form.money);
+                params.append('startTime', formatDate(this.form.startTime));
+                params.append('endTime', formatDate(this.form.endTime));
+                params.append('description', this.form.description);
+				this.$axios.post("http://192.168.1.114:9919/productpack/add",params)
+						.then(res=>{
+							if(res.data.code==0){
+								this.$router.go(-1)
+							}
+						})
 			},
 			//返回按钮
 			quit(){
-				
+				this.$router.go(-1)
 			}
 		}
 	}
