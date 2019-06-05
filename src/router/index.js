@@ -10,7 +10,8 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/manager'
+            redirect: '/login',//默认跳转页面
+
         },
         {
             path: '/',
@@ -18,99 +19,103 @@ export default new Router({
             meta: { title: '自述文件' },
             children:[
                 {
-                    path: '/manager',
-                    component: resolve => require(['../components/page/Manager.vue'], resolve),
+                    path: '/项目管理',
+                    component: resolve => require(['../components/page/ProjectManagement/项目管理.vue'], resolve),
                     meta: { title: '项目管理' }
                 },
                 {
-                    path: '/banner',
-                    component: resolve => require(['../components/page/Banner.vue'], resolve),
+                    path: '/项目详情/:id',
+                    component: resolve => require(['../components/page/ProjectManagement/项目详情.vue'], resolve),
+                    meta: { title: '项目详情' }
+                },
+                {
+                    path: '/设置',
+                    component: resolve => require(['../components/page/personalCenter/设置.vue'], resolve),
+                    meta: { title: '设置' }
+                },
+                {
+                    path: '/城市管理',
+                    component: resolve => require(['../components/page/areaCenter/城市管理.vue'], resolve),
+                    meta: { title: '城市管理' }
+                },
+                {
+                    path: '/首页banner',
+                    component: resolve => require(['../components/page/clientMange/首页banner.vue'], resolve),
                     meta: { title: '首页banner' }
                 },
                 {
-                    path: '/activity',
-                    component: resolve => require(['../components/page/Activity.vue'], resolve),
-                    meta: { title: '活动管理' }
+                    path: '/合作项目',
+                    component: resolve => require(['../components/page/clientMange/合作项目.vue'], resolve),
+                    meta: { title: '合作项目' }
                 },
                 {
-                    path: '/colonel',
-                    component: resolve => require(['../components/page/Colonel.vue'], resolve),
-                    meta: { title: '我要当团长管理' }
+                    path: '/客户端管理',
+                    component: resolve => require(['../components/page/clientMange/客户端管理.vue'], resolve),
+                    meta: { title: '客户端管理' }
                 },
                 {
-                    path: '/many',
-                    component: resolve => require(['../components/page/Many.vue'], resolve),
-                    meta: { title: '多人拼团'}
+                    path: '/用户钱包管理',
+                    component: resolve => require(['../components/page/financeCenter/用户钱包管理.vue'], resolve),
+                    meta: { title: '用户钱包管理' }
                 },
                 {
-                    path: '/thousand',
-                    component: resolve => require(['../components/page/Thousand.vue'], resolve),
-                    meta: { title: '万人众筹' }
+                    path: '/钱包使用详情',
+                    component: resolve => require(['../components/page/financeCenter/钱包使用详情.vue'], resolve),
+                    meta: { title: '钱包使用详情' }
                 },
                 {
-                    path: '/list',
-                    component: resolve => require(['../components/page/List.vue'], resolve),
-                    meta: { title: '团列表 '}
+                    path: '/零钱提现',
+                    component: resolve => require(['../components/page/financeCenter/零钱提现.vue'], resolve),
+                    meta: { title: '零钱提现' }
                 },
                 {
-                    path: '/colonel_details',
-                    component: resolve => require(['../components/page/Colonel_details.vue'], resolve),
-                    meta: { title: '我要当团长活动详情页' }
+                    path: '/提现详情',
+                    component: resolve => require(['../components/page/financeCenter/提现详情.vue'], resolve),
+                    meta: { title: '提现详情' }
                 },
                 {
-                    path: '/many_details',
-                    component: resolve => require(['../components/page/Many_details.vue'], resolve),
-                    meta: { title: '多人拼团活动详情页' }
+                    path: '/项目财务管理',
+                    component: resolve => require(['../components/page/financeCenter/项目财务管理.vue'], resolve),
+                    meta: { title: '项目财务管理' }
                 },
                 {
-                    path: '/thousand_details',
-                    component: resolve => require(['../components/page/Thousand_details.vue'], resolve),
-                    meta: { title: '万人众筹活动详情页' }
+                    path: '/项目申请提现',
+                    component: resolve => require(['../components/page/financeCenter/项目申请提现.vue'], resolve),
+                    meta: { title: '项目申请提现' }
                 },
                 {
-                    path: '/member',
-                    component: resolve => require(['../components/page/Member.vue'], resolve),
-                    meta: { title: '团成员管理' }
+                    path: '/审核提现',
+                    component: resolve => require(['../components/page/financeCenter/审核提现.vue'], resolve),
+                    meta: { title: '审核提现' }
                 },
-                {
-                    path: '/coupon_manage',
-                    component: resolve => require(['../components/page/Coupon_manage.vue'], resolve),
-                    meta: { title: '礼券包管理' }
-                },
-                {
-                    path: '/added',
-                    component: resolve => require(['../components/page/Added.vue'], resolve),
-                    meta: { title: '新增礼券包' }
-                },
-                {path: '/check_coupons',
-                    component: resolve => require(['../components/page/Check_coupons.vue'], resolve),
-                    meta: { title: '查看礼券包' }
-                },
-                {
-                    path: '/coupon_list',
-                    component: resolve => require(['../components/page/Coupon_list.vue'], resolve),
-                    meta: { title: '礼券列表' }
-                },
-                {
-                    path: '/self_support',
-                    component: resolve => require(['../components/page/Self_support.vue'], resolve),
-                    meta: { title: '查看礼券详情—自营活动' }
-                },
-                {
-                    path: '/third_party',
-                    component: resolve => require(['../components/page/Third_party.vue'], resolve),
-                    meta: { title: '查看礼券详情—第三方活动' }
-                },
-                {
-                    path: '/cancelled',
-                    component: resolve => require(['../components/page/Cancelled.vue'], resolve),
-                    meta: { title: '查看礼券详情—已核销' }
-                }
+                // {
+                //     path: '/地图',
+                //     component: resolve => require(['../components/page/areaCenter/map.vue'], resolve),
+                //     meta: { title: '地图' }
+                // }
+                
+                
+                // {
+                //     path:'/修改密码',
+                //     component: resolve => require(['../components/page/personalCenter/修改密码.vue'], resolve),
+                //     meta: { title: '修改密码' }
+                // },
+                // {
+                //     path:'/修改绑定手机',
+                //     component: resolve => require(['../components/page/personalCenter/修改绑定手机.vue'], resolve),
+                //     meta: { title: '修改绑定手机' }
+                // },
+
             ]
         },
         {
             path: '/login',
             component: resolve => require(['../components/page/Login.vue'], resolve)
-        }
+        },
+        {
+            path: '/Index',
+            component: resolve => require(['../components/common/Index.vue'], resolve)
+        },
+        
     ]
 })

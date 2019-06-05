@@ -3,14 +3,18 @@
         <div class="ms-login">
             <div class="ms-title">车位宝后台管理系统</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
-                <el-form-item prop="account">
-                    <el-input v-model="ruleForm.account" placeholder="请输入账号">
-                        <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
+                <el-form-item prop="username">
+                    <el-input v-model="ruleForm.username" placeholder="请输入账号">
+                        <el-button slot="prepend">
+                        	<i class="iconfont icon-zhanghao"></i>
+                        </el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input type="password" placeholder="请输入密码" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')">
-                        <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
+                        <el-button slot="prepend">
+                        	<i class="iconfont icon-mima"></i>
+                        </el-button>
                     </el-input>
                 </el-form-item>
                 <div class="login-btn">
@@ -27,11 +31,11 @@
         data: function(){
             return {
                 ruleForm: {
-                    account: '',
-                    password: ''
+                    username: 'zhang',
+                    password: '123456'
                 },
                 rules: {
-                    account: [
+                    username: [
                         { required: true, message: '请输入用户名', trigger: 'blur' }
                     ],
                     password: [
@@ -40,49 +44,68 @@
                 }
             }
         },
+        created(){
+        	
+        },
         methods: {
             submitForm() {
-                var params = new URLSearchParams();
-				params.append('account', this.ruleForm.account);
-				params.append('password', this.ruleForm.password);
-				this.$axios.post(request.testUrl+"/login",params)
-					.then(res=>{
-						//console.log(res)
+                // var params = new URLSearchParams();
+				// params.append('username', this.ruleForm.username);
+                // params.append('password', this.ruleForm.password);
+                // console.log(JSON.stringify(this.ruleForm));
+				this.$axios.post(request.testUrl+"/auth/platform/login",JSON.stringify(this.ruleForm))
+                    .then(res=>{
+                        console.log(res.headers.token);
+                        // console.log(res.data)
+                        var token=res.headers.token;
 						if(res.data.code==0){
-							var name=res.data.data.name
-							console.log(res)
-							this.$router.push({ path: '/',query:{'name':name}}) 
+							var name=res.data.data.username;
+							var id=res.data.data.id;
+							localStorage.setItem('name',name);
+                            localStorage.setItem('id',id);
+                            localStorage.setItem('token',token);
+							this.$router.push({ path: '/Index'})
 						}else{
 							this.$message({
 								type: 'info',
-								message: res.data.msg
+								message: '登录失败'
 							});	
 						}		
 	        		}).catch(res=>{
 	        			this.$message({
 								type: 'info',
-								message: res.data.msg
+								message: '失败'
 							});	
-	        		})
+                })
+                // this.$router.push({ path: '/Index'});
+	        	
             }
         }
     }
 </script>
 
 <style scoped>
+    .el-button--primary {
+        color: #fff!important;
+        background-color: #409EFF!important;
+        border-color: #409EFF!important;
+    }
     .login-wrap{
         position: relative;
         width:100%;
         height:100%;
-        background-image: url(../../assets/img/login-bg.jpg);
-        background-size: 100%;
+        /* background: url(../../assets/img/login-bg2.jpg) no-repeat; */
+        background-color: #ccc;
+        background-size: 100% 100%;
+        
     }
     .ms-title{
         width:100%;
         line-height: 50px;
         text-align: center;
-        font-size:20px;
-        color: #fff;
+        font-size:25px;
+        margin-top: 20px;
+        color: #409EFF;
         border-bottom: 1px solid #ddd;
     }
     .ms-login{
@@ -92,11 +115,11 @@
         width:350px;
         margin:-190px 0 0 -175px;
         border-radius: 5px;
-        background: rgba(255,255,255, 0.3);
+        background: rgba(255,255,255, 0.8);
         overflow: hidden;
     }
     .ms-content{
-        padding: 30px 30px;
+        padding: 20px 30px;
     }
     .login-btn{
         text-align: center;
@@ -111,4 +134,7 @@
         line-height:30px;
         color:#fff;
     }
+    .el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
+    border-color: #409EFF;
+}
 </style>
