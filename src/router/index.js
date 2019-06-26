@@ -24,7 +24,8 @@ export default new Router({
                     meta: { title: '项目管理' }
                 },
                 {
-                    path: '/项目详情/:id',
+                    path: '/项目详情',
+                    name:'项目详情',
                     component: resolve => require(['../components/page/ProjectManagement/项目详情.vue'], resolve),
                     meta: { title: '项目详情' }
                 },
@@ -70,6 +71,7 @@ export default new Router({
                 },
                 {
                     path: '/提现详情',
+                    name:"提现详情",
                     component: resolve => require(['../components/page/financeCenter/提现详情.vue'], resolve),
                     meta: { title: '提现详情' }
                 },
@@ -88,6 +90,12 @@ export default new Router({
                     component: resolve => require(['../components/page/financeCenter/审核提现.vue'], resolve),
                     meta: { title: '审核提现' }
                 },
+                {
+                    path: '/审核状态',
+                    component: resolve => require(['../components/page/financeCenter/审核状态.vue'], resolve),
+                    meta: { title: '审核状态' }
+                },
+                
                 // {
                 //     path: '/地图',
                 //     component: resolve => require(['../components/page/areaCenter/map.vue'], resolve),

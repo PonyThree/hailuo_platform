@@ -152,13 +152,9 @@
         //生命周期
         
         
-        created(){
-        	
+        created(){	
         	//渲染banner信息
-			this.save()
-	        	
-			
-			
+			this.save()	
         },
         
       

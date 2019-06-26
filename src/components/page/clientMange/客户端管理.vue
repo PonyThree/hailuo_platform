@@ -10,8 +10,8 @@
                         <el-button style='color:rgb(25,158,216)' size:='small' @click='addlj'>新增</el-button>
                     </div>
                     <!-- 链接列表 -->
-                    <div class="conList">
-                        <div class="list" v-for="(item,index) in linkList">
+                    <div class="conList" v-loading="loading">
+                        <div class="list" v-for="(item,index) in linkList" :key="index">
                             <div class="pic">
                                 <!-- <image :src='item.imgUrl'></image> -->
                                 <img :src="item.image" alt="跳转地址"/>
@@ -49,8 +49,8 @@
                         <el-button style='color:rgb(25,158,216)' size:='small' @click='addzx'>新增</el-button>
                     </div>
                     <!-- 咨询列表 -->
-                    <div class="conList">
-                        <div class="list" v-for="(item,index) in advisoryList">
+                    <div class="conList" v-loading="loading">
+                        <div class="list" v-for="(item,index) in advisoryList" :key="index">
                             <div class="pic">
                                 <img :src='item.image'/>
                                 <!-- <img src="../../../assets/img/headCar.png" alt=""> -->
@@ -80,8 +80,8 @@
                         <el-button style='color:rgb(25,158,216)' size:='small' @click='addrw'>新增</el-button>
                     </div>
                     <!-- 平台软文列表 -->
-                    <div class="softTxt">
-                        <div v-for='(item,index) in softTextList' class='softList'>
+                    <div class="softTxt" v-loading="loading">
+                        <div v-for='(item,index) in softTextList' class='softList' :key="index">
                             <span>{{index+1}}.{{item.linkName}}</span>
                             <el-button type='text' style='color: #199ED8' @click='delrw(item.id)'>删除</el-button>
                             <span v-show='1==2'>{{item.id}}</span>
@@ -373,6 +373,7 @@ export default {
     inject:['reload'],
     data(){
         return{
+            loading:false,
             // 软文form
             rwUpdateVisible:false,
             rweditVisible:false,
@@ -417,7 +418,7 @@ export default {
                 // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
                 linkName:[
                     { required: true, message: '请输入图片描述', trigger: 'blur' },
-                    { min: 1, max: 160, message: '长度在 1 到 160个字符', trigger: 'blur' }
+                    { min: 1, max: 4, message: '长度在 1 到 4个字符', trigger: 'blur' }
                 ],
                 // date1: [
                 // 	{ type: 'date', required: true, message: '请选择日期', trigger: 'change' }
@@ -444,7 +445,11 @@ export default {
             this.$axios.get(request.testUrl+'/platform/auth2/information/findList')
             .then(res=>{
                 // console.log(res.data.data);
-                this.advisoryList=res.data.data;
+                this.loading=true;
+                setTimeout(()=>{
+                    this.loading=false;
+                    this.advisoryList=res.data.data;
+                },1000);
             })
         },
         //渲染软文列表
@@ -456,9 +461,14 @@ export default {
                 }
             })
             .then(res=>{
+                this.loading=true;
+                setTimeout(()=>{
+                    this.loading=false;
+                    this.softTextList=res.data.data.records;
+                    this.total1=res.data.data.total;
+                },1000);
                 // console.log(res.data.data.records);
-                this.softTextList=res.data.data.records;
-                this.total1=res.data.data.total;
+               
             })
         },
         // 链接列表渲染
@@ -470,9 +480,14 @@ export default {
                 }
             })
             .then(res=>{
+                this.loading=true;
+                setTimeout(()=>{
+                    this.loading=false;
+                    this.linkList=res.data.data.records;
+                    this.total=res.data.data.total;
+                },1000);
                 // console.log(res.data.data.total);
-                this.linkList=res.data.data.records;
-                this.total=res.data.data.total;
+                
                 // alert(this.total);
             })
         },
@@ -593,7 +608,7 @@ export default {
                 		if(res.data.code==0){
                   			//console.log(res)
                 			this.linkupdateVisible=false;
-                            // this.reload();
+                            this.reload();
                             this.showLinkList();
                 		}else{
                 			this.$message({
@@ -720,6 +735,7 @@ export default {
                             .then(res=>{
                                 if(res.data.code==0){
                                     this.zxupdateVisible=false;
+                                    this.reload();
                                     this.showzxList();
                                     this.$message({
                                         type:'success',

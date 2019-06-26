@@ -49,14 +49,12 @@
         },
         methods: {
             submitForm() {
-                // var params = new URLSearchParams();
-				// params.append('username', this.ruleForm.username);
-                // params.append('password', this.ruleForm.password);
                 // console.log(JSON.stringify(this.ruleForm));
+                // /auth/platform/login
 				this.$axios.post(request.testUrl+"/auth/platform/login",JSON.stringify(this.ruleForm))
                     .then(res=>{
-                        console.log(res.headers.token);
-                        // console.log(res.data)
+                        // console.log(res.headers.token);
+                        console.log(res.data)
                         var token=res.headers.token;
 						if(res.data.code==0){
 							var name=res.data.data.username;
@@ -66,10 +64,10 @@
                             localStorage.setItem('token',token);
 							this.$router.push({ path: '/Index'})
 						}else{
-							this.$message({
-								type: 'info',
-								message: '登录失败'
-							});	
+							// this.$message({
+							// 	type: 'info',
+							// 	message: '登录失败'
+							// });	
 						}		
 	        		}).catch(res=>{
 	        			this.$message({
@@ -77,7 +75,6 @@
 								message: '失败'
 							});	
                 })
-                // this.$router.push({ path: '/Index'});
 	        	
             }
         }

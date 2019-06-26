@@ -4,37 +4,37 @@
     <el-row>
         <el-col :span="3">
             <div class="walletBorder active">
-                落位总收入<span>(40.7万)</span>
+                落位总收入<span>({{lwMoney}}万)</span>
             </div>
         </el-col>
         <el-col :span="3">
             <div class="walletBorder">
-                认购总收入<span>(-26.5万)</span>
+                认购总收入<span>({{rgMoney}}万)</span>
             </div>
         </el-col>
         <el-col :span="3">
             <div class="walletBorder">
-                落位总退款<span>(-18.7万)</span>
+                落位总退款<span>({{tkMoney}}万)</span>
             </div>
         </el-col>
         <el-col :span="3">
             <div class="walletBorder">
-                商家已提现<span>(186.3万)</span>
+                商家已提现<span>({{xmProposed}}万)</span>
             </div>
         </el-col>
         <el-col :span="3">
             <div class="walletBorder">
-                商家可提现<span>(186.5万)</span>
+                商家可提现<span>({{xmCanPropos}}万)</span>
             </div>
         </el-col>
          <el-col :span="3">
             <div class="walletBorder">
-                平台总收入<span>(186.3万)</span>
+                平台总收入<span>({{ptMoney}}万)</span>
             </div>
         </el-col>
         <el-col :span="3">
             <div class="walletBorder">
-                平台余额<span>(186.5万)</span>
+                平台余额<span>({{ptSurplusMoney}}万)</span>
             </div>
         </el-col>
     </el-row>
@@ -51,7 +51,7 @@
     <el-table
         :data="tableData"
         border
-        style="width: 94%">
+        style="width: 94%" v-loading="loading">
         <el-table-column
         prop="projectName"
         label="项目名称"
@@ -64,37 +64,40 @@
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="fallingIncome"
+        prop="lwMoney"
         label="落位收入（万元）"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="subscriptionIncome"
+        prop="rgMoney"
         label="认购收入(万元）"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="fallbackRefund"
+        prop="tkMoney"
         label="所有退款（万元）"
         align='center'>
         </el-table-column>
-        <el-table-column
-        prop="platformRevenue"
-        label="平台总收入（万元）"
-        align='center'>
+        <el-table-column  label="平台总收入（万元）" align='center' prop="ptTolMoney">
+            <template slot-scope="scope">
+                <div>
+                    <span>{{tableData[scope.$index].lwMoney+Number(tableData[scope.$index].rgMoney-Number(tableData[scope.$index].tkMoney))}}</span>
+                    <!-- <span>{{ptTolMoney}}</span> -->
+                </div>
+            </template>
         </el-table-column>
         <el-table-column
-        prop="projectIncome"
+        prop="xmMoney"
         label="项目总收入（万元）"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="beenWithdrawn"
+        prop="xmProposed"
         label="项目已提现（万元）"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="beWithdrawn"
+        prop="xmCanPropos"
         label="项目可提现（万元）"
         align='center'>
         </el-table-column>
@@ -103,7 +106,7 @@
         label="提现记录"
         align='center'>
             <template slot-scope="scope">
-                <el-button @click.native.prevent="viewRecord(scope.row.id)" type="text" size="small" style='color:#409EFF;'>
+                <el-button @click.native.prevent="viewRecord(tableData[scope.$index].projectId)" type="text" size="small" style='color:#409EFF;'>
                 查看
                 </el-button>
             </template>
@@ -113,7 +116,7 @@
         label="提现申请"
         align='center'>
             <template slot-scope="scope">
-                <el-button @click.native.prevent="viewWithdrawal(scope.row.id)" type="text" size="small" style='color:#409EFF;' v-if="scope.row.withdrawalApplication === 0">
+                <el-button @click.native.prevent="viewWithdrawal(tableData[scope.$index].paid)" type="text" size="small" style='color:#409EFF;' v-if="tableData[scope.$index].stype==0">
                     查看
                 </el-button>
                 <el-button type="text" size="small" style='color:#ccc;' v-else>
@@ -123,7 +126,7 @@
         </el-table-column>
     </el-table>
     <!--分页器-->
-    <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pagesize" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page'>
+    <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pageSize" @current-change="currentChange" @size-change="sizeChange" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page'>
     </el-pagination>
   </div>
 </template>
@@ -133,54 +136,88 @@ export default {
   name: 'financeManagement',
   data () {
       return {
+        loading:false,
         form: {},
-        tableData: [{
-          id: '156486',
-          projectName: '蓝湖郡',
-          region: '重庆',
-          fallingIncome: '200',
-          subscriptionIncome: '123',
-          fallbackRefund: '210',
-          platformRevenue: '1344',
-          projectIncome: '1234',
-          beenWithdrawn: '456',
-          beWithdrawn: '111',
-          withdrawalsRecord: 0,
-          withdrawalApplication: 0
-        }, {
-          id: '54815',
-          projectName: '迪拜大楼',
-          region: '迪拜',
-          fallingIncome: '200',
-          subscriptionIncome: '123',
-          fallbackRefund: '210',
-          platformRevenue: '1344',
-          projectIncome: '1234',
-          beenWithdrawn: '456',
-          beWithdrawn: '111',
-          withdrawalsRecord: 0,
-          withdrawalApplication: 1
-        }, {
-          id: '54468489',
-          projectName: '来福士',
-          region: '重庆',
-          fallingIncome: '200',
-          subscriptionIncome: '123',
-          fallbackRefund: '210',
-          platformRevenue: '1344',
-          projectIncome: '1234',
-          beenWithdrawn: '456',
-          beWithdrawn: '111',
-          withdrawalsRecord: 0,
-          withdrawalApplication: 0
-        }],
+        tableData: [],
+        tableData1: [],
         total:1000,
-        pagesize:10,
-        currentPage:2,
-        tNums: 0
+        pageSize:10,
+        currentPage:1,
+        tNums: 0,
+        //落位总收入
+        lwMoney:0,
+        //认购总收入
+        rgMoney:0,
+        //落位总退款
+        tkMoney:0,
+        //商家已提现
+        xmProposed:0,
+        //可提现
+        xmCanPropos:0,
+        //平台总收入
+        ptMoney:0,
+        //平台余额
+        ptSurplusMoney:0
       }
   },
+  created(){
+      this.renderDate();
+      this.renderMoney();
+  },
   methods: {
+    // 渲染项目财务管理表数据
+    renderDate(){
+        this.$axios.get(request.testUrl+"/finance/auth2/platformMoney/pageDate",{
+            params:{
+                current:this.currentPage,
+                pageSize:this.pageSize
+
+            }
+        }).then(res=>{
+            this.loading=true;
+            setTimeout(()=>{
+                this.loading=false;
+                console.log(res.data.data.records);
+                this.tableData=res.data.data.records;
+                //计算落位总收入
+                // this.tableData.forEach(item=>{
+                    
+                //     // console.log(item);
+                //     this.lwTolMoney+=Number(item.lwMoney);
+                //     this.rgTolMoney+=Number(item.rgMoney);
+                //     this.tkTolMoney+=Number(item.tkMoney);
+                //     this.proposedTol+=Number(item.xmProposed);
+                //     this.canProposeTol+=Number(item.xmCanPropos);
+                //     // tableData[scope.$index].lwMoney+tableData[scope.$index].rgMoney-tableData[scope.$index].tkMoney
+                //     this.ptTolMoney+=Number(item.lwMoney)+Number(item.rgMoney)-Number(item.tkMoney);
+                // })
+                // this.ptBalance=Number(this.ptTolMoney)-Number(this.proposedTol);
+            },1000)   
+        })
+    },
+    //列表上金额统计数据加载
+    renderMoney(){
+        this.$axios.post(request.testUrl+"/finance/auth2/platformMoney/selPlaSumMoney")
+        .then(res=>{
+            // console.log(res.data.data);
+            this.lwMoney=res.data.data.lwMoney;
+            this.rgMoney=res.data.data.rgMoney;
+            this.tkMoney=res.data.data.tkMoney;
+            this.xmProposed=res.data.data.xmProposed;
+            this.xmCanPropos=res.data.data.xmCanPropos;
+            this.ptMoney=res.data.data.ptMoney;
+            this.ptSurplusMoney=res.data.data.ptSurplusMoney;
+        })
+    },
+    currentChange(currentPage){
+        // alert(currentPage);
+        this.currentPage=currentPage;
+    },
+    sizeChange(){
+        // alert(pageSize);
+        this.pageSize=pageSize;
+    },
+    //条件搜索
     onSubmit () {
         // alert('submit!');
         // alert(this.form.input5);
@@ -189,10 +226,24 @@ export default {
                 message:'请输入要查询的项目名称',
                 type:'error'
             })
+        }else{
+            //条件搜索
+            this.$axios.get(request.testUrl+"/finance/auth2/platformMoney/pageDate",{
+                params:{
+                    name:this.form.input5,
+                    current:1,
+                    pageSize:10
+                }
+            }).then(res=>{
+                console.log(res.data.data.records)
+                this.tableData=res.data.data.records;
+                this.form.input5="";
+            })
         }
-        alert(this.form.input5);
+        // alert(this.form.input5);
     },
     viewRecord (id) {
+        // alert(id);
         this.$router.push({
             path: '/项目申请提现',
             query:{
@@ -201,6 +252,7 @@ export default {
         });
     },
     viewWithdrawal (id) {
+        alert(id);
         this.$router.push({
             path: '/审核提现',
             query:{

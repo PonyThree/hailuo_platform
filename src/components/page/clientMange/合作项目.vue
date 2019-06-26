@@ -5,10 +5,11 @@
             <div class="title">
                 <p>前端已展示合作项目</p>
             </div>
-            <div class='content'>
-                <div class="list" v-for='(item,index) in coperationList'>
+            <div class='content' v-loading="loadCoperationList">
+                <div class="list" v-for='(item,index) in coperationList' :key="index">
                     <p>{{item.name}}</p>
-                    <p>{{item.line}}</p>
+                    <p @click='jumpBom(index,item.id,item.frontShow)'>{{item.frontShow==1?'不展示':'展示'}}</p>
+                    <p v-show="1==2">{{item.id}}</p>
                 </div>
             </div>
         </div>
@@ -17,18 +18,19 @@
             <div class="title">
                 <p>已发布项目</p>
             </div>
-            <div class='content'>
+            <div class='content' v-loading="loadCoperationList">
                 <div class="search">
                     <el-button style='color:#000;margin-left:20px;' @click='find'>查询</el-button>
                     <el-input placeholder="请输入项目名称" style='width:240px;' v-model='searchTxt' class='searchIpt'></el-input>
                 </div>
-                <div class="list" v-for='(item,index) in publishProject'>
+                <div class="list" v-for='(item,index) in publishProject'  :key="index">
                     <p>{{item.name}}</p>
-                    <p>{{item.show}}</p>
+                    <p @click='jumpTop(index,item.id,item.frontShow)'>{{item.frontShow==0?'展示':'不展示'}}</p>
+                    <p v-show="1==2">{{item.id}}</p>
                 </div>
             </div>
             <!--分页器-->
-            <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pagesize" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page'>
+            <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pageSize" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page' @size-change="sizeChange" @current-change="currentChange"> 
             </el-pagination>
         </div>
     </div>
@@ -36,123 +38,124 @@
 
 </template>
 <script>
+
 export default {
+    inject:['reload'],
     data(){
         return{
             //查询的文本
             searchTxt:'',
-            currentPage:3,
-            pagesize:10,
+            currentPage:1,
+            pageSize:6,
             total:100,
+            loadCoperationList:false,
             //合作项目列表
           coperationList:[
-              {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-              {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-              {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-              {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-              {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-              {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-               {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-               {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-               {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-               {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-              {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-              {
-                  name:'蓝湖郡',
-                  line:'下线'
-              },
-
           ],
             //   已发布项目列表  
             publishProject:[
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-                {
-                name:'蓝湖郡',
-                show:'前端展示' 
-                },
-
             ]
         }
     },
+    created(){
+        this.renderCoperation();
+        this.renderUnShow();
+    },
     methods:{
+        // 数据加载 合作项目方
+        renderCoperation(){
+            this.$axios.get(request.testUrl+'/project/auth2/project/findFrontShowProjects')
+            .then(res=>{
+                // console.log(res.data.data);
+                this.loadCoperationList=true;
+                this.coperationList=res.data.data;
+                setTimeout(()=>{
+                    this.loadCoperationList=false;
+                },1000);
+            })
+        },
+        //未展示到前端的项目
+        renderUnShow(){
+            // var params=new URLSearchParams();
+            // params.append('page',this.currentPage);
+            // params.append('pageSize',this.pagesize);
+            this.$axios.get(request.testUrl+'/project/auth2/project/findHasPublishProject',{
+                params:{
+                    page:this.currentPage,
+                    pageSize:this.pageSize
+                }
+            })
+            .then(res=>{
+                // console.log(res.data.data)
+                this.loadCoperationList=true;
+                this.publishProject=res.data.data.records;
+                this.total=res.data.data.total;
+                setTimeout(()=>{
+                    this.loadCoperationList=false;
+                },1000);
+                
+            })
+        },
         find(){
-            alert(this.searchTxt);
+            // alert(this.searchTxt);
+
+            this.$axios.get(request.testUrl+'/project/auth2/project/findHasPublishProject',{
+                params:{
+                    projectName:this.searchTxt,
+                    page:this.currentPage,
+                    pageSize:this.pageSize
+                }
+            }).then(res=>{
+                console.log(res.data.data);
+                this.publishProject=res.data.data.records;
+                this.total=res.data.data.total;
+                // this.renderUnShow();
+                // this.reload();
+            })
+        },
+        //切换到不展示
+        jumpBom(i,id,frontShow){
+            console.log(i,id,frontShow);
+            if(frontShow==1){
+                frontShow=0;
+            }else{
+                frontShow=1;
+            }
+            console.log(i,id,frontShow);
+            var params=new URLSearchParams();
+            params.append('frontShow',frontShow);
+            params.append('projectId',id);
+            this.$axios.post(request.testUrl+'/project/auth2/project/updateFrontShow',params)
+            .then(res=>{
+                console.log(res.data.data)
+                this.renderUnShow();
+                this.renderCoperation();
+            })
+        },
+        //展示到小程序端
+        jumpTop(i,id,frontShow){
+            if(frontShow==0){
+                frontShow=1;
+            }else{
+                frontShow=0;
+            }
+            var params=new URLSearchParams();
+            params.append('frontShow',frontShow);
+            params.append('projectId',id);
+            this.$axios.post(request.testUrl+'/project/auth2/project/updateFrontShow',params)
+            .then(res=>{
+                console.log(res.data)
+                this.renderUnShow();
+                this.renderCoperation();
+            })
+        },
+        currentChange(currentPage){
+            alert(currentPage);
+            this.currentPage=currentPage;
+            // this.renderUnShow();
+        },
+        sizeChange(pageSize){
+            alert(pageSize);
         }
     }
 
@@ -190,7 +193,9 @@ export default {
     }
     .content{
         width:100%;
-        height:300px;
+        /* height:300px; */
+        height:auto;
+        padding-bottom:30px;
         overflow: hidden;
     }
     .publishPro{
@@ -202,7 +207,8 @@ export default {
     }
     .publishPro .content{
         width:100%;
-        height:360px;
+        /* height:360px; */
+        height:auto;
     }
     .content .list{
         float:left;

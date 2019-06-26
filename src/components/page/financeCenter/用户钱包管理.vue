@@ -4,27 +4,27 @@
     <el-row>
         <el-col :span="5">
             <div class="walletBorder active">
-                零钱总充值<span>(40.7万)</span>
+                零钱总充值<span>({{chargeMoneyCount}})</span>
             </div>
         </el-col>
         <el-col :span="5">
             <div class="walletBorder">
-                零钱总提现<span>(-26.5万)</span>
+                零钱总提现<span>({{cashMoneyCount}})</span>
             </div>
         </el-col>
         <el-col :span="5">
             <div class="walletBorder">
-                客户零钱总支出<span>(-18.7万)</span>
+                客户零钱总支出<span>({{useMoneyCount}})</span>
             </div>
         </el-col>
         <el-col :span="5">
             <div class="walletBorder">
-                项目总退款<span>(186.3万)</span>
+                项目总退款<span>({{refundMoneyCount}})</span>
             </div>
         </el-col>
         <el-col :span="4">
             <div class="walletBorder">
-                平台钱包余额<span>(186.5万)</span>
+                平台钱包余额<span>({{balanceMoneyCount}})</span>
             </div>
         </el-col>
     </el-row>
@@ -50,8 +50,8 @@
         <el-form-item class="information">
             <el-input placeholder="请输入用户昵称/手机号码" v-model="form.input5" class="input-with-select">
                 <el-select v-model="form.select" slot="prepend" placeholder="请选择">
-                    <el-option label="手机号" value="phone"></el-option>
-                    <el-option label="昵称" value="nickname"></el-option>
+                    <el-option label="手机号" value="0"></el-option>
+                    <el-option label="昵称" value="1"></el-option>
                 </el-select>
             </el-input>
         </el-form-item>
@@ -69,14 +69,19 @@
         label="序号"
         width="100"
         align='center'>
+        <template slot-scope="scope">
+            <div>
+                <span>{{parseInt(scope.$index)+1}}</span>
+            </div>
+        </template>
         </el-table-column>
         <el-table-column
-        prop="nickname"
+        prop="userName"
         label="客户昵称"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="phone"
+        prop="mobile"
         label="联系电话"
         align='center'>
         </el-table-column>
@@ -85,13 +90,13 @@
         label="提现详情"
         align='center'>
             <template slot-scope="scope">
-                <el-button @click.native.prevent="withdraw(scope.$index)" type="text" size="small" style='color:#409EFF;'>
+                <el-button @click.native.prevent="withdraw(tableData[scope.$index].userId)" type="text" size="small" style='color:#409EFF;'>
                 查看
                 </el-button>
             </template>
         </el-table-column>
         <el-table-column
-        prop="walletbalance"
+        prop="balance"
         label="钱包余额"
         align='center'>
         </el-table-column>
@@ -100,17 +105,17 @@
         label="操作状态"
         align='center'>
             <template slot-scope="scope">
-                <el-button @click.native.prevent="details(scope.$index)" type="text" size="small" style='color:#409EFF;'>
+                <el-button @click.native.prevent="details(tableData[scope.$index].userId)" type="text" size="small" style='color:#409EFF;'>
                 查看
                 </el-button>
             </template>
         </el-table-column>
     </el-table>
     <div class="totalNum">
-        总计：￥{{ tNums }}
+            总计：￥{{ moneyCount }}
     </div>
     <!--分页器-->
-    <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pagesize" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page'>
+    <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pageSize" @current-change="currentChange" @size-change="sizeChange" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page'>
     </el-pagination>
   </div>
 </template>
@@ -121,48 +126,108 @@ export default {
   data () {
       return {
         form: {},
-        tableData: [{
-          number: '1',
-          nickname: '王小虎',
-          phone: '15800001234',
-          withdraw: '查看',
-          walletbalance: '2000.00',
-          operating: '查看'
-        },{
-          number: '2',
-          nickname: '王小虎',
-          phone: '15800001234',
-          withdraw: '查看',
-          walletbalance: '2000.00',
-          operating: '查看'
-        },{
-          number: '3',
-          nickname: '王小虎',
-          phone: '15800001234',
-          withdraw: '查看',
-          walletbalance: '2000.00',
-          operating: '查看'
-        }],
+        tableData: [],
         total:1000,
-        pagesize:10,
-        currentPage:2,
-        tNums: 0
+        pageSize:10,
+        currentPage:1,
+        moneyCount: 0,
+        //总余额
+        balanceMoneyCount:'',
+        //提现
+        cashMoneyCount:'',
+        //充值
+        chargeMoneyCount:'',
+        //支出
+        useMoneyCount:'',
+        //退款
+        refundMoneyCount:'',
       }
+  },
+  created(){
+    //   列表数据加载
+    this.renderData();
+    //金额加载
+    this.renderMoney();
   },
   methods: {
     onSubmit () {
-        alert('submit!');
+        // alert('submit!');
+        // alert(this.form.select);
+        // var form=new FormData();
+        // var params=new URLSearchParams(form);
+        var obj={};
+        if(this.form.select==0){
+            // params.append('mobile',this.form.input5);
+            obj.mobile=this.form.input5;
+        }else{
+            // params.append('userName',this.form.input5);
+            obj.userName=this.form.input5;
+        }
+        // params.append('page',this.currentPage);
+        // params.append('pageSize',this.pageSize);
+        obj.page=this.currentPage;
+        obj.pageSize=this.pageSize;
+        // console.log(obj);
+        this.$axios.get(request.testUrl+"/user/auth2/userMoney/listUserMoneyInfo",{
+            params:obj
+        }).then(res=>{
+            // console.log(res.data.data.records);
+            this.tableData=res.data.data.records;
+        })
     },
     totalNum () {
         this.tableData.forEach((item, index) => {
             this.tNums += parseInt(item.walletbalance)
         })
     },
-    withdraw (index) {
-        this.$router.push('/零钱提现');
+    withdraw (userId) {
+        this.$router.push({
+            path:'/零钱提现',
+            query:{
+                userId:userId
+            }
+        });
     },
-    details (index) {
-        this.$router.push('/钱包使用详情');
+    details (userId) {
+        this.$router.push({
+            path:'/钱包使用详情',
+            query:{
+                userId:userId
+            }
+        });
+    },
+    currentChange(currentPage){
+        // alert(currentPage);
+        this.currentPage=currentPage;
+    },
+    sizeChange(pageSize){
+        // alert(pageSize);
+        this.pageSize=pageSize;
+    },
+    //列表数据加载
+    renderData(){
+        this.$axios.get(request.testUrl+"/user/auth2/userMoney/listUserMoneyInfo",{
+            params:{
+                page:this.currentPage,
+                pageSize:this.pageSize
+            }
+        }).then(res=>{
+            // console.log(res.data.data.records)
+            this.tableData=res.data.data.records;
+            this.moneyCount=res.data.data.records[0].moneyCount;
+            // console.log(this.moneyCount);
+        })
+    },
+    //金钱数据加载
+    renderMoney(){
+        this.$axios.get(request.testUrl+"/user/auth2/user/moneyStatistical").then(res=>{
+            // console.log(res.data.data);
+            this.balanceMoneyCount=res.data.data.balanceMoneyCount;
+            this.cashMoneyCount=res.data.data.cashMoneyCount;
+            this.chargeMoneyCount=res.data.data.chargeMoneyCount;
+            this.useMoneyCount=res.data.data.useMoneyCount;
+            this.refundMoneyCount=res.data.data.refundMoneyCount;
+        })
     }
   },
   mounted () {

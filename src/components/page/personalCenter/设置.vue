@@ -11,34 +11,34 @@
                             <span>个人资料</span>
                         </div>
                         <!-- 用户个人信息 -->
-                        <div class="personInfo">
+                        <div class="personInfo" v-loading="loading">
                             <div class="perPic">
                                 <img src='../../../assets/img/girl.jpg' style='width:80px;height:80px;margin-left:130px;'/>
                             </div>
                             <div>
                                 <el-form :model='personData' style='width:600px;margin:0 auto;' ref='personData' :rules='rules2'>
-                                    <el-form-item label='账号:' prop='account'> 
-                                        <el-input v-model='personData.account' style='width:300px'></el-input>
+                                    <el-form-item label='账号:' prop='username'> 
+                                        <el-input v-model='personData.username' style='width:300px'></el-input>
                                     </el-form-item>
                                     <el-form-item label='职务:' prop='position'> 
                                         <el-input v-model='personData.position' style='width:300px'></el-input>
                                     </el-form-item>
-                                    <el-form-item label='姓名:' prop='name'> 
-                                        <el-input v-model='personData.name' style='width:300px'></el-input>
+                                    <el-form-item label='姓名:' prop='realname'> 
+                                        <el-input v-model='personData.realname' style='width:300px'></el-input>
                                     </el-form-item>
-                                    <el-form-item label='籍贯:' prop='birthPlace'> 
+                                    <!-- <el-form-item label='籍贯:' prop='birthPlace'> 
                                         <el-input v-model='personData.birthPlace' style='width:300px'></el-input>
-                                    </el-form-item>
+                                    </el-form-item> -->
                                     <el-form-item label='性别:' prop='gender' label-width="300px" style='margin-left:-258px;'> 
-                                        <el-radio-group v-model='personData.gender'>
+                                        <el-radio-group v-model='personData.sex'>
                                             <el-radio  :label=1>男</el-radio>
                                             <el-radio  :label=0>女</el-radio>
                                         </el-radio-group>
                                     </el-form-item>
                                     <el-row>
                                         <el-col :span='18'>
-                                            <el-form-item label='验证手机:' prop='telPhone'> 
-                                                <el-input v-model='personData.telPhone' style='width:300px'></el-input>
+                                            <el-form-item label='验证手机:' prop='mobile'> 
+                                                <el-input v-model='personData.mobile' style='width:300px'></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span='6'>
@@ -53,9 +53,9 @@
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
-                                    <el-form-item label='身份证号:' prop='identityNumber'> 
+                                    <!-- <el-form-item label='身份证号:' prop='identityNumber'> 
                                         <el-input v-model='personData.identityNumber' style='width:300px'></el-input>
-                                    </el-form-item>
+                                    </el-form-item> -->
                                     
                                 </el-form>
                             </div>
@@ -108,38 +108,37 @@
                                 <div style='float:right;'>
                                     <span style='font-size:14px;color:#409EFF'>车位宝账号:</span>
                                     <span style='color:#409EFF;font-size:16px'>boss</span>
-                                    <el-input placeholder="请输入员工账号或姓名" style='width:300px;margin-right:5px;margin-left:20px;' v-model='form1.searchTxt'></el-input>
+                                    <el-input placeholder="请输入员工账号或姓名" style='width:300px;margin-right:5px;margin-left:20px;' v-model='form1.keyword' ></el-input>
                                     <el-button type='primary' size='small' @click="searchEmp">搜索</el-button>
                                 </div>
                             </div>
                         </div>
                         <!-- 员工信息表 -->
-                        <div class="empTable">
-                            <!-- 新增员工 -->
+                        <div class="empTable" v-loading="loading">
                             <div class='addEmp'>
                                 <el-button type='primary'  @click='addEmp' size='small'>新增员工+</el-button>
                             </div>
                             <el-table :data='empData'>
-                                <el-table-column label='员工账号' prop='empAccount'>
+                                <el-table-column label='员工账号' prop='username'>
                                     <template slot-scope="scope">
                                         <div>
                                             <span class="iconfont icon-shou" style='color:#409EFF;font-size:18px;margin-right:5px;'></span>
-                                            <span>{{empData[scope.$index].empAccount}}</span>
+                                            <span>{{empData[scope.$index].username}}</span>
                                         </div>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label='姓名' prop='name'></el-table-column>
+                                <el-table-column label='姓名' prop='realname'></el-table-column>
                                 <el-table-column label='职务' prop='position'></el-table-column>
-                                <el-table-column label='手机号码' prop='telPhone'></el-table-column>
+                                <el-table-column label='手机号码' prop='mobile'></el-table-column>
                                 <el-table-column label='权限' prop='telPhone'>
                                     <template slot-scope="scope">
-                                        <el-button type='text' style='color:#169BD5;'  @click="goDetails(scope.$index)">详情</el-button>
+                                        <el-button type='text' style='color:#169BD5;'  @click="goDetails(empData[scope.$index].id)">详情</el-button>
                                         <!-- <span style='color:#169BD5;' @click='goDetails(scope.$index)'>详情</span> -->
                                     </template>
                                 </el-table-column>
                                 <el-table-column label='操作'>
                                     <template slot-scope="scope">
-                                        <el-button type='primary' v-if='scope.$index!==0' @click="deleteEmp(scope.$index)">删除</el-button>
+                                        <el-button type='primary' v-if='scope.$index!==0' @click="deleteEmp(empData[scope.$index].id)">删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -197,7 +196,7 @@
                             <span>消息通知</span>
                         </div>
                         <el-form :model='form2' ref='form2' style='width:680px;margin-left:75px;'>
-                            <el-form-item v-for="(domain, index) in form2.telPhoneList"   :prop="'telPhoneList.'+index+'.telPhone'" :label="'接收手机号'+(index+1)" :rules='rules.telPhone' style="width: 60%;margin-left:30%;margin-bottom: 0;" >
+                            <el-form-item v-for="(domain, index) in form2.telPhoneList"  :key="index" :prop="'telPhoneList.'+index+'.telPhone'" :label="'接收手机号'+(index+1)" :rules='rules.telPhone' style="width: 60%;margin-left:30%;margin-bottom: 0;" >
                                 <template>
                                     <div>
                                         <el-input v-model="domain.telPhone"  style="width: 180px;"></el-input>
@@ -212,7 +211,7 @@
                                 <el-form-item prop='checkedList'  style='margin-top:0px;'>
                                     <div style="margin: 10px 33px;width:130px;color:#606266;">设置提醒内容:</div>
                                     <el-checkbox-group v-model="form2.checkedList" @change="handleCheckedListChange" style='margin-left:180px;'>
-                                        <el-checkbox v-for="item in contentList" :label="item" :key="item" style='display:block;'>{{item}}</el-checkbox>
+                                        <el-checkbox v-for="(item,index) in contentList" :label="item" :key="index" style='display:block;'>{{item}}</el-checkbox>
                                     </el-checkbox-group>
                                 </el-form-item>
                             </div> 
@@ -367,6 +366,7 @@ export default {
     // 250 194 88警告橙色
     inject:['reload'],//注入依赖
     data(){
+
         // 登录密码验证
         var validatePass = (rule, value, callback) => {
             if (value === '') {
@@ -436,6 +436,13 @@ export default {
             }
         };
         return {
+            loading:false,
+            //默认显示 员工账号查询
+            showSearch:true,
+            searchObj:{},
+            // 员工查询数据默认页码和页大小
+            current:1,
+            pageSize:10,
             //sendAuthCode用来控制显示获取手机验证码还是显示倒计时
             sendAuthCode:true,
             auth_time:'60',
@@ -443,20 +450,14 @@ export default {
             tagTitle:'个人资料',
             form:{},
             form1:{
-                parkAccount:'boss',
-                searchTxt:''
+                keyword:''
             },
             form2:{
                 telPhoneList:[
                     {
                         telPhone:12345698752,
                         id:1
-                    },
-                    // {
-                    //     telPhone:12345698956,
-                    //     id:2
-                    // },
-
+                    }
                 ],
                 checkedList:['用户退款异常','用户付款成功']
             },
@@ -487,38 +488,20 @@ export default {
             dialogAdd:false,
             activeName:'first',
             personData:{
-                account:'boss',
-                position:'董事长',
-                name:'戴阳',
-                //1男 0女
-                gender:1,
-                telPhone:'15123476565',
-                //验证
-                verification:true,
-                birthPlace:'重庆市渝北区',
-                //身份证号
-                identityNumber:13212346549865446
+                // account:'boss',
+                // position:'董事长',
+                // name:'戴阳',
+                // //1男 0女
+                // gender:1,
+                // telPhone:'15123476565',
+                // //验证
+                // verification:true,
+                // birthPlace:'重庆市渝北区',
+                // //身份证号
+                // identityNumber:13212346549865446
 
             },
             empData:[
-                {
-                    empAccount:'boss',
-                    name:'戴阳',
-                    position:'董事长',
-                    telPhone:15123476565,
-                },
-                {
-                    empAccount:'abcd123',
-                    name:'CTD',
-                    position:'产品经理',
-                    telPhone:15123476565,
-                },
-                 {
-                    empAccount:'abcd456',
-                    name:'鸭宝',
-                    position:'执行总监',
-                    telPhone:15123476566,
-                },
             ],
             // 员工表验证
             rules:{
@@ -587,12 +570,43 @@ export default {
         
     },
     created(){
-        
+        this.renderEmp();
+        this.renderPerInfo();
     },
     methods:{
         handleClick(tag){
-            console.log(tag.label);
+            // console.log(tag.label);
             this.tagTitle=tag.label;
+        },
+        // 员工数据加载
+        renderEmp(){
+            this.$axios.post(request.testUrl+"/platform/auth2/adminUser/pageList",JSON.stringify({
+                pageSize:this.pageSize,
+                current:this.current
+            })).then(res=>{
+                this.loading=true;
+                setTimeout(()=>{
+                    this.loading=false;
+                    this.empData=res.data.data.records;
+                },1000);
+                // console.log(res.data.data.records);
+               
+            })
+        },
+        // 用户个人信息加载
+        renderPerInfo(){
+            // console.log(localStorage.getItem('token'))
+            // var token=localStorage.getItem('token');
+            this.$axios.post(request.testUrl+"/auth/platform/getLoginInfo")
+            .then(res=>{
+                this.loading=true;
+                setTimeout(()=>{
+                    this.loading=false;
+                    this.personData=res.data.data;
+                },1000);
+                console.log(res.data.data)
+                
+            })
         },
         //手机号验证
         handleTel(){
@@ -656,19 +670,35 @@ export default {
             this.tagTitle='个人资料';
         },
         searchEmp(){
-            alert(this.form1.searchTxt);
+            // console.log(JSON.stringify(this.form1));
+            this.$axios.post(request.testUrl+"/platform/auth2/adminUser/pageList",JSON.stringify(this.form1))
+            .then(res=>{
+                // console.log(res.data.data.records);
+                this.empData=res.data.data.records;
+                this.form1={};
+            })
         },
-        //新增员工
+        //新增员工按钮
         addEmp(){
-            // alert('新增员工');
             this.dialogAdd=true;
         },
-        goDetails(i){
-            alert('要去第'+i+'个');
+        goDetails(id){
+            // alert(id)
         },
-        deleteEmp(i){
-            // alert('删除'+i);
-            this.empData.splice(i,1);
+        deleteEmp(id){
+            // this.empData.splice(i,1);
+            // alert(id);
+            this.$axios.delete(request.testUrl+"/platform/auth2/adminUser/"+id)
+            .then(res=>{
+                // console.log(res.data);
+                if(res.data.code==0){
+                    this.$message({
+                        type:'success',
+                        message:'删除成功'
+                    });
+                    this.renderEmp();
+                }
+            })
         },
         save(){
             alert('消息通知中的保存');
@@ -800,16 +830,13 @@ export default {
         },
         //新增员工保存
         submitForm(merchantForm) {
-            console.log(this.merchantForm);
-            console.log(11);
-            // alert('添加员工');
-            alert( this.$refs.merchantForm);
+            // console.log(this.merchantForm);
             // console.log( this.$refs.merchantForm.validate);
             // this.$refs.merchantForm.validate((valid)=>{
             //     alert(valid+'123');
             // });
-            console.log(this.dialogAdd);
-            this.dialogAdd=false;
+            // console.log(this.dialogAdd);
+          
             // this.$refs.merchantForm.validate((valid) => {
             //     console.log(22);
             //     alert('添加员工成功了吗')
@@ -828,6 +855,23 @@ export default {
             //         return false;
             //     }
             // });
+            this.$axios.post(request.testUrl+"/platform/auth2/adminUser/add",JSON.stringify({
+                mobile:this.merchantForm.telPhone,
+                position:this.merchantForm.position,
+                username:this.merchantForm.empAccount,
+                realname:this.merchantForm.name,
+                password:this.merchantForm.checkPass
+            })).then(res=>{
+                console.log(res.data);
+                    this.dialogAdd=false;
+                    if(res.data.code==0){
+                        this.$message({
+                            type:'success',
+                            message:'新增成功'
+                    });
+                    this.merchantForm={};
+                }
+            })
       }
     }
 }

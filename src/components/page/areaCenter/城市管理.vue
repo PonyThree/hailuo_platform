@@ -3,33 +3,34 @@
         <h2>区域管理>   &nbsp;城市管理></h2>
         <div style='margin:20px auto 0;width:80%;overflow:hidden;'>
             <div class='exportBtn'>
+                <!-- <el-button type='primary' @click='del'>删除</el-button> -->
                 <el-button type='primary' @click='exportData'>导出</el-button>
             <!-- <a :href="serverUrl+'/adminActivity/export?status='+this.form.status+'&activityTypeId='+this.form.activityTypeId" style="margin-left: 50px;" class="flag" @click='exportData'>导出</a> -->
             </div>
             <div class="searchHead" style='width:100%;'>
                 <el-form :data='form' ref='from' inline>
                     <el-form-item label="区域:" prop='region' style='margin-left:10px;'>
-                        <el-select v-model="form.region" placeholder="请选择">
-                            <el-option  label="全国" value=""></el-option>
-                            <el-option  label="重庆" value="1"></el-option>
+                        <el-select v-model="form.region" placeholder="请选择" @change="provinceChange">
+                            <el-option  :label="item.name" :value="item.id" v-for='(item,index) in provinceList' :key="index"></el-option>
+                            <!-- <el-option  label="重庆" value="1"></el-option>
                             <el-option  label="武汉" value="2"></el-option>
-                            <el-option  label="上海" value="3"></el-option>
+                            <el-option  label="上海" value="3"></el-option> -->
                         </el-select>
                     </el-form-item>
                     <el-form-item label="城市:" prop='city' style='margin-left:10px;'>
-                        <el-select v-model="form.city" placeholder="请选择">
-                            <el-option  label="全国" value=""></el-option>
-                            <el-option  label="重庆" value="1"></el-option>
+                        <el-select v-model="form.city" placeholder="请选择" @change="cityChange">
+                            <el-option  :label="item.name"  v-for='(item,index) in cityList' :value="item.id" :key="index"></el-option>
+                            <!-- <el-option  label="重庆" value="1"></el-option>
                             <el-option  label="武汉" value="2"></el-option>
-                            <el-option  label="上海" value="3"></el-option>
+                            <el-option  label="上海" value="3"></el-option> -->
                         </el-select>
                     </el-form-item>
                     <el-form-item label="地区:" prop='area' style='margin-left:10px;'>
-                        <el-select v-model="form.area" placeholder="请选择">
-                            <el-option  label="大渡口区" value=""></el-option>
-                            <el-option  label="渝中区" value="1"></el-option>
+                        <el-select v-model="form.area" placeholder="请选择" >
+                            <el-option   :label="item.name"  v-for='(item,index) in areaList' :value="item.id" :key="index"></el-option>
+                            <!-- <el-option  label="渝中区" value="1"></el-option>
                             <el-option  label="渝北区" value="2"></el-option>
-                            <el-option  label="XXX区" value="3"></el-option>
+                            <el-option  label="XXX区" value="3"></el-option> -->
                         </el-select>
                     </el-form-item>
                     <el-form-item style='margin-left:56px;'>
@@ -40,22 +41,23 @@
                     </el-form-item>
                 </el-form>
             </div>
-            <el-table :data='areaData' style='width:100%;margin-top:10px;'>
-                <el-table-column label='区域' prop='region'>
+            <el-table :data='areaData' style='width:100%;margin-top:10px;'  @selection-change='handleSelectionChange' v-loading="loading">
+                <el-table-column type="selection" width="55" prop='checked'></el-table-column>
+                <el-table-column label='区域' prop='provinceName'>
 
                 </el-table-column>
-                <el-table-column label='城市' prop='city'>
+                <el-table-column label='城市' prop='cityName'>
 
                 </el-table-column>
-                <el-table-column label='地区' prop='area'>
+                <el-table-column label='地区' prop='countyName'>
 
                 </el-table-column>
                 <el-table-column label='项目名称' prop='projectName'>
 
                 </el-table-column>
-                <el-table-column label='操作' prop='caozuo'>
+                <el-table-column label='操作'>
                     <template slot-scope="scope">
-                            <el-button type='text' style='color:rgb(25,158,216);' @click='find(scope.$index)'>查看</el-button>
+                            <el-button type='text' style='color:rgb(25,158,216);' @click='find(scope.$index,areaData[scope.$index].id)'>查看</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -66,16 +68,16 @@
                     <el-form-item label='社区:'>
                         <template>
                             <div>
-                                <el-input v-model='form.community'></el-input>
+                                <el-input v-model='form.name'></el-input>
                                 <i class="el-icon-location" @click="getLocation"></i>
                             </div>
                         </template>
                     </el-form-item>
-                    <el-form-item label='经度' prop='longitude'>
-                        <el-input v-model='form.longitude'></el-input>
+                    <el-form-item label='经度' prop='longitudes'>
+                        <el-input v-model='form.longitudes'></el-input>
                     </el-form-item>
-                    <el-form-item label='纬度' prop='latitude'>
-                        <el-input v-model='form.latitude'></el-input>
+                    <el-form-item label='纬度' prop='latitudes'>
+                        <el-input v-model='form.latitudes'></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -84,14 +86,14 @@
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-        <div class="map">
+        <!-- <div class="map">
             <div id="allmap"></div>
             <div id="r-result">
                 经度: <input id="longitude" type="text" style="width:100px; margin-right:10px;" />
                 纬度: <input id="latitude" type="text" style="width:100px; margin-right:10px;" />
-                <!-- <input type="button" value="查询" onclick="theLocation()" /> -->
+                <input type="button" value="查询" onclick="theLocation()" />
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -102,9 +104,20 @@ export default {
     // allmap
     data(){
         return {
+            loading:false,
+            page:1,
+            pageSize:6,
             myMap:null,
             showMap:false,
             dialogVisible:false,
+            //用来存储批量选中删除的值数组
+            multipleSelection:'',
+            //省
+            provinceList:[],
+            //城市
+            cityList:[],
+            //地区
+            areaList:[],
             form:{
                 community:'恒大加州',
                 // 经度
@@ -114,57 +127,68 @@ export default {
                 address:''
 
             },
-            areaData:[
-                {
-                    region:'重庆',
-                    city:'重庆',
-                    area:'大渡口区',
-                    projectName:'北大资源'
-
-                },
-                {
-                    region:'重庆',
-                    city:'重庆',
-                    area:'大渡口区',
-                    projectName:'北大资源'
-
-                },
-                {
-                    region:'重庆',
-                    city:'重庆',
-                    area:'大渡口区',
-                    projectName:'北大资源'
-
-                },
-                {
-                    region:'重庆',
-                    city:'重庆',
-                    area:'大渡口区',
-                    projectName:'北大资源'
-
-                }
-            ]
+            areaData:[]
         }
     },
     mounted(){
-        this.initMap();
+        // this.initMap();
+        this.renderAreaList();
+        this.getProvinceList();
     },
     methods:{
-        initMap(){
-            loadBMap('qzN1OxHV2ozVYx12WsGD2I7Q0bdQDVo1')
-            .then(()=>{
-                //百度地图API功能
-                this.myMap=new BMap.Map('allmap');//创建Map实例
-                this.myMap.centerAndZoom(new BMap.point(116.404,39.915));//初始化地图，设置中心点坐标和地图级别
-                this.myMap.setCurrentCity('重庆');//设置地图显示的城市
-                this.myMap.enableScrollWheelZoom(true);
-            }).catch(err=>{
-                console.log('地图加载失败');
+        // 城市管理列表
+        renderAreaList(){
+            this.$axios.get(request.testUrl+'/project/auth2/project/projectList',{
+                params:{
+                    page:this.page,
+                    pageSize:this.pageSize
+                }
+            }).then(res=>{
+                this.loading=true;
+                setTimeout(()=>{
+                    this.loading=false;
+                    this.areaData=res.data.data.records;
+                },1000)
+                // console.log(res.data.data);
+                
             })
         },
-        find(i){
-            // alert('查看更多'+i);
+        //获取省列表
+        getProvinceList(){
+            this.$axios.get(request.testUrl+'/project/sysRegion/select',{
+                params:{
+                    parentId:0
+                }
+            }).then(res=>{
+                // console.log(res.data.data)
+                this.provinceList=res.data.data;
+                // console.log(this.provinceList)
+            })
+        },
+        // initMap(){
+        //     loadBMap('qzN1OxHV2ozVYx12WsGD2I7Q0bdQDVo1')
+        //     .then(()=>{
+        //         //百度地图API功能
+        //         this.myMap=new BMap.Map('allmap');//创建Map实例
+        //         this.myMap.centerAndZoom(new BMap.point(116.404,39.915));//初始化地图，设置中心点坐标和地图级别
+        //         this.myMap.setCurrentCity('重庆');//设置地图显示的城市
+        //         this.myMap.enableScrollWheelZoom(true);
+        //     }).catch(err=>{
+        //         console.log('地图加载失败');
+        //     })
+        // },
+        find(i,id){
+            // alert('查看更多'+id);
             this.dialogVisible=true;
+            //获取初始化的数据
+            this.$axios.get(request.testUrl+'/project/auth2/project/selectOne',{
+                params:{
+                    projectId:id
+                }
+            }).then(res=>{
+                console.log(res.data.data);
+                this.form=res.data.data;
+            })
         },
         search(){
             alert('查询');
@@ -176,9 +200,84 @@ export default {
             alert('得到位置');
             this.showMap=true;
         },
+        //条件查询
         search(){
-            alert(this.form.address);
-        }
+            // alert(this.form.address);
+            this.$axios.get(request.testUrl+'/project/auth2/project/projectList',{
+                params:{
+                    provinceId:this.form.region,
+                    cityId:this.form.city,
+                    countyId:this.form.erea,
+                    address:this.form.address,
+                    page:this.page,
+                    pageSize:this.pageSize
+
+                }
+            })
+            .then(res=>{
+                // console.log(res.data.data);
+                this.areaData=res.data.data.records;
+            })
+        },
+        // 区域渲染
+        provinceChange(){
+            // alert('改变了');
+            // console.log(this.form.region);
+            //得到城市列表
+           this.$axios.get(request.testUrl+'/project/sysRegion/select',{
+                params:{
+                    parentId:this.form.region
+                }
+            }).then(res=>{
+                // console.log(res.data.data)
+                this.cityList=res.data.data;
+                console.log(this.cityList)
+            })
+        },
+        cityChange(){
+            // console.log(this.form.city);
+            //得到地区
+            this.$axios.get(request.testUrl+'/project/sysRegion/select',{
+                params:{
+                    parentId:this.form.city
+                }
+            }).then(res=>{
+                // console.log(res.data.data)
+                this.areaList=res.data.data;
+                console.log(this.areaList)
+            })
+        },
+        //存取批量删除选中值数组
+        handleSelectionChange(val){
+                this.multipleSelection=val;
+                console.log(this.multipleSelection);
+        },
+        //批量删除
+		del(){
+			let checkArr=this.multipleSelection;
+			if(checkArr.length==0){
+				this.$message({
+					type:'warning',
+					message:'请选中你将要批量删除的数据'
+				});
+			}
+			let params=[];
+			checkArr.forEach(item=>{
+				params.push(item.id);
+			})
+			console.log(params);
+			this.$axios.post(request.testUrl+'/project/auth2/project/deleteProjectBatch',params)
+			.then(res=>{
+				console.log(res.data);
+				if(res.data.code==0){
+					this.$message({
+						type:'success',
+						message:'删除成功'
+					});
+					this.renderAreaList();
+				}
+			})
+		},
     }
 
 }

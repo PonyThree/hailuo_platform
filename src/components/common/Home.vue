@@ -44,6 +44,13 @@ export default {
       }
       this.tagsList = arr;
     });
+  },
+  activated () {
+    // if (this.lastCity !== this.city) {
+    //   this.lastCity = this.city
+    //   this.getHomeInfo()
+    // }
+    console.log('1111');
   }
 };
 </script>

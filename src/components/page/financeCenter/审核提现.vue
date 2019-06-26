@@ -6,45 +6,47 @@
                 <div class="header"><p>提现审核表</p></div>
                 <el-row class="infoDetails">
                     <el-col :span="8">
-                        <div class="infoDetailsdes">项目名称：{{ projectName }}</div>
+                        <div class="infoDetailsdes">项目名称：{{ form.projectName }}</div>
                     </el-col>
                     <el-col :span="8">
-                        <div class="infoDetailsdes">申请人：{{ applicant }}</div>
+                        <div class="infoDetailsdes">申请人：{{ form.applicant }}</div>
                     </el-col>
                     <el-col :span="8">
-                        <div class="infoDetailsdes">联系电话：{{ phone }}</div>
+                        <div class="infoDetailsdes">联系电话：{{ form.applicantPhone }}</div>
                     </el-col>
                 </el-row>
                 <el-row class="infoDetails">
                     <el-col :span="8">
-                        <div class="infoDetailsdes">可提现金额（元）：<span class="fontRed">{{ cashWithdrawal }}</span></div>
+                        <div class="infoDetailsdes">可提现金额（元）：<span class="fontRed">{{ form.canOutMoney }}</span></div>
                     </el-col>
                     <el-col :span="8">
-                        <div class="infoDetailsdes">申请提现金额（元）：<span class="fontRed">{{ applyCashWithdrawal }}</span></div>
+                        <div class="infoDetailsdes">申请提现金额（元）：<span class="fontRed">{{ form.outMoney }}</span></div>
                     </el-col>
                     <el-col :span="8">
-                        <div class="infoDetailsdes">到账地址：{{ arrival }}</div>
+                        <div class="infoDetailsdes">到账地址：{{ form.accountName }}</div>
                     </el-col>
                 </el-row>
                 <el-row class="infoDetails">
                     <el-col :span="24">
-                        <div class="infoRemarks">备注：{{ remarks }}</div>
+                        <div class="infoRemarks">备注：{{ form.remarks }}</div>
                     </el-col>
                 </el-row>
             </div>
         </el-col>
     </el-row>
-    <!-- 0:待审核   1：已驳回   2：已审核 -->
-    <el-row class="walletButton" v-if="this.status === 0">
+    <!-- 0:待审核 -->
+    <el-row class="walletButton" v-if="this.form.status === 0">
         <el-button type="primary" @click="handClickDetermine">确定</el-button>
         <el-button @click="handClickReject">驳回</el-button>
         <el-button @click="handClickCancel">取消</el-button>
     </el-row>
-    <el-row class="walletButton" v-else-if="this.status === 1">
+    <!-- 已驳回2 -->
+    <el-row class="walletButton" v-if="this.form.status === 2">
         <el-button type="info" disabled>已驳回</el-button>
         <el-button @click="handClickModify">修改</el-button>
     </el-row>
-    <el-row class="walletButton" v-else-if="this.status === 2">
+    <!-- 已审核 1 -->
+    <el-row class="walletButton" v-if="this.form.status === 1">
         <el-button type="primary" disabled>已审核</el-button>
     </el-row>
   </div>
@@ -55,71 +57,130 @@ export default {
   name: 'walletDetails',
   data () {
     return {
-        projectName: "东方大厦",
-        applicant: "neymar da silva",
-        phone: "15800001234",
-        cashWithdrawal: "2000.00",
-        applyCashWithdrawal: "2000.00",
-        arrival: "财务通13134543113445533",
-        remarks: "我是一个备注",
-        status: 0
+        id:this.$route.query.id,
+        form:{
+            projectName:'',
+            applicant:'',
+            applicantPhone:'',
+            canOutMoney:'',
+            outMoney:'',
+            accountName:'',
+            remarks:'',
+            status: ''
+        }
     }
   },
+  created(){
+    //   this.renderData();
+  },
+  mounted(){
+      this.renderData();
+  },
   methods: {
-      handClickDetermine () {
-        this.$confirm('是否确定审核通过?', '审核状态', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-            this.$message({
-                type: 'success',
-                message: '审核通过!'
+        //   数据加载
+        renderData(){
+            // var id=this.$route.query.id;
+            // console.log(id);
+            this.$axios.get(request.testUrl+"/finance/auth2/applyMoney/selOneData",{
+                params:{
+                    id:this.id
+                }
+            }).then(res=>{
+                console.log(res.data.data);
+                this.form={};
+                // console.log(this.form);
+                this.form=res.data.data;
+            })
+        },
+        //确定通过 status=1
+        handClickDetermine () {
+            this.$confirm('是否确定审核通过?', '审核状态', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                
+                // this.status = 1
+                var params=new FormData();
+                params.append("id",this.id);
+                params.append("status",1);
+                this.$axios.post(request.testUrl+"/finance/auth2/applyMoney/updApplyStatus",params).then(res=>{
+                    console.log(res.data);
+                    if(res.data.code==0){
+                        this.form.status=1;
+                        this.$message({
+                            type: 'success',
+                            message: '审核通过!'
+                        });
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'warning',
+                    message: '取消审核'
+                });      
             });
-            this.status = 2
-        }).catch(() => {
-            this.$message({
-                type: 'warning',
-                message: '取消审核'
-            });      
-        });
-      },
-      handClickReject () {
-        this.$confirm('是否驳回审核?', '审核状态', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            this.$message({
-                type: 'success',
-                message: '驳回通过!'
+        },
+        //驳回 status=2
+        handClickReject () {
+            this.$confirm('是否驳回审核?', '审核状态', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                //已驳回 2
+                var params=new FormData();
+                params.append("id",this.id);
+                params.append("status",2);
+                this.$axios.post(request.testUrl+"/finance/auth2/applyMoney/updApplyStatus",params).then(res=>{
+                    console.log(res.data);
+                    if(res.data.code==0){
+                        this.form.status=2;
+                        this.$message({
+                            type: 'success',
+                            message: '已驳回!'
+                        });
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'warning',
+                    message: '取消驳回'
+                });      
             });
-            this.status = 1
-        }).catch(() => {
-            this.$message({
-                type: 'warning',
-                message: '取消驳回'
-            });      
-        });
-      },
-      handClickCancel () {
-        this.$router.go(-1)
-      },
-      handClickModify () {
-        this.$confirm('是否修改?', '审核状态', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            this.status = 0
-        }).catch(() => {
-            this.$message({
-                type: 'warning',
-                message: '取消修改'
-            });      
-        });
-      }
-  }
+        },
+        //已驳回状态 修改为已审核
+        handClickModify () {
+            this.$confirm('是否修改?', '审核状态', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                var params=new FormData();
+                params.append("id",this.id);
+                params.append("status",1);
+                this.$axios.post(request.testUrl+"/finance/auth2/applyMoney/updApplyStatus",params).then(res=>{
+                    console.log(res.data);
+                    if(res.data.code==0){
+                        this.form.status=1;
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功!'
+                        });
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'warning',
+                    message: '取消修改'
+                });      
+            });
+        },
+        //取消
+        handClickCancel () {
+            // this.$router.go(-1)
+        }
+    }
 }
 </script>
 

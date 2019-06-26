@@ -6,7 +6,7 @@
             <el-button type='primary' @click='add'>新增按钮</el-button>
         </div>
 		<!--表格列表-->
-		<el-table :data="bannerTable" border style="width: 100%">
+		<el-table :data="bannerTable" border style="width: 100%" v-loading="loading">
 			<el-table-column prop="num" label="" align="center" width="40">
 				<template scope="scope">
 					<span>{{scope.$index+1}}</span>
@@ -133,6 +133,7 @@ export default {
 	inject:['reload'],
     data(){
         return {
+			loading:false,
             dialogVisible: false,
             labelPosition: 'left',
             editVisible:false,
@@ -185,8 +186,13 @@ export default {
 			.then(res=>{
 				console.log(res.data.data.records);
 				// console.log(res.data.data.total);
-				this.total=res.data.data.total;
-				this.bannerTable=res.data.data.records;
+				this.loading=true;
+				setTimeout(()=>{
+					this.total=res.data.data.total;
+					this.bannerTable=res.data.data.records;
+					this.loading=false;
+				},1000)
+				
 			})
 		},
 		//数字验证
@@ -199,12 +205,6 @@ export default {
         add(){
 			// alert('新增');
 			this.addVisible=true;
-        },
-        update(i){
-            alert('修改'+i);
-        },
-        deletePicInfo(i){
-            alert('删除'+i);
         },
         //增加banner按钮弹框
         addList(){
@@ -331,7 +331,6 @@ export default {
 	                duration: 6000
             	});
 		    },
-			
         	show(){
         		document.getElementById("aa").style.display="none";
         		document.getElementById("cc").style.display="block";
@@ -402,8 +401,9 @@ export default {
                 		if(res.data.code==0){
 	              			//console.log(res)
 							this.editVisible=false;
-							this.showBannerList();
 							this.form={};
+							this.showBannerList();
+							// this.reload();
 							this.$message({
 								type: 'success',
 								message: '编辑成功'
@@ -415,7 +415,7 @@ export default {
 							});
                 		}
 				})
-				this.reload();
+				// this.reload();
             },
             
         	//删除这一行

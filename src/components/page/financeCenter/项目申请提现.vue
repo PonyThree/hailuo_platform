@@ -9,7 +9,7 @@
                 class="datePicker"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-                default-value="2019-01-01">
+                default-value="2019-01-01" format="yyyy 年 MM 月 dd 日" value-format="timestamp" @blur="getTime" style="width:500px;">
             </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -27,12 +27,17 @@
     <el-table
         :data="tableData"
         border
-        style="width: 94%">
+        style="width: 94%" v-loading="loading">
         <el-table-column
         prop="applicationList"
         label="申请列表"
         width="100"
         align='center'>
+        <template slot-scope="scope">
+            <div>
+                <span>{{(scope.$index)+1}}</span>
+            </div>
+        </template>
         </el-table-column>
         <el-table-column
         prop="applicant"
@@ -40,59 +45,69 @@
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="contactNumber"
+        prop="applicantPhone"
         label="联系电话"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="applicationTime"
+        prop="createTime"
         label="申请时间"
         align='center'>
+            <!-- <template slot-scope="scope">
+                <div>
+                    <span>{{createTime}}</span>
+                </div>
+            </template> -->
         </el-table-column>
         <el-table-column
-        prop="withdrawalAmount"
+        prop="canOutMoney"
         label="可提现金额"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="cashWithdrawal"
+        prop="outMoney"
         label="申请提现金额（万元）"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="address"
+        prop="accountName"
         label="到账地址"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="collectionAccount"
+        prop="account"
         label="收款账号"
         align='center'>
         </el-table-column>
         <el-table-column
-        prop="reviewTime"
+        prop="modifyTime"
         label="审核时间"
         align='center'>
+            <!-- <template slot-scope="scope">
+                <div>
+                    <span>{{modifyTime}}</span>
+                </div>
+            </template> -->
         </el-table-column>
         <el-table-column
-        prop="approvalStatus"
+        prop="status"
         label="审核状态"
         align='center'>
             <template slot-scope="scope">
-                <el-button @click.native.prevent="review(scope.row.id)" type="text" size="small" style='color:#409EFF;' v-if="scope.row.approvalStatus === 0">
+                <el-button @click.native.prevent="review(scope.row.id)" type="text" size="small" style='color:#409EFF;' v-if="scope.row.status === 0">
                     待审核
                 </el-button>
-                <el-button @click.native.prevent="audited(scope.row.id)" type="text" size="small" style='color:#409EFF;' v-else-if="scope.row.approvalStatus === 1">
+                <el-button @click.native.prevent="audited(scope.row.id)" type="text" size="small" style='color:#409EFF;' v-else-if="scope.row.status === 1">
                     已审核
                 </el-button>
-                <el-button @click.native.prevent="dismissed(scope.row.id)" type="text" size="small" style='color:#409EFF;' v-else-if="scope.row.approvalStatus === 2">
+                <el-button @click.native.prevent="dismissed(scope.row.id)" type="text" size="small" style='color:#409EFF;' v-else-if="scope.row.status === 2">
                     已驳回
                 </el-button>
             </template>
         </el-table-column>
     </el-table>
     <!--分页器-->
-    <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pagesize" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page'>
+    <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pageSize" @current-change="currentChange" @size-change="sizeChange" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page'>
     </el-pagination>
   </div>
 </template>
@@ -102,61 +117,76 @@ export default {
   name: 'applicationWithdrawal',
   data () {
       return {
+        loading:false,
         form: {},
-        tableData: [{
-          id: "156465",
-          applicationList: '1',
-          applicant: 'neymar da silva',
-          contactNumber: '12346774144',
-          applicationTime: '2019-5-2 18:29:54',
-          withdrawalAmount: '17.6',
-          cashWithdrawal: '12',
-          address: '财互通',
-          collectionAccount: '1565346567673131',
-          reviewTime: '2019-5-2 18:28:08',
-          approvalStatus: 0,
-          remarks: '我是一个有意思的备注',
-          status: 0
-        }, {
-          id: "456465",
-          applicationList: '2',
-          applicant: 'kaka',
-          contactNumber: '12346774144',
-          applicationTime: '2019-5-2 18:29:54',
-          withdrawalAmount: '17.6',
-          cashWithdrawal: '12',
-          address: '支付宝',
-          collectionAccount: '1565346567673131',
-          reviewTime: '2019-5-2 18:28:08',
-          approvalStatus: 1,
-          remarks: '我是一个有意思的备注',
-          status: 2
-        }, {
-          id: "423165",
-          applicationList: '3',
-          applicant: 'wulei',
-          contactNumber: '12346774144',
-          applicationTime: '2019-5-2 18:29:54',
-          withdrawalAmount: '17.6',
-          cashWithdrawal: '12',
-          address: '微信',
-          collectionAccount: '1565346567673131',
-          reviewTime: '2019-5-2 18:28:08',
-          approvalStatus: 2,
-          remarks: '我是一个有意思的备注',
-          status: 1
-        }],
+        tableData: [],
         total:1000,
-        pagesize:10,
-        currentPage:2,
-        tNums: 0
+        pageSize:10,
+        currentPage:1,
+        tNums: 0,
+        id:this.$route.query.id,
+        //查询开始时间
+        staTime:'',
+        //查询结束时间
+        endTime:''
       }
   },
+  created(){
+      this.renderTable();
+  },
   methods: {
-    onSubmit () {
-        alert('submit!');
+    addZero(n){
+    return n<10? '0'+n :n;
     },
+    // 时间戳转时间函数
+    transformDate(time){
+        var t=new Date(time);
+        var y=t.getFullYear();
+        var mon=t.getMonth()+1;
+        var d=t.getDate();
+        var h=t.getHours();
+        var m=t.getMinutes();
+        var s=t.getSeconds();
+        return y+'-'+this.addZero(mon)+'-'+this.addZero(d)+"  "+this.addZero(h)+":"+this.addZero(m)+":"+this.addZero(s);
+    },
+    //提现列表加载
+    renderTable(){
+        // alert(this.id);
+        this.$axios.post(request.testUrl+"/finance/auth2/applyMoney/getPageByPlatfrom",JSON.stringify({
+            projectId:this.id,
+            pageSize:this.pageSize,
+            current:this.currentPage
+        })).then(res=>{
+            // console.log(res.data.data.records);
+            res.data.data.records.forEach(item=>{
+                item.createTime=this.transformDate(item.createTime)
+                item.modifyTime=this.transformDate(item.modifyTime)
+            })
+            this.tableData=res.data.data.records;
+        })
+    },
+    getTime(){
+        this.staTime=this.form.dateStartEnd[0];
+        this.endTime=this.form.dateStartEnd[1];
+        console.log(this.staTime,this.endTime);
+       
+    },
+    onSubmit () {
+        // alert('submit!');
+        this.$axios.post(request.testUrl+"/finance/auth2/applyMoney/getPageByPlatfrom",JSON.stringify({
+            projectId:this.id,
+            current:this.currentPage,
+            pageSize:this.pageSize,
+            staTime:this.staTime,
+            endTime:this.endTime
+        })).then(res=>{
+            // console.log(res.data.data.records);
+            this.tableData=res.data.data.records;
+        })
+    },
+    
     review (id) {
+        // alert(id);
         this.$router.push({
             path: '/审核提现',
             query:{
@@ -165,21 +195,31 @@ export default {
         });
     },
     audited (id) {
+        // alert(id);
         this.$router.push({
-            path: '/审核提现',
+            path: '/审核状态',
             query:{
                 id: id
             }
         });
     },
     dismissed (id) {
+        // alert(id);
         this.$router.push({
-            path: '/审核提现',
+            path: '/审核状态',
             query:{
                 id: id
             }
         });
-    }
+    },
+    currentChange(currentPage){
+        // alert(currentPage);
+        this.currentPage=currentPage;
+    },
+    sizeChange(){
+        // alert(pageSize);
+        this.pageSize=pageSize;
+    },
   }
 }
 </script>
