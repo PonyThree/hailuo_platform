@@ -4,27 +4,27 @@
     <el-row>
         <el-col :span="5">
             <div class="walletBorder active">
-                零钱总充值<span>({{chargeMoneyCount}})</span>
+                零钱总充值<span>({{chargeMoneyCountTwo}})</span>
             </div>
         </el-col>
         <el-col :span="5">
             <div class="walletBorder">
-                零钱总提现<span>({{cashMoneyCount}})</span>
+                零钱总提现<span>({{cashMoneyCountTwo}})</span>
             </div>
         </el-col>
         <el-col :span="5">
             <div class="walletBorder">
-                客户零钱总支出<span>({{useMoneyCount}})</span>
+                客户零钱总支出<span>({{useMoneyCountTwo}})</span>
             </div>
         </el-col>
         <el-col :span="5">
             <div class="walletBorder">
-                项目总退款<span>({{refundMoneyCount}})</span>
+                项目总退款<span>({{refundMoneyCountTwo}})</span>
             </div>
         </el-col>
         <el-col :span="4">
             <div class="walletBorder">
-                平台钱包余额<span>({{balanceMoneyCount}})</span>
+                平台钱包余额<span>({{balanceMoneyCountTwo}})</span>
             </div>
         </el-col>
     </el-row>
@@ -132,15 +132,15 @@ export default {
         currentPage:1,
         moneyCount: 0,
         //总余额
-        balanceMoneyCount:'',
+        balanceMoneyCountTwo:'',
         //提现
-        cashMoneyCount:'',
+        cashMoneyCountTwo:'',
         //充值
-        chargeMoneyCount:'',
+        chargeMoneyCountTwo:'',
         //支出
-        useMoneyCount:'',
+        useMoneyCountTwo:'',
         //退款
-        refundMoneyCount:'',
+        refundMoneyCountTwo:'',
       }
   },
   created(){
@@ -222,11 +222,19 @@ export default {
     renderMoney(){
         this.$axios.get(request.testUrl+"/user/auth2/user/moneyStatistical").then(res=>{
             // console.log(res.data.data);
-            this.balanceMoneyCount=res.data.data.balanceMoneyCount;
-            this.cashMoneyCount=res.data.data.cashMoneyCount;
-            this.chargeMoneyCount=res.data.data.chargeMoneyCount;
-            this.useMoneyCount=res.data.data.useMoneyCount;
-            this.refundMoneyCount=res.data.data.refundMoneyCount;
+            if(res.data.data!=null){
+                this.balanceMoneyCountTwo=res.data.data.balanceMoneyCountTwo;
+                this.cashMoneyCountTwo=res.data.data.cashMoneyCountTwo;
+                this.chargeMoneyCountTwo=res.data.data.chargeMoneyCountTwo;
+                this.useMoneyCountTwo=res.data.data.useMoneyCountTwo;
+                this.refundMoneyCountTwo=res.data.data.refundMoneyCountTwo;
+            }else{
+                this.$message({
+                    type:'info',
+                    message:'金钱汇总暂时没有数据'
+                })
+            }
+            
         })
     }
   },

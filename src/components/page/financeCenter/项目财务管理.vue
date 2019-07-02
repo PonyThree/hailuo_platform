@@ -212,10 +212,12 @@ export default {
     currentChange(currentPage){
         // alert(currentPage);
         this.currentPage=currentPage;
+        this.renderDate();
     },
     sizeChange(){
         // alert(pageSize);
         this.pageSize=pageSize;
+        this.renderDate();
     },
     //条件搜索
     onSubmit () {
