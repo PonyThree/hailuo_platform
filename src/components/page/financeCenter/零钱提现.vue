@@ -111,7 +111,7 @@ export default {
         userId:this.$route.query.userId,
         form: {},
         tableData: [],
-        total:1000,
+        total:100,
         pageSize:10,
         currentPage:1,
         tNums: 0,
@@ -169,14 +169,6 @@ export default {
             }
         });
     },
-    currentChange(currentPage){
-        // alert(currentPage);
-        this.currentPage=currentPage;
-    },
-    sizeChange(){
-        // alert(pageSize);
-        this.pageSize=pageSize;
-    },
     //加载数据
     renderData(userId){
         this.$axios.get(request.testUrl+"/user/auth2/userCashRecording/userCashRecordList",{
@@ -186,25 +178,46 @@ export default {
                 userId:userId
             }
         }).then(res=>{
-            // console.log(res.data.data.records);
-            // applyForTime
-            this.tableData=res.data.data.records;
             // this.tableData.forEach(item=>{
             //     this.time=this.transformDate(item.applyForTime);
             // })
-            for(var i=0;i<res.data.data.records.length;i++){
-                this.tableData[i].applyForTime=this.transformDate(res.data.data.records[i].applyForTime);
+            this.total=res.data.data.total;
+            if(res.data.data.records.length>=1){
+                this.tableData=res.data.data.records;
+                for(var i=0;i<res.data.data.records.length;i++){
+                    if(res.data.data.records[i].applyForTime!=""){
+                        this.tableData[i].applyForTime=this.transformDate(res.data.data.records[i].applyForTime);
+                    }else{
+                        this.tableData[i].applyForTime="";
+                    }
+                }
+                // console.log(this.tableData);
+                this.userName=res.data.data.records[0].userName;
+                this.mobile=res.data.data.records[0].mobile;
+            }else{
+                this.$message({
+                    type:'info',
+                    message:'数据加载完毕'
+                })
             }
-            console.log(this.tableData);
-            this.userName=res.data.data.records[0].userName;
-            this.mobile=res.data.data.records[0].mobile;
+            
             // this.tableData.time=res.data.data.records.applyForTime
         })
     },
     timeChange(){
         // console.log(this.startTime)
         // console.log(this.endTime)
-    }
+    },
+    currentChange(currentPage){
+        // alert(currentPage);
+        this.currentPage=currentPage;
+        this.renderData();
+    },
+    sizeChange(){
+        // alert(pageSize);
+        this.pageSize=pageSize;
+        this.renderData();
+    },
   },
   watch:{
       $route(to,from){

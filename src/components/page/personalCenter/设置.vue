@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div  stytle="margin-top:80px;width:60%;overflow:hidden;">
         <h2>设置>  {{tagTitle}}</h2>
         <div class="setting">
             <el-tabs v-model="activeName" @tab-click="handleClick" class='tabs' stretch v-if='show'> 
@@ -26,9 +26,6 @@
                                     <el-form-item label='姓名:' prop='realname'> 
                                         <el-input v-model='personData.realname' style='width:300px'></el-input>
                                     </el-form-item>
-                                    <!-- <el-form-item label='籍贯:' prop='birthPlace'> 
-                                        <el-input v-model='personData.birthPlace' style='width:300px'></el-input>
-                                    </el-form-item> -->
                                     <el-form-item label='性别:' prop='gender' label-width="300px" style='margin-left:-258px;'> 
                                         <el-radio-group v-model='personData.sex'>
                                             <el-radio  :label=1>男</el-radio>
@@ -56,13 +53,12 @@
                                     <!-- <el-form-item label='身份证号:' prop='identityNumber'> 
                                         <el-input v-model='personData.identityNumber' style='width:300px'></el-input>
                                     </el-form-item> -->
-                                    
                                 </el-form>
                             </div>
                         </div>
                         <!-- 个人资料中的手机号验证 -->
                         <el-dialog title="验证手机" :visible.sync="dialogVisible" width="30%">
-                            <el-form  width='20%' :rules='rules1' :model='form'>
+                            <el-form  width='20%'  :model='form' :rules='rules1'>
                                 <el-form-item label='手机号码:' prop='telPhone'>
                                     <template>
                                         <el-input v-model='form.telPhone' style='width:200px;' placeholder="请输入手机号码"></el-input>
@@ -107,7 +103,7 @@
                             <div class='tilCon'>
                                 <div style='float:right;'>
                                     <span style='font-size:14px;color:#409EFF'>车位宝账号:</span>
-                                    <span style='color:#409EFF;font-size:16px'>boss</span>
+                                    <span style='color:#409EFF;font-size:16px;margin-right: 60px;'>{{name}}</span>
                                     <el-input placeholder="请输入员工账号或姓名" style='width:300px;margin-right:5px;margin-left:20px;' v-model='form1.keyword' ></el-input>
                                     <el-button type='primary' size='small' @click="searchEmp">搜索</el-button>
                                 </div>
@@ -146,7 +142,7 @@
                         </div>
                         <!-- 新增的对话框 添加员工-->
                         <el-dialog title='添加员工' :visible.sync="dialogAdd" width="466px" center>
-                            <el-form  ref='merchantForm' :model="merchantForm"  :rules='rules' label-width="120px" >
+                            <el-form  ref='merchantForm' :model="merchantForm"   label-width="120px" :rules='rules'>
                                 <el-form-item label="员工账号:" prop='empAccount'>
                                     <el-input placeholder="请输入内容" v-model="merchantForm.empAccount" ></el-input>
                                 </el-form-item>
@@ -154,38 +150,27 @@
                                     <el-input placeholder="请输入内容" v-model="merchantForm.name" ></el-input>
                                 </el-form-item>
                                 <div class='txt'>添加完员工后方可编辑员工权限，详细权限请到权限管理设置</div>
-                                <!-- <el-form-item label="登录密码:" prop='loginpwd'>
-                                    <el-input  v-model="merchantForm.loginpwd" type='password'></el-input>
-                                </el-form-item>
-                                <el-form-item label="确认密码:" prop='confirmpwd'>
-                                    <el-input  v-model="merchantForm.confirmpwd" type='password'></el-input>
-                                </el-form-item> -->
                                 <el-form-item label="密码" prop="pass">
-                                    <el-input type="password" v-model="merchantForm.pass"></el-input>
+                                    <el-input type="password" v-model="merchantForm.pass" autocomplete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="确认密码" prop="checkPass">
-                                    <el-input type="password" v-model="merchantForm.checkPass"></el-input>
+                                    <el-input type="password" v-model="merchantForm.checkPass" autocomplete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="手机号码:" prop='telPhone'>
                                     <el-input  v-model="merchantForm.telPhone" ></el-input>
                                 </el-form-item>
                                 <el-form-item label="职务:" prop='position'>
-                                    <el-input  v-model="merchantForm.position" ></el-input>
+                                    <el-input  v-model="merchantForm.position" ></el-input> 
                                 </el-form-item>
                                 <el-form-item>
-                                    <!-- <span slot="footer" class="dialog-footer">
-                                        <el-button type="primary" @click="submitForm(merchantForm)">保存</el-button>
-                                        <el-button type="primary" @click="cancel">取 消</el-button>
-                                    </span> -->
                                     <template slot-scope="scope">
                                         <div>
-                                            <el-button type="primary" @click="submitForm(merchantForm)">保存</el-button>
+                                            <el-button type="primary" @click="submitForm('merchantForm')">保存</el-button>
                                             <el-button type="primary" @click="cancel()">取 消</el-button>
                                         </div>
                                     </template>
                                 </el-form-item>
                             </el-form>
-                            
                         </el-dialog>    
                     </div>
                 </el-tab-pane>
@@ -195,7 +180,7 @@
                             <span class="iconfont icon-shuxian"></span>
                             <span>消息通知</span>
                         </div>
-                        <el-form :model='form2' ref='form2' style='width:680px;margin-left:75px;'>
+                        <el-form :model='form2' ref='form2' style='width:680px;margin-left:75px;' class="infoForm">
                             <el-form-item v-for="(domain, index) in form2.telPhoneList"  :key="index" :prop="'telPhoneList.'+index+'.telPhone'" :label="'接收手机号'+(index+1)" :rules='rules.telPhone' style="width: 60%;margin-left:30%;margin-bottom: 0;" >
                                 <template>
                                     <div>
@@ -208,10 +193,10 @@
                             </el-form-item>
                             <div style='width:500px;margin:24px auto;font-size:14px;line-height:20px;color:#606266;text-align:center;'>一个人最多可以设置3个不同手机号接受信息</div>
                             <div style='width:50%;margin:0 auto;'>
-                                <el-form-item prop='checkedList'  style='margin-top:0px;'>
+                                <el-form-item prop='checkedList'  style='margin-top:30px;'>
                                     <div style="margin: 10px 33px;width:130px;color:#606266;">设置提醒内容:</div>
                                     <el-checkbox-group v-model="form2.checkedList" @change="handleCheckedListChange" style='margin-left:180px;'>
-                                        <el-checkbox v-for="(item,index) in contentList" :label="item" :key="index" style='display:block;'>{{item}}</el-checkbox>
+                                        <el-checkbox v-for="(item,index) in contentList" :label="item" :key="index" style='display:block;' >{{item}}</el-checkbox>
                                     </el-checkbox-group>
                                 </el-form-item>
                             </div> 
@@ -228,7 +213,7 @@
                                 <span class="iconfont icon-shuxian"></span>
                                 <span>账号安全</span>
                                 <span style='margin-left:40px;font-size:14px;color:#409EFF'>车位宝账号:</span>
-                                <span style='margin-left:5px;color:#409EFF;font-size:16px'>boss</span>
+                                <span style='margin-left:5px;color:#409EFF;font-size:16px'>{{name}}</span>
                             </div>
                             <div class='accountSafe'>
                                 <!-- 登录密码 -->
@@ -366,28 +351,26 @@ export default {
     // 250 194 88警告橙色
     inject:['reload'],//注入依赖
     data(){
-
         // 登录密码验证
-        var validatePass = (rule, value, callback) => {
+        var validatePass1 = (rule, value, callback) => {
             if (value === '') {
-            callback(new Error('请输入密码'));
+                callback(new Error('请输入密码'))
             } else {
-            if (this.merchantForm.checkPass !== '') {
-                this.$refs.merchantForm.validateField('checkPass');
+                if (this.merchantForm.checkPass !== '') {
+                    // this.$refs.merchantForm.validateField('checkPass')
+                }
+                callback()
             }
-            // callback();
-            }
-        };
-        // 确认密码验证
+        }
         var validatePass2 = (rule, value, callback) => {
             if (value === '') {
-            callback(new Error('请再次输入密码'));
+                callback(new Error('请再次输入密码'))
             } else if (value !== this.merchantForm.pass) {
-            callback(new Error('两次输入密码不一致!'));
+                callback(new Error('两次输入密码不一致!'))
             } else {
-            // callback();
+                callback()
             }
-        };
+        }
         // 账号安全时登录密码验证
         var validateNewPass = (rule, value, callback) => {
             if (value === '') {
@@ -402,11 +385,11 @@ export default {
         // 账号安全时确认密码验证
         var validateNewPass2 = (rule, value, callback) => {
             if (value === '') {
-            callback(new Error('请再次输入新密码'));
+                callback(new Error('请再次输入新密码'));
             } else if (value !== this.form.newPass) {
-            callback(new Error('两次输入密码不一致!'));
+                callback(new Error('两次输入密码不一致!'));
             } else {
-            // callback();
+                callback();
             }
         };
         // 手机验证
@@ -432,7 +415,7 @@ export default {
                     callback(new Error('请输入正确的18位身份证号码'));
                 }
             }else{
-                // callback();
+                callback();
             }
         };
         return {
@@ -487,20 +470,7 @@ export default {
             bindAccount:false,
             dialogAdd:false,
             activeName:'first',
-            personData:{
-                // account:'boss',
-                // position:'董事长',
-                // name:'戴阳',
-                // //1男 0女
-                // gender:1,
-                // telPhone:'15123476565',
-                // //验证
-                // verification:true,
-                // birthPlace:'重庆市渝北区',
-                // //身份证号
-                // identityNumber:13212346549865446
-
-            },
+            personData:{},
             empData:[
             ],
             // 员工表验证
@@ -511,17 +481,11 @@ export default {
                 name:[
                     {required:true,message:'请输入姓名',trigger:'blur'},
                 ],
-                // loginpwd:[
-                //     {required:true,message:'请输入登录密码',trigger:'blur'},
-                // ],
-                // confirmpwd:[
-                //     {required:true,message:'请输入登录密码',trigger:'blur'},
-                // ],
                 pass: [
-                    {validator: validatePass, trigger: 'blur'}
+                    { validator: validatePass1, trigger: 'blur' }
                 ],
                 checkPass: [
-                    {validator: validatePass2, trigger: 'blur'}
+                    { validator: validatePass2, trigger: 'blur' }
                 ],
                 //手机号验证
                 telPhone:[
@@ -549,11 +513,11 @@ export default {
                     {validator: validatePhone, trigger: 'blur'}
                 ],
             },
-            // telPhoneListRules:{
-            //     telPhone:[
-            //         {validator: validatePhone, trigger: 'blur'}
-            //     ],
-            // },
+            telPhoneListRules:{
+                telPhone:[
+                    {validator: validatePhone, trigger: 'blur'}
+                ],
+            },
             //修改手机时 密码和确认密码验证
             updateTelRules:{
                 yzCode:[
@@ -572,10 +536,13 @@ export default {
     created(){
         this.renderEmp();
         this.renderPerInfo();
+        this.renderAccountName();
     },
     methods:{
+        renderAccountName(){
+            this.name=localStorage.getItem("name");
+        },
         handleClick(tag){
-            // console.log(tag.label);
             this.tagTitle=tag.label;
         },
         // 员工数据加载
@@ -590,12 +557,10 @@ export default {
                     this.empData=res.data.data.records;
                 },1000);
                 // console.log(res.data.data.records);
-               
             })
         },
         // 用户个人信息加载
         renderPerInfo(){
-            // console.log(localStorage.getItem('token'))
             // var token=localStorage.getItem('token');
             this.$axios.post(request.testUrl+"/auth/platform/getLoginInfo")
             .then(res=>{
@@ -604,13 +569,11 @@ export default {
                     this.loading=false;
                     this.personData=res.data.data;
                 },1000);
-                console.log(res.data.data)
-                
+                // console.log(res.data.data)
             })
         },
         //手机号验证
         handleTel(){
-            // alert('手机号验证');
             // this.reload();
             console.log(this.checked);
             if(this.checked==true){
@@ -618,7 +581,6 @@ export default {
                 // this.form.telPhone=this.personData.telPhone;
             }
             else{
-                // alert('请选中左边的选择框,再点击验证');
                 this.$message({
                     message:'请选中左边的选择框,再点击验证',
                     type:'error'
@@ -626,7 +588,6 @@ export default {
             }
         },
         nextStep(){
-            // alert('下一步');
             this.dialogVisible=false;
             this.dialogVisible1=true;
         },
@@ -638,15 +599,10 @@ export default {
         //   .catch(_ => {});
         // },
         getTelCode(){
-            // alert('获取验证码');
             // 发送请求
-            // this.$axios.get(url).then(res=>{
-            //     console.log(res.data);
-            // });
             //隐藏获取手机验证码 显示倒计时
             this.sendAuthCode=false;
             var auth_time=parseInt(this.auth_time);
-            // alert(auth_time);
             var timer=setInterval(()=>{
                 auth_time--;
                 // console.log(auth_time);
@@ -655,7 +611,6 @@ export default {
                     clearInterval(timer);
                     this.sendAuthCode=true;
                     this.auth_time=60;
-                    // alert(this.auth_time);
                     clearInterval(timer);
                 }
             },1000)
@@ -666,31 +621,30 @@ export default {
             this.dialogVisible1=false;
             this.personData.verification=false;
             this.show=true;
-            // this.$router.push('/设置');
             this.tagTitle='个人资料';
         },
         searchEmp(){
-            // console.log(JSON.stringify(this.form1));
             this.$axios.post(request.testUrl+"/platform/auth2/adminUser/pageList",JSON.stringify(this.form1))
             .then(res=>{
-                // console.log(res.data.data.records);
                 this.empData=res.data.data.records;
                 this.form1={};
             })
         },
         //新增员工按钮
         addEmp(){
-            this.dialogAdd=true;
+            this.$nextTick(()=>{
+                if (this.$refs.merchantForm !== undefined){
+                    this.$refs.merchantForm.resetFields();//等弹窗里的form表单的dom渲染完在执行this.$refs.staffForm.resetFields()，去除验证
+                }
+            });
+            this.dialogAdd=true;   
         },
         goDetails(id){
             // alert(id)
         },
         deleteEmp(id){
-            // this.empData.splice(i,1);
-            // alert(id);
             this.$axios.delete(request.testUrl+"/platform/auth2/adminUser/"+id)
             .then(res=>{
-                // console.log(res.data);
                 if(res.data.code==0){
                     this.$message({
                         type:'success',
@@ -701,23 +655,27 @@ export default {
             })
         },
         save(){
-            alert('消息通知中的保存');
+            // alert('消息通知中的保存');
             this.$message({
                 message:'保存成功',
                 type:'success'
             });
 
         },
+        //取消按钮清空数据
         cancel(){
             this.dialogAdd=false;
+            this.$nextTick(()=>{
+                this.$refs.merchantForm.resetFields();
+            })
+            // this.reload();
         },
          //增加提示
         addpromptList(){
             if(this.num==2){
-                alert('一个人最多可以设置3个不同手机号接受信息');
+                // alert('一个人最多可以设置3个不同手机号接受信息');
                 return;
             }
-            // alert('增加!');
             this.form2.telPhoneList.push({
             });
             this.num=this.form2.telPhoneList.length-1;
@@ -725,7 +683,6 @@ export default {
         },
         //删除
         deletepromptList(item){
-            // alert('减少!');
             var index = this.form2.telPhoneList.indexOf(item)
             if (index !== -1) {
                 this.form2.telPhoneList.splice(index, 1)
@@ -733,11 +690,9 @@ export default {
             this.num=this.form2.telPhoneList.length-1;                        
         },
         handleCheckedListChange(){
-
         },
         //修改密码
         updatePwd(){
-            // alert('修改密码');
             console.log('修改密码');
             this.show=false;
             this.tagTitle='账号安全';
@@ -746,36 +701,28 @@ export default {
         },
         //修改手机
         updateTel(){
-            // alert('修改手机');
             this.tagTitle='绑定手机';
             this.show2=false;
             this.showTel=true;
         },
         recevie(){
-            // alert('获取验证码');
             //隐藏获取手机验证码 显示倒计时
             this.sendAuthCode=false;
             var auth_time=parseInt(this.auth_time);
             var timer=setInterval(()=>{
                 auth_time--;
-                // console.log(auth_time);
                 this.auth_time=auth_time;
                 if(auth_time<=0){
                     clearInterval(timer);
                     this.sendAuthCode=true;
                     this.auth_time=60;
-                    // alert(this.auth_time);
                     clearInterval(timer);
                 }
             },1000);
         },
         confirmUpdate(form){
-            // alert('确认修改');
              this.$refs.form.validate((valid) => {
-                //  console.log(valid);
                 if (valid) {
-                    // alert('修改成功');
-                    // this.form={};
                     this.$message({
                         message:'修改成功',
                         type:'success'
@@ -783,8 +730,8 @@ export default {
                     var timer=setTimeout(()=>{
                         this.show1=false;
                         this.show=true;
+                        clearTimeout(timer)
                     },1000);
-                    // clearTimeout(timer);
                     
                 } else {
                     console.log('error submit!!');
@@ -794,85 +741,60 @@ export default {
         },
         //解绑手机
         untied(){
-            // alert('解绑手机');
             this.dialogVisibleAccount=true;
         },
         //修改手机获得验证码
         getyzCode(){
-            alert('获得验证码');
+            // alert('获得验证码');
             //隐藏获取手机验证码 显示倒计时
             this.sendAuthCode=false;
             var auth_time=parseInt(this.auth_time);
             var timer=setInterval(()=>{
                 auth_time--;
-                // console.log(auth_time);
                 this.auth_time=auth_time;
                 if(auth_time<=0){
                     clearInterval(timer);
                     this.sendAuthCode=true;
                     this.auth_time=60;
-                    // alert(this.auth_time);
                     clearInterval(timer);
                 }
             },1000);
         },
         telNextStep(){
-            alert('修改手机号码之后的下一步');
             this.updateTelInfo=false;
             this.updateSuccess=true;
             this.form3={};
-            var timer=setTimeout(()=>{
-                // this.updateSuccess=false;
-                // this.updateTelInfo=true;
-            },1000);
-            // clearTimeout(timer);
-            // this.$router.push('/设置');
         },
         //新增员工保存
         submitForm(merchantForm) {
-            // console.log(this.merchantForm);
-            // console.log( this.$refs.merchantForm.validate);
-            // this.$refs.merchantForm.validate((valid)=>{
-            //     alert(valid+'123');
-            // });
-            // console.log(this.dialogAdd);
-          
-            // this.$refs.merchantForm.validate((valid) => {
-            //     console.log(22);
-            //     alert('添加员工成功了吗')
-            //     if (valid) {
-            //         alert('添加员工成功')
-            //         console.log(this.dialogAdd);
-            //         this.dialogAdd=false;
-            //         // alert('submit!');
-            //         this.merchantForm={};
-            //         this.$message({
-            //             message:'添加成功',
-            //             type:'success'
-            //         });
-            //     } else {
-            //         console.log('error submit!!');
-            //         return false;
-            //     }
-            // });
-            this.$axios.post(request.testUrl+"/platform/auth2/adminUser/add",JSON.stringify({
-                mobile:this.merchantForm.telPhone,
-                position:this.merchantForm.position,
-                username:this.merchantForm.empAccount,
-                realname:this.merchantForm.name,
-                password:this.merchantForm.checkPass
-            })).then(res=>{
-                console.log(res.data);
-                    this.dialogAdd=false;
-                    if(res.data.code==0){
-                        this.$message({
-                            type:'success',
-                            message:'新增成功'
-                    });
-                    this.merchantForm={};
+            this.$refs.merchantForm.validate((valid)=>{
+                if(valid){
+                }else{
+                    this.$message({
+                        type:'error',
+                        message:'新增保存失败'
+                    })
+                    return ;
                 }
             })
-      }
+            this.$axios.post(request.testUrl+"/platform/auth2/adminUser/add",JSON.stringify({
+                        mobile:this.merchantForm.telPhone,
+                        position:this.merchantForm.position,
+                        username:this.merchantForm.empAccount,
+                        realname:this.merchantForm.name,
+                        password:this.merchantForm.checkPass
+                        })).then(res=>{
+                            // console.log(res.data);
+                                this.dialogAdd=false;
+                                if(res.data.code==0){
+                                    this.$message({
+                                        type:'success',
+                                        message:'新增成功'
+                                });
+                                this.renderEmp();
+                            }
+            })
+        }
     }
 }
 </script>
@@ -899,14 +821,14 @@ export default {
     }
     /* 1 119 213 */
     .tabs{
-        width:80%;
-        height:900px;
+        width:90%;
+        height:800px;
         padding-left:40px;
         /* background-color: pink; */
     }
     .content{
-        height:900px;
-        overflow: hidden;
+        /* height:600px!important; */
+        margin-top: 46px!important;
     }
     .el-button--primary {
     color: #fff!important;
@@ -930,20 +852,10 @@ export default {
     .empInfo{
         width:600px;
         margin:10px auto 0;
-        /* background-color: pink; */
     }
-    /* .perPic{
-        width:80px;
-        height:80px;
-    } */
-    /* .addEmp{
-        float:right;
-        margin-bottom:30px;
-    } */
     .empTable{
         width:100%;
         height:auto;
-        /* background-color: pink; */
         margin:20px auto 0;
     }
     .empTable .addEmp{
@@ -960,17 +872,13 @@ export default {
     /* 添加减少符号样式 */
     .use{
         display: inline-block;
-        /* width:30px;
-        height:30px; */
         font-size:26px;
-        /* margin-top:3px; */
         margin-left:10px;
         color:#409EFF;
         line-height: 20px;
         vertical-align: middle;
     }
     .save{
-        /* float:right; */
         display: block;
         margin-left:350px;
     }
@@ -981,7 +889,6 @@ export default {
         height:386px;
         overflow: hidden;
         margin-top:10px;
-        /* background-color: pink; */
         border:1px solid #ccc;
         border-radius:10px;
         background-color:#fff;
@@ -994,9 +901,7 @@ export default {
         margin:50px 40px 0 80px;
         border:1px solid #bbb;
         background-color:#fff;
-        border-radius:5px;
-        /* box-shadow:0px 0px 0px 2px rgba(1,1,1,0.6); */
-        
+        border-radius:5px; 
     }
     .accountSafe .box1{
         box-shadow:0px 0px 0px 4px rgba(1,1,1,0.05);
@@ -1027,9 +932,6 @@ export default {
         display:flex;
         flex-direction: column;
         justify-content: center;
-        justify-content: center;
-        /* background-color: pink; */
-
     }
     .con span{
         font-size:68px;
@@ -1054,7 +956,6 @@ export default {
     .pwdBtn{
         width:60%;
         border:1px solid #409eff;
-        /* margin-top:10px; */
         margin:10px auto 0;
     }
     .phoneBtn button{
@@ -1066,7 +967,6 @@ export default {
       .updateInfo{
         font-size:14px;
         width:900px;
-        /* background-color: pink; */
         margin-left:90px;
         margin-bottom:20px;
     }
@@ -1074,18 +974,12 @@ export default {
         margin:0 80px 0 20px;
     }
     .updateTel{
-        /* background-color: pink; */
-        /* display: flex; */
         width:99%;
-        /* height:386px; */
         height:auto;
-        /* overflow: hidden; */
         margin-top:10px;
         padding:35px 0 0 75px;
-        /* background-color: pink; */
         border:1px solid #ccc;
         border-radius:10px;
-        /* background-color:#fff; */
         margin-left:10px;
     }
     .telHead{
@@ -1095,7 +989,6 @@ export default {
         height:90px;
         border-bottom: 1px solid #aaa;
         padding-bottom:20px;
-        /* background-color: #ff0; */
     }
     .circleTel{
         display: flex;
@@ -1126,5 +1019,17 @@ export default {
         font-size:14px;
         color:#000;
         margin: 110px 0 90px 50px;
+    }
+    .infoForm >>> .el-form-item.el-form-item--small{
+        margin-top:30px;
+    }
+    .infoForm >>> .el-form-item__error{
+        margin-left: 105px;
+        margin-top: 6px;
+    }
+    .setting >>> .tabs[data-v-b5790acc] {
+    width: 90%;
+    height: 577px;
+    padding-left: 40px;
     }
 </style>

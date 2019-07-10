@@ -10,9 +10,9 @@ import './assets/css/icon.css';
 import './components/common/directives';
 import "babel-polyfill";
 import './assets/fonts/iconfont.css';//引入阿里图标
-
 import { Message, Loading } from 'element-ui';//引入elment的loading
-
+//引入百度地图
+import BaiduMap from 'vue-baidu-map'
 import qs from 'qs';//qs 用来解决vue中post请求以 a=a&b=b 的格式
 
 //引入全局配置服务器域名
@@ -28,6 +28,9 @@ Vue.config.productionTip = false
 Vue.use(ElementUI, {
     size: 'small'
 });
+Vue.use(BaiduMap,{
+	ak:'RWH9ZFBykv6AjsDurEoj62wKvoVStp9P'
+})
 Vue.prototype.$axios = axios;
 
 

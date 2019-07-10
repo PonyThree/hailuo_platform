@@ -145,6 +145,14 @@ export default {
       return this.$route.path.replace("/", "");
     }
   },
+  // watch:{
+  //           $route(to,from){
+  //               console.log(from);
+  //               // if (from.path == "/零钱提现") {
+  //               //         this.renderData(this.$route.query.id)
+  //               // }
+  //           }
+  // },
   created() {
     // 通过 Event Bus 进行组件间通信，来折叠侧边栏
     bus.$on("collapse", msg => {
@@ -176,5 +184,4 @@ export default {
     background: rgb(240,240,240)!important;
     color: #000!important;  
 }
-
 </style>

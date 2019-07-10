@@ -6,9 +6,9 @@
           <div class="header">
             <p>基本信息</p>
           </div>
-          <el-row class="infoDetails">
+          <el-row class="infoDetails" v-if="activities.length>=1">
             <el-col :span="8">
-              <div class="infoDetailsdes">客户昵称：{{ userName }}</div>
+              <div class="infoDetailsdes">客户昵称：{{userName }}</div>
             </el-col>
             <el-col :span="8">
               <div class="infoDetailsdes">联系电话：{{ mobile }}</div>
@@ -29,23 +29,14 @@
           <div class="header">
             <p>钱包交易订单详情</p>
           </div>
-          <div style="height: 400px;overflow-y:auto;" class="stepsPadding">
+          <div style="height: 400px;overflow-y:auto;" class="stepsPadding" v-if="activities.length>=1">
             <el-steps direction="vertical" style>
               <el-step
                 v-for="item in activities"
                 :key="item.recordId"
                 :description="desc(item)"
-                style="font-size:16px;"
-              >
-                <!-- <template>
-                               <div>
-                                    <span>{{item.truckSpaceName}}---{{item.useForName}}{{item.useTime}}</span>
-                               </div>
-                </template>-->
+                style="font-size:16px;">
               </el-step>
-              <!-- <el-step description="A408车位——落位退款——2019-5-2 16:31:53——+￥2000.00"></el-step>
-                        <el-step description="A401车位——落位——2019-5-2 16:31:53——-￥2000.00"></el-step>
-              <el-step description="A402车位——认购——2019-5-2 16:31:53——-￥2000.00"></el-step>-->
             </el-steps>
           </div>
         </div>
@@ -86,15 +77,19 @@ export default {
           }
         )
         .then(res => {
-          console.log(res.data.data);
-          this.activities = res.data.data;
-          this.userName = res.data.data[0].userName;
-          this.mobile = res.data.data[0].mobile;
-          this.balance = res.data.data[0].balance;
+          if(res.data.code==0){
+            if(res.data.data!=[]){
+              this.userName=res.data.data[0].userName;
+              this.mobile = res.data.data[0].mobile;
+              this.balance = res.data.data[0].balance;
+              this.activities=res.data.data;
+            }else{
+              this.userName='';
+            }
+          }
         });
     },
     desc(item) {
-      console.log(item.truckSpaceName);
       return (
         item.truckSpaceName +
         "------" +
@@ -109,7 +104,7 @@ export default {
   watch: {
     $route(to, from) {
       if (from.path == "/用户钱包管理") {
-        this.renderData(this.$route.query.userId);
+        this.renderData(this.$route.query.userId)
       }
     }
   },

@@ -66,8 +66,6 @@ export default {
     },
     methods:{
          renderData(){
-            // var id=this.$route.query.id;
-            // console.log(id);
             this.$axios.get(request.testUrl+"/finance/auth2/applyMoney/selOneData",{
                 params:{
                     id:this.id
@@ -75,15 +73,6 @@ export default {
             }).then(res=>{
                 console.log(res.data.data);
                 this.form={};
-                // console.log(this.form);
-                // this.projectName=res.data.data.projectName;
-                // this.applicant=res.data.data.applicant;
-                // this.applicantPhone=res.data.data.applicantPhone;
-                // this.canOutMoney=res.data.data.canOutMoney;
-                // this.outMoney=res.data.data.outMoney;
-                // this.accountName=res.data.data.accountName;
-                // this.remarks=res.data.data.remarks;
-                // this.status=res.data.data.status;
                 this.form=res.data.data;
             })
         },

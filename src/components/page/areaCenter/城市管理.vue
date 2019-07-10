@@ -3,8 +3,8 @@
         <h2>区域管理>   &nbsp;城市管理></h2>
         <div style='margin:20px auto 0;width:80%;overflow:hidden;'>
             <div class='exportBtn'>
-                <!-- <el-button type='primary' @click='del'>删除</el-button> -->
-                <el-button type='primary' @click='exportData'>导出</el-button>
+                <el-button type='primary' @click='del'>删除</el-button>
+                <el-button type='primary' @click='exportData' @>导出</el-button>
             <!-- <a :href="serverUrl+'/adminActivity/export?status='+this.form.status+'&activityTypeId='+this.form.activityTypeId" style="margin-left: 50px;" class="flag" @click='exportData'>导出</a> -->
             </div>
             <div class="searchHead" style='width:100%;'>
@@ -12,29 +12,20 @@
                     <el-form-item label="区域:" prop='region' style='margin-left:10px;'>
                         <el-select v-model="form.region" placeholder="请选择" @change="provinceChange">
                             <el-option  :label="item.name" :value="item.id" v-for='(item,index) in provinceList' :key="index"></el-option>
-                            <!-- <el-option  label="重庆" value="1"></el-option>
-                            <el-option  label="武汉" value="2"></el-option>
-                            <el-option  label="上海" value="3"></el-option> -->
                         </el-select>
                     </el-form-item>
                     <el-form-item label="城市:" prop='city' style='margin-left:10px;'>
                         <el-select v-model="form.city" placeholder="请选择" @change="cityChange">
                             <el-option  :label="item.name"  v-for='(item,index) in cityList' :value="item.id" :key="index"></el-option>
-                            <!-- <el-option  label="重庆" value="1"></el-option>
-                            <el-option  label="武汉" value="2"></el-option>
-                            <el-option  label="上海" value="3"></el-option> -->
                         </el-select>
                     </el-form-item>
                     <el-form-item label="地区:" prop='area' style='margin-left:10px;'>
                         <el-select v-model="form.area" placeholder="请选择" >
                             <el-option   :label="item.name"  v-for='(item,index) in areaList' :value="item.id" :key="index"></el-option>
-                            <!-- <el-option  label="渝中区" value="1"></el-option>
-                            <el-option  label="渝北区" value="2"></el-option>
-                            <el-option  label="XXX区" value="3"></el-option> -->
                         </el-select>
                     </el-form-item>
                     <el-form-item style='margin-left:56px;'>
-                        <el-input placeholder="请输入项目地址" style='width:200px' v-model='form.address'></el-input>
+                        <el-input placeholder="请输入项目地址" style='width:200px' v-model='form.address1'></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button @click='search'>查询</el-button>
@@ -86,6 +77,9 @@
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
+        <!--分页器-->
+        <el-pagination background  :current-page.sync='page' :page-sizes="[5, 10, 15]"  layout="total, sizes, prev, pager, next,jumper" :total="total" class='pageStyle' @size-change="sizeChange" @current-change="currentChange"> 
+        </el-pagination>
         <!-- <div class="map">
             <div id="allmap"></div>
             <div id="r-result">
@@ -96,8 +90,6 @@
         </div> -->
     </div>
 </template>
-
-
 <script>
 import loadBMap from '../../../assets/js/loadBMap';
 export default {
@@ -106,7 +98,8 @@ export default {
         return {
             loading:false,
             page:1,
-            pageSize:6,
+            pageSize:10,
+            total:0,
             myMap:null,
             showMap:false,
             dialogVisible:false,
@@ -124,7 +117,7 @@ export default {
                 longitude:'103.968837',
                 // 纬度
                 latitude:'30.604888',
-                address:''
+                address1:''
 
             },
             areaData:[]
@@ -132,39 +125,39 @@ export default {
     },
     mounted(){
         // this.initMap();
-        this.renderAreaList();
+        this.renderAreaList(this.page,this.pageSize);
         this.getProvinceList();
     },
     methods:{
         // 城市管理列表
-        renderAreaList(){
-            this.$axios.get(request.testUrl+'/project/auth2/project/projectList',{
-                params:{
-                    page:this.page,
-                    pageSize:this.pageSize
-                }
-            }).then(res=>{
+        renderAreaList(n1,n2){
+            let data={
+             
+            }
+            this.$axios.get(request.testUrl+'/project/auth2/project/projectList?page=1&pageSize=10').then(res=>{
+                console.log(res.data.data)
                 this.loading=true;
-                setTimeout(()=>{
+                var lock=setTimeout(()=>{
                     this.loading=false;
                     this.areaData=res.data.data.records;
+                    this.total=res.data.data.total;
+                    clearTimeout(lock)
                 },1000)
                 // console.log(res.data.data);
                 
             })
         },
-        //获取省列表
-        getProvinceList(){
-            this.$axios.get(request.testUrl+'/project/sysRegion/select',{
-                params:{
-                    parentId:0
-                }
-            }).then(res=>{
-                // console.log(res.data.data)
-                this.provinceList=res.data.data;
-                // console.log(this.provinceList)
-            })
+        currentChange(page){
+            // alert(page)
+			this.page=page;
+			this.renderAreaList(this.page,this.pageSize,);
         },
+        sizeChange(pageSize){
+            // alert(pageSize)
+			this.pageSize=pageSize
+			this.renderAreaList(this.page,this.pageSize)
+        },
+        
         // initMap(){
         //     loadBMap('qzN1OxHV2ozVYx12WsGD2I7Q0bdQDVo1')
         //     .then(()=>{
@@ -202,24 +195,43 @@ export default {
         },
         //条件查询
         search(){
-            // alert(this.form.address);
-            this.$axios.get(request.testUrl+'/project/auth2/project/projectList',{
-                params:{
-                    provinceId:this.form.region,
-                    cityId:this.form.city,
-                    countyId:this.form.erea,
-                    address:this.form.address,
-                    page:this.page,
-                    pageSize:this.pageSize
-
-                }
-            })
-            .then(res=>{
-                // console.log(res.data.data);
+            var obj={};
+            if(this.form.address1!=""){
+                obj.address=this.form.address1;
+            }
+            if(this.form.region!=undefined){
+                obj.provinceId=this.form.region;
+            }
+            if(this.form.city!=undefined){
+                obj.cityId=this.form.city;
+            }
+            if(this.form.area!=undefined){
+                obj.countyId=this.form.area;
+            }
+            this.$axios({
+                method:'get',
+                url:request.testUrl+"/project/auth2/project/projectList",
+                params:obj
+            }).then(res=>{
+                console.log(res.data.data)
                 this.areaData=res.data.data.records;
+                this.total=res.data.data.total
+                this.form={}
             })
         },
-        // 区域渲染
+        //获取省列表
+        getProvinceList(){
+            this.$axios.get(request.testUrl+'/project/sysRegion/select',{
+                params:{
+                    parentId:0
+                }
+            }).then(res=>{
+                // console.log(res.data.data)
+                this.provinceList=res.data.data;
+                // console.log(this.provinceList)
+            })
+        },
+        // 市区域渲染
         provinceChange(){
             // alert('改变了');
             // console.log(this.form.region);
@@ -234,6 +246,7 @@ export default {
                 console.log(this.cityList)
             })
         },
+        //区域渲染
         cityChange(){
             // console.log(this.form.city);
             //得到地区
@@ -340,6 +353,9 @@ export default {
     	width: 56px;
     	text-align: center;
     	margin-left: 20px;
+    }
+    .pageStyle{
+        text-align: center
     }
 </style>
 

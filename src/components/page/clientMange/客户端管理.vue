@@ -1,111 +1,115 @@
 <template>
     <div>
        <h2>客户端管理</h2>
-       <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
-           <!-- 第三方链接 -->
-            <div class="content">
-                    <!-- 头部标题 -->
-                    <div class="conTil">
-                        <span>第三方链接</span>
-                        <el-button style='color:rgb(25,158,216)' size:='small' @click='addlj'>新增</el-button>
+       <div v-loading="loading">
+            <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0' >
+                <!-- 第三方链接 -->
+                    <div class="content">
+                            <!-- 头部标题 -->
+                            <div class="conTil">
+                                <span>第三方链接</span>
+                                <el-button style='color:rgb(25,158,216)' size:='small' @click='addlj'>新增</el-button>
+                            </div>
+                            <!-- 链接列表 -->
+                            <div class="conList" >
+                                <div class="list" v-for="(item,index) in linkList" :key="index" v-if="linkList.length<=6">
+                                    <div class="pic">
+                                        <!-- <image :src='item.imgUrl'></image> -->
+                                        <img :src="item.image" alt="跳转地址"/>
+                                        <!-- <img src="../../../assets/img/headCar.png" alt=""> -->
+                                    </div>
+                                    <div class='desc'>
+                                        <p>{{item.linkName}}</p>
+                                        <p>排序:{{item.sort}}</p>
+                                    </div>
+                                    <div class='btn'>
+                                        <span v-show='1==2'>{{item.id}}</span>
+                                        <el-button @click="dellj(item.id)" type='primary' size='small'>删除</el-button>
+                                        <el-button @click="updatelj(item.id)" type='primary' size='small'>修改</el-button>
+                                    </div>
+                                </div>
+                            </div> 
+                            
                     </div>
-                    <!-- 链接列表 -->
-                    <div class="conList" v-loading="loading">
-                        <div class="list" v-for="(item,index) in linkList" :key="index">
-                            <div class="pic">
-                                <!-- <image :src='item.imgUrl'></image> -->
-                                <img :src="item.image" alt="跳转地址"/>
-                                <!-- <img src="../../../assets/img/headCar.png" alt=""> -->
+                    <!-- 分页 -->
+                    <!-- <div style='width:80%;margin-top:10px;text-align:center;margin-left: 100px;'>
+                                
+                                <el-pagination
+                                    background
+                                    layout="prev, pager, next"
+                                    :total='total' class='page'  @current-change="currentChange" :current-page="currentPage" :page-size="pageSize"  >
+                                </el-pagination>
+                    </div>  -->
+            </div>
+            <!-- 首页咨询 -->
+            <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
+                <!-- 首页咨询   -->
+                    <div class="content">
+                            <!-- 头部标题 -->
+                            <div class="conTil">
+                                <span>首页资讯</span>
+                                <el-button style='color:rgb(25,158,216)' size:='small' @click='addzx'>新增</el-button>
                             </div>
-                            <div class='desc'>
-                                <p>{{item.linkName}}</p>
-                                <p>排序:{{item.sort}}</p>
+                            <!-- 咨询列表 -->
+                            <div class="conList">
+                                <div class="list" v-for="(item,index) in advisoryList" :key="index">
+                                    <div class="pic">
+                                        <img :src='item.image'/>
+                                        <!-- <img src="../../../assets/img/headCar.png" alt=""> -->
+                                    </div>
+                                    <div class='desc'>
+                                        <p>{{item.linkName}}</p>
+                                    </div>
+                                    <div v-if='1==2'>
+                                        <span>{{item.id}}</span>
+                                    </div>
+                                    <div class='btn'>
+                                        <el-button @click="delzx(advisoryList[index].id)" type='primary' size='small'>删除</el-button>
+                                        <el-button @click="updatezx(advisoryList[index].id)" type='primary' size='small'>修改</el-button>
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                    </div>
+            </div>
+                <!-- 平台软文 -->
+            <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
+                <!-- 平台软文   -->
+                    <div class="content">
+                            <!-- 头部标题 -->
+                            <div class="conTil">
+                                <span>平台软文</span>
+                                <el-button style='color:rgb(25,158,216)' size:='small' @click='addrw'>新增</el-button>
                             </div>
-                            <div class='btn'>
-                                <span v-show='1==2'>{{item.id}}</span>
-                                <el-button @click="dellj(item.id)" type='primary' size='small'>删除</el-button>
-                                <el-button @click="updatelj(item.id)" type='primary' size='small'>修改</el-button>
-                            </div>
-                        </div>
+                            <!-- 平台软文列表 -->
+                            <div class="softTxt">
+                                <div v-for='(item,index) in softTextList' class='softList' :key="index">
+                                    <span>{{index+1}}.{{item.linkName}}</span>
+                                    <el-button type='text' style='color: #199ED8' @click='delrw(item.id)'>删除</el-button>
+                                    <span v-show='1==2'>{{item.id}}</span>
+                                    <el-button type='text' style='color: #199ED8' @click='updaterw(item.id)'>修改</el-button>
+                                </div>
+                            </div>   
+                    </div>
+                    <div style='width:80%;margin-top:10px;text-align:center;margin-left: 100px;'>
+                                <!-- 分页 -->
+                                <!-- @size-change="sizeChange" -->
+                                <!-- <el-pagination
+                                    background
+                                    layout="prev, pager, next"
+                                    :total="total1"  @current-change="currentChange1" :current-page="currentPage1" :page-size="pageSize1">
+                                </el-pagination> -->
+                                <!--分页器-->
+                                <el-pagination background  :current-page.sync='currentPage1' :page-sizes="[5, 10, 15]"  layout="total, sizes, prev, pager, next,jumper" :total="total1" class='page' @size-change="sizeChange" @current-change="currentChange"> 
+                                </el-pagination>
                     </div> 
-                    
             </div>
-            <div style='width:80%;margin-top:10px;text-align:center;margin-left: 100px;'>
-                        <!-- 分页 -->
-                        <el-pagination
-                            background
-                            layout="prev, pager, next"
-                            :total='total' class='page'  @current-change="currentChange" :current-page="currentPage" :page-size="pageSize"  >
-                        </el-pagination>
-            </div> 
-       </div>
-       <!-- 首页咨询 -->
-       <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
-           <!-- 首页咨询   -->
-            <div class="content">
-                    <!-- 头部标题 -->
-                    <div class="conTil">
-                        <span>首页咨询</span>
-                        <el-button style='color:rgb(25,158,216)' size:='small' @click='addzx'>新增</el-button>
-                    </div>
-                    <!-- 咨询列表 -->
-                    <div class="conList" v-loading="loading">
-                        <div class="list" v-for="(item,index) in advisoryList" :key="index">
-                            <div class="pic">
-                                <img :src='item.image'/>
-                                <!-- <img src="../../../assets/img/headCar.png" alt=""> -->
-                            </div>
-                            <div class='desc'>
-                                <p>{{item.linkName}}</p>
-                            </div>
-                            <div v-if='1==2'>
-                                <span>{{item.id}}</span>
-                            </div>
-                            <div class='btn'>
-                                <el-button @click="delzx(advisoryList[index].id)" type='primary' size='small'>删除</el-button>
-                                <el-button @click="updatezx(advisoryList[index].id)" type='primary' size='small'>修改</el-button>
-                            </div>
-                        </div>
-                    </div> 
-                    
+            <!-- 确定和取消按钮 -->
+            <div class="bomBtns">
+                <el-button type='primary' @click='determine()' size='middle'>确定</el-button>
+                <el-button @click='cancel' size='middle'>取消</el-button>
             </div>
-       </div>
-        <!-- 平台软文 -->
-        <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
-           <!-- 平台软文   -->
-            <div class="content">
-                    <!-- 头部标题 -->
-                    <div class="conTil">
-                        <span>平台软文</span>
-                        <el-button style='color:rgb(25,158,216)' size:='small' @click='addrw'>新增</el-button>
-                    </div>
-                    <!-- 平台软文列表 -->
-                    <div class="softTxt" v-loading="loading">
-                        <div v-for='(item,index) in softTextList' class='softList' :key="index">
-                            <span>{{index+1}}.{{item.linkName}}</span>
-                            <el-button type='text' style='color: #199ED8' @click='delrw(item.id)'>删除</el-button>
-                            <span v-show='1==2'>{{item.id}}</span>
-                            <el-button type='text' style='color: #199ED8' @click='updaterw(item.id)'>修改</el-button>
-                        </div>
-                    </div>
-                   
-                    
-            </div>
-            <div style='width:80%;margin-top:10px;text-align:center;margin-left: 100px;'>
-                        <!-- 分页 -->
-                        <!-- @size-change="sizeChange" -->
-                        <el-pagination
-                            background
-                            layout="prev, pager, next"
-                            :total="total1"  @current-change="currentChange1" :current-page="currentPage1" :page-size="pageSize1">
-                        </el-pagination>
-            </div> 
-       </div>
-       <!-- 确定和取消按钮 -->
-       <div class="bomBtns">
-           <el-button type='primary' @click='determine()' size='middle'>确定</el-button>
-           <el-button @click='cancel' size='middle'>取消</el-button>
-       </div>
+        </div>
        <!-- 平台软文新增对话框 -->
         <el-dialog title="新增" :visible.sync="rweditVisible" width="25%">
             <el-form  :model="form" ref="form" label-width="116px" :label-position="labelPosition" :rules='rules'>
@@ -182,7 +186,7 @@
                         <div>
                              <span slot="footer" class="dialog-footer">
                                 <el-button type="primary" @click="savePicUpdate(form)">确定</el-button>
-                                <el-button @click="rwUpdateVisible = false">取 消</el-button> 
+                                <el-button @click="rwcancle">取 消</el-button> 
                             </span>
                         </div>
                     </template>
@@ -227,7 +231,7 @@
                         <div>
                             <span slot="footer" class="dialog-footer">
                                 <el-button type="primary" @click="savePic1(form1)">确定</el-button>
-                                <el-button @click="linkeditVisible = false">取 消</el-button> 
+                                <el-button @click="linkCancle">取 消</el-button> 
                             </span>
                         </div>
                     </template>
@@ -273,7 +277,7 @@
                         <div>
                             <span slot="footer" class="dialog-footer">
                                 <el-button type="primary" @click="savePic1Update(form1)">确定</el-button>
-                                <el-button @click="linkupdateVisible = false">取 消</el-button> 
+                                <el-button @click="linkUpdateCancle">取 消</el-button> 
                             </span>
                         </div>
                     </template>
@@ -317,7 +321,7 @@
                         <div>
                             <span slot="footer" class="dialog-footer">
                                 <el-button type="primary" @click="savePic3(form3)">确定</el-button>
-                                <el-button @click="zxeditVisible = false">取 消</el-button> 
+                                <el-button @click="zxcancle">取 消</el-button> 
                             </span>
                         </div>
                     </template>
@@ -361,7 +365,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="savePic3Update(form3)">确定</el-button>
-                <el-button @click="zxupdateVisible = false">取 消</el-button> 
+                <el-button @click="zxupdateCancle">取 消</el-button> 
             </span>
         </el-dialog> 
     </div>
@@ -394,7 +398,7 @@ export default {
             linkeditVisible:false,
             linkupdateVisible:false,
             form1:{},
-            total:50,
+            total:10,
             fileList1:[],
             //咨询
             form3:{
@@ -433,42 +437,54 @@ export default {
     },
     created(){
         //咨询列表
-        this.showzxList();
-        //软文列表
-        this.showrwList();
-        //链接列表渲染
-        this.showLinkList();
+        // this.showzxList();
+        // //软文列表
+        // this.showrwList();
+        // //链接列表渲染
+        // this.showLinkList();
+        this.renderData();
     },
     methods:{
+        currentChange(currentPage1){
+            alert(currentPage1)
+			this.currentPage1=currentPage1;
+            // this.renderData(this.pageSize,this.currentPage);
+            this.showrwList(this.currentPage1,this.pageSize1);
+        },
+        sizeChange(pageSize1){
+            alert(pageSize1)
+			this.pageSize1=pageSize1
+            // this.renderData(this.pageSize,this.currentPage)
+            this.showrwList(this.currentPage1,this.pageSize1);
+        },
+        renderData(){
+            this.loading=true;
+            var lock=setTimeout(()=>{
+                this.showLinkList();
+                this.showzxList();
+                this.showrwList(this.currentPage1,this.pageSize1);
+                this.loading=false;
+                clearTimeout(lock);
+            },1000)
+        },
         // 咨询列表渲染
         showzxList(){
             this.$axios.get(request.testUrl+'/platform/auth2/information/findList')
             .then(res=>{
-                // console.log(res.data.data);
-                this.loading=true;
-                setTimeout(()=>{
-                    this.loading=false;
                     this.advisoryList=res.data.data;
-                },1000);
             })
         },
         //渲染软文列表
-        showrwList(){
+        showrwList(n1,n2){
             this.$axios.get(request.testUrl+'/platform/auth2/softArticle/pageFind',{
                 params:{
-                    page:this.currentPage1,
-                    pageSize:this.pageSize1
+                    page:n1,
+                    pageSize:n2
                 }
             })
             .then(res=>{
-                this.loading=true;
-                setTimeout(()=>{
-                    this.loading=false;
                     this.softTextList=res.data.data.records;
                     this.total1=res.data.data.total;
-                },1000);
-                // console.log(res.data.data.records);
-               
             })
         },
         // 链接列表渲染
@@ -480,15 +496,8 @@ export default {
                 }
             })
             .then(res=>{
-                this.loading=true;
-                setTimeout(()=>{
-                    this.loading=false;
                     this.linkList=res.data.data.records;
                     this.total=res.data.data.total;
-                },1000);
-                // console.log(res.data.data.total);
-                
-                // alert(this.total);
             })
         },
         // 链接系列form1
@@ -521,47 +530,50 @@ export default {
             },
             //链接新增保存
             savePic1(form1) {
-                this.$refs.form1.validate((valid) => {
+                console.log(this.linkList.length);
+                if(this.linkList.length<6){
+                    this.$refs.form1.validate((valid) => {
                         if (valid) {
-                            // alert('新增成功!');
                             // this.form1={};
                             this.linkeditVisible=false;
                         } else {
                             console.log('error submit!!');
                             return false;
                         }
-                });
-                var params = new URLSearchParams();
-                params.append('image', this.form1.image);
-                params.append('href', this.form1.href);
-                params.append('linkName', this.form1.linkName);
-                params.append('sort', this.form1.sort);
-                this.$axios.post(request.testUrl+"/platform/auth2/thirdLinks/doInsertOrUpdate",params)
-                	.then(res=>{
-                		if(res.data.code==0){
-                  			//console.log(res)
-                			this.linkeditVisible=false;
-                			// this.reload();
-                		}else{
-                			this.$message({
-                				type: 'success',
-                				message: '新增成功'
-                			});
-                		}
-                })
-                this.reload();
+                    });
+                    var params = new URLSearchParams();
+                    params.append('image', this.form1.image);
+                    params.append('href', this.form1.href);
+                    params.append('linkName', this.form1.linkName);
+                    params.append('sort', this.form1.sort);
+                    this.$axios.post(request.testUrl+"/platform/auth2/thirdLinks/doInsertOrUpdate",params)
+                        .then(res=>{
+                            if(res.data.code==0){
+                                //console.log(res)
+                                this.linkeditVisible=false;
+                                // this.reload();
+                            }else{
+                                this.$message({
+                                    type: 'success',
+                                    message: '新增成功'
+                                });
+                            }
+                    })
+                    this.reload();
+                }else{
+                    this.linkeditVisible=false;
+                    this.$message({
+                        type:'warning',
+                        message:'最多上传6个链接，如果想继续新增，请删掉前面的!'
+                    })
+                }
             },
             
             dellj(id){
-                // alert('删除'+i);
-                // this.linkList.splice(i,1);
-                // console.log(this.linkList);
                 var params=new URLSearchParams();
                 params.append('id',id);
                 this.$axios.post(request.testUrl+'/platform/auth2/thirdLinks/doDelete',params)
                 .then(res=>{
-                    // console.log(res.data.code);
-                    // console.log(this.linkList);
                     this.showLinkList();
                     if(res.data.code==0){
                         this.$message({
@@ -586,6 +598,16 @@ export default {
                     // console.log(res.data.data)
                     this.form1=res.data.data;
                 })
+            },
+            //链接新增取消按钮
+            linkCancle(){
+                this.linkeditVisible=false;
+                this.reload();
+            },
+            //链接修改取消按钮
+            linkUpdateCancle(){
+                this.linkupdateVisible=false;
+                this.reload();
             },
             //链接修改保存
             savePic1Update(form1,id){
@@ -625,8 +647,6 @@ export default {
             beforeUpload3(file) {
                 var param = new FormData(); // FormData 对象
                 param.append("file", file); // 文件对象
-                // console.log(file);
-                // console.log(request.testUrl);
                 this.$axios({
                 method: "post",
                 url: request.testUrl+"/project/auth2/image/upload",
@@ -648,7 +668,11 @@ export default {
             },
             addzx(){
                 // alert('新增');
+                // this.$nextTick(()=>{
+                    //     this.$refs.form3.restFileds()
+                // })
                 this.zxeditVisible=true;
+                // this.reload();
             },
             delzx(id){
                 // alert('删除'+id);
@@ -667,6 +691,16 @@ export default {
                     }
                 })
                 // console.log(this.advisoryList);
+            },
+            //咨询新增取消修改
+            zxcancle(){
+                this.zxeditVisible=false;
+                this.reload();
+            },
+            // 咨询修改取消
+            zxupdateCancle(){
+                this.zxupdateVisible=false;
+                this.reload();
             },
             //修改咨询
             updatezx(id){
@@ -687,7 +721,6 @@ export default {
             savePic3(form3) {
                 this.$refs.form3.validate((valid) => {
                         if (valid) {
-                            // alert('新增成功!');
                             // this.form3={};
                             this.zxeditVisible=false;
                         } else {
@@ -880,10 +913,20 @@ export default {
             },
             //全部保存
             determine(){
-                // alert('确定');
+                this.$message({
+                    type:'success',
+                    message:'保存成功'
+                })
+                this.renderData();
             },
             cancel(){
-                alert('取消');
+                // alert('取消');
+                this.reload();
+            },
+            //软文取消按钮
+            rwcancle(){
+                this.rwUpdateVisible=false;
+                this.reload();
             },
         //点击x 上传图片
         show(){
@@ -929,35 +972,15 @@ export default {
                 duration: 6000
             });
         },    
-        //链接系列form1   
-            //已有的图片删除
-            // afterRemove1(file, fileList){
-            //     this.$message({
-            //         type: 'info',
-            //         message: '已删除原有图片',
-            //         duration: 6000
-            //     });
-            // }, 
-        // sizeChange(pageSize1){
-        //     alert(pageSize1);
-        // },
         //链接当前页码
         currentChange(currentPage){
-            // alert(currentPage);
-            // if(currentPage>this.total){
-            //     this.$message({
-            //         type:'error',
-            //         message:'当前页码已超过数据量'
-            //     });
-            //     return;
-            // }
             this.currentPage=currentPage;
             this.showLinkList();
         },
         // 软文当前页码
         currentChange1(currentPage1){
             this.currentPage1=currentPage1;
-            this.showrwList();
+            this.showrwList(this.currentPage1,this.pageSize1);
         }
     } 
 

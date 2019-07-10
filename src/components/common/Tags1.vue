@@ -30,6 +30,30 @@
                 tagsList: []
             }
         },
+        created(){
+            this.setTags(this.$route);
+            // 监听关闭当前页面的标签页
+            bus.$on('close_current_tags', () => {
+                for (let i = 0, len = this.tagsList.length; i < len; i++) {
+                    const item = this.tagsList[i];
+                    if(item.path === this.$route.fullPath){
+                        if(i < len - 1){
+                            this.$router.push(this.tagsList[i+1].path);
+                        }else if(i > 0){
+                            this.$router.push(this.tagsList[i-1].path);
+                        }else{
+                            this.$router.push('/index');
+                        }
+                        this.tagsList.splice(i, 1);
+                    }
+                }
+            })
+        },
+        computed: {
+                showTags() {
+                    return this.tagsList.length > 0;
+                }
+        },
         methods: {
             isActive(path) {
                 return path === this.$route.fullPath;
@@ -65,20 +89,11 @@
                     if(this.tagsList.length >= 8){
                         this.tagsList.shift();
                     }
-                    if(route.meta.title=="项目详情"){
-                    }else{
-                        if(route.meta.title=="零钱提现" || route.meta.title=="钱包使用详情"){
-                            
-                        }else{
-                            this.tagsList.push({
-                                title: route.meta.title,
-                                path: route.fullPath,
-                                name: route.matched[1].components.default.name
-                            })
-                        }
-                        
-                    }
-                    
+                    this.tagsList.push({
+                        title: route.meta.title,
+                        path: route.fullPath,
+                        name: route.matched[1].components.default.name
+                    })
                 }
                 bus.$emit('tags', this.tagsList);
             },
@@ -86,46 +101,13 @@
                 command === 'other' ? this.closeOther() : this.closeAll();
             }
         },
-        computed: {
-            showTags() {
-                return this.tagsList.length > 0;
-            }
-        },
         watch:{
-            $route(newValue, oldValue){
-                console.log(newValue,oldValue)
-                // alert(newValue=="项目详情"&&oldValue=="项目详情")
-                if(newValue.name=="项目详情"){
-                    // this.$router.go(-1);
-                //    this.$router.push({
-                //        path:oldValue.path,
-                //        query:{
-                //            id:oldValue.id
-                //        }
-                //    })
-                }else{
-                    this.setTags(newValue);
-                }
+            $route(to,from){
+                console.log(from);
+                // if (from.path == "/零钱提现") {
+                //         this.renderData(this.$route.query.id)
+                // }
             }
-        },
-        created(){
-            this.setTags(this.$route);
-            // 监听关闭当前页面的标签页
-            bus.$on('close_current_tags', () => {
-                for (let i = 0, len = this.tagsList.length; i < len; i++) {
-                    const item = this.tagsList[i];
-                    if(item.path === this.$route.fullPath){
-                        if(i < len - 1){
-                            this.$router.push(this.tagsList[i+1].path);
-                        }else if(i > 0){
-                            this.$router.push(this.tagsList[i-1].path);
-                        }else{
-                            this.$router.push('/index');
-                        }
-                        this.tagsList.splice(i, 1);
-                    }
-                }
-            })
         }
     }
 

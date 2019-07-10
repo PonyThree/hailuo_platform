@@ -127,7 +127,7 @@ export default {
       return {
         form: {},
         tableData: [],
-        total:1000,
+        total:100,
         pageSize:10,
         currentPage:1,
         moneyCount: 0,
@@ -151,28 +151,20 @@ export default {
   },
   methods: {
     onSubmit () {
-        // alert('submit!');
-        // alert(this.form.select);
-        // var form=new FormData();
-        // var params=new URLSearchParams(form);
         var obj={};
         if(this.form.select==0){
-            // params.append('mobile',this.form.input5);
             obj.mobile=this.form.input5;
         }else{
-            // params.append('userName',this.form.input5);
             obj.userName=this.form.input5;
         }
-        // params.append('page',this.currentPage);
-        // params.append('pageSize',this.pageSize);
         obj.page=this.currentPage;
         obj.pageSize=this.pageSize;
-        // console.log(obj);
         this.$axios.get(request.testUrl+"/user/auth2/userMoney/listUserMoneyInfo",{
             params:obj
         }).then(res=>{
-            // console.log(res.data.data.records);
             this.tableData=res.data.data.records;
+            this.total=res.data.data.total;
+            this.moneyCount=res.data.data.records[0].moneyCount;
         })
     },
     totalNum () {
@@ -196,14 +188,7 @@ export default {
             }
         });
     },
-    currentChange(currentPage){
-        // alert(currentPage);
-        this.currentPage=currentPage;
-    },
-    sizeChange(pageSize){
-        // alert(pageSize);
-        this.pageSize=pageSize;
-    },
+  
     //列表数据加载
     renderData(){
         this.$axios.get(request.testUrl+"/user/auth2/userMoney/listUserMoneyInfo",{
@@ -212,16 +197,21 @@ export default {
                 pageSize:this.pageSize
             }
         }).then(res=>{
-            // console.log(res.data.data.records)
-            this.tableData=res.data.data.records;
+            if(res.data.data.records!=null){
+                this.tableData=res.data.data.records;
+                this.total=res.data.data.total;
+            }else{
+                this.$message({
+                    type:'info',
+                    message:'数据已经加载完毕'
+                })
+            }
             this.moneyCount=res.data.data.records[0].moneyCount;
-            // console.log(this.moneyCount);
         })
     },
     //金钱数据加载
     renderMoney(){
         this.$axios.get(request.testUrl+"/user/auth2/user/moneyStatistical").then(res=>{
-            // console.log(res.data.data);
             if(res.data.data!=null){
                 this.balanceMoneyCountTwo=res.data.data.balanceMoneyCountTwo;
                 this.cashMoneyCountTwo=res.data.data.cashMoneyCountTwo;
@@ -236,10 +226,27 @@ export default {
             }
             
         })
-    }
+    },
+    currentChange(currentPage){
+    // alert(currentPage);
+    this.currentPage=currentPage;
+    this.renderData();
+    },
+    sizeChange(pageSize){
+        // alert(pageSize);
+        this.pageSize=pageSize;
+        this.renderData();
+    },
   },
+
   mounted () {
      this.totalNum()
+  },
+  watch:{
+      $route(to,from){
+          console.log(to,from)
+          
+      }
   }
 }
 </script>

@@ -31,8 +31,8 @@
         data: function(){
             return {
                 ruleForm: {
-                    username: 'zhang',
-                    password: '123456'
+                    username: 'yyy',
+                    password: 'yyy'
                 },
                 rules: {
                     username: [
@@ -54,31 +54,33 @@
 				this.$axios.post(request.testUrl+"/auth/platform/login",JSON.stringify(this.ruleForm))
                     .then(res=>{
                         // console.log(res.headers.token);
-                        console.log(res.data)
+                        // console.log(res.data)
                         var token=res.headers.token;
 						if(res.data.code==0){
 							var name=res.data.data.username;
 							var id=res.data.data.id;
+                            localStorage.setItem('realname',res.data.data.realname);
 							localStorage.setItem('name',name);
                             localStorage.setItem('id',id);
                             localStorage.setItem('token',token);
 							this.$router.push({ path: '/Index'})
 						}else{
-							// this.$message({
-							// 	type: 'info',
-							// 	message: '登录失败'
-							// });	
+							this.$message({
+								type: 'info',
+								message: '登录失败'
+							});	
 						}		
 	        		}).catch(res=>{
 	        			this.$message({
 								type: 'info',
-								message: '失败'
+								message: res.data.msg
 							});	
                 })
 	        	
             }
         }
     }
+    
 </script>
 
 <style scoped>
@@ -91,7 +93,7 @@
         position: relative;
         width:100%;
         height:100%;
-        /* background: url(../../assets/img/login-bg2.jpg) no-repeat; */
+        background: url(../../assets/img/park.jpg) no-repeat;
         background-color: #ccc;
         background-size: 100% 100%;
         

@@ -5,13 +5,13 @@
                <div class="title">
                     <span>平台后端</span>
                     <div class='head'>
-                        <img src='../../assets/img/boy.jpg' class='headPic'></img>
-                        <p>陈新南</p>
+                        <img src='../../assets/img/boy.jpg' class='headPic'/>
+                        <p>{{realname}}</p>
                     </div>
                 </div> 
                 <!-- 内容区域 -->
                 <div class="content">
-                    <div class="list" v-for="(item,index) in projectList">
+                    <div class="list" v-for="(item,index) in projectList" :key="index">
                         <div class='desc'>
                             <p>{{item.title}}</p>
                             <p>{{item.desc}}</p>
@@ -28,6 +28,7 @@
 export default {
     data(){
         return{
+            realname:'',
             projectList:[
                 {
                     title:'商家管理',
@@ -54,10 +55,17 @@ export default {
                     desc:'项目权限设置,商户管理',
                     jumpTxt:'前往管理'
                 },
-            ]
+            ],
         }
     },
+    created(){
+        this.renderRealName(); 
+    },
     methods:{
+        renderRealName(){
+            this.realname=localStorage.getItem('realname');
+            console.log(this.realname);
+        },
         jumpPage(i){
             // alert(i);
             if(i==1){

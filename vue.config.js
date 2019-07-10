@@ -22,5 +22,5 @@ module.exports = {
 	    },
 	    // open:true 自动帮你打开浏览器
 	    hot:true  //热更新
-    } 
+    }
 }

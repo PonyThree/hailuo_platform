@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class='bannnn'>
        <h2>项目管理>   &nbsp;项目banner></h2>
         <!--新增-->
         <div class='addBtn'>
@@ -21,24 +21,25 @@
 			<el-table-column prop="href" label="跳转链接设置" align="center" ></el-table-column>
 			<el-table-column prop="description" label="图片描述" align="center" ></el-table-column>
 			<el-table-column prop="sort" label="排序值" align="center" ></el-table-column>
-			<el-table-column prop="id" v-show:"1==2"></el-table-column>
+			<!-- <el-table-column prop="id" v-show="1==2"></el-table-column> -->
 			<el-table-column prop="caozuo" label="操作" align="center" >
 				<template slot-scope="scope">
-                        <el-button icon="el-icon-edit" @click="handleEdit(scope.$index,bannerTable[scope.$index].id)">编辑</el-button>
-                        <el-button icon="el-icon-delete" class="red" @click="deleteMember(scope.$index,bannerTable[scope.$index].id)">删除</el-button>
+                        <el-button icon="el-icon-edit" @click="handleEdit(scope.$index,bannerTable[scope.$index].id)" >编辑</el-button>
+						<!-- v-if="scope.$index!=0" -->
+                        <el-button icon="el-icon-delete" class="red" @click="deleteMember(scope.$index,bannerTable[scope.$index].id)" v-if="scope.$index!=0">删除</el-button>
                     </template>
 			</el-table-column>	
 		</el-table>
-		
-		<!--分页器-->
-		<!-- <el-pagination background  :current-page='currentPage'  :page-size="pageSize" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page' @current-change="currentChange">
-		</el-pagination> -->
-		  <!-- 分页 -->
-		<el-pagination
+		<!-- <el-pagination
 			background
-			layout="prev, pager, next"
-			:total='total' class='page'  @current-change="currentChange" :current-page="currentPage" :page-size="pageSize"  >
-		</el-pagination>
+			class='page'
+			@size-change="handleSizeChange"
+			@current-change="handleCurrentChange"
+			:current-page.sync="current"
+			:page-size="size"
+			layout="prev, pager, next, jumper"
+			:total="total">
+		</el-pagination> -->
 		
 		
 		<!-- 编辑弹出框 -->
@@ -76,7 +77,7 @@
 					<template>
 						<div>
 							<span slot="footer" class="dialog-footer">
-								<el-button type="primary" @click="savePic(form)">保存</el-button>
+								<el-button type="primary" @click="savePic('form')">保存</el-button>
 								<el-button @click="editVisible = false">取 消</el-button> 
 							</span>
 						</div>
@@ -91,7 +92,7 @@
 				<el-form-item label="图片上传:" style="width:92%;" prop='image'>
                     <div style="width: 80%;height: 100px;display: block;float: left;position: relative;" id="aa">
                         <img src="../../../assets/img/banner1.png" alt="">
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:67px;top:-2px;" @click="show"/>
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:156px;top:-4px;" @click="show"/>
                     </div>
                     
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">
@@ -139,9 +140,12 @@ export default {
             editVisible:false,
             addVisible:false,
             revise:false,
-            currentPage:1,
-            pageSize:3,
-            total:100,
+            // currentPage:1,
+            // pageSize:3,
+			// total:100,
+			current: 1,
+			total: 0,
+			size: 0,
             bannerTable:[],
 			// 新增
             formList: {},
@@ -177,23 +181,36 @@ export default {
 	},
     methods:{	
 		showBannerList(){
-			this.$axios.get(request.testUrl+'/platform/auth2/platformBanner/pageSelect',{
-				params:{
-					page:this.currentPage,
-					pageSize:this.pageSize
-				}
-			})
-			.then(res=>{
-				console.log(res.data.data.records);
-				// console.log(res.data.data.total);
 				this.loading=true;
-				setTimeout(()=>{
-					this.total=res.data.data.total;
-					this.bannerTable=res.data.data.records;
-					this.loading=false;
-				},1000)
-				
-			})
+				this.$axios.get(request.testUrl+'/platform/auth2/platformBanner/pageSelect',{
+					params:{
+						page:this.current,
+						pageSize: 10
+					}
+				})
+				.then(res=>{
+					// console.log(res.data.data.records);
+					// console.log(res.data.data.total);
+					if(res.data.code==0){
+						var lock=setTimeout(()=>{
+						this.bannerTable = res.data.data.records;
+						// this.bannerTable.splice(0,0,this.baseData);
+						// if(res.data.data.records.length>=1){
+							this.size = res.data.data.size // 一页显示个数
+							this.current = res.data.data.current // 当前页
+							this.loading=false;
+						// }
+							this.total = res.data.data.total // 一共几页
+							clearTimeout(lock);
+						},1000)
+					}else{
+						this.$message({
+							type:'error',
+							message:res.data.msg
+						})
+					}
+					
+				})
 		},
 		//数字验证
 		yzNum(){
@@ -262,7 +279,6 @@ export default {
 					if (valid) {
 						// this.formList={};
 						this.addVisible=false;
-						// alert('添加成功!');
 					} else {
 						console.log('error submit!!');
 						return false;
@@ -270,7 +286,6 @@ export default {
 				});
                 var params = new URLSearchParams();	
 				params.append('imgUrl', this.formList.imgUrl);
-				alert(this.formList.imgUrl);
                 params.append('href', this.formList.href);
                 params.append('description', this.formList.description);
                 params.append('sort', this.formList.sort);				
@@ -284,11 +299,13 @@ export default {
 							})
 						this.formList={};
 						this.showBannerList();
+						this.reload();
 		    			}else{
 		    				this.$message({
 				                type: 'info',
-				                message: '添加失败',
-			            	});
+				                message: res.data.msg,
+							});
+							this.formList={};
 		    			}
 					})
 					
@@ -338,8 +355,11 @@ export default {
         	
         	//编辑跳出弹框
         	handleEdit(index,id) {
-				// alert(id);
 				this.editVisible=true;
+				// alert(id);
+				if(id=="111"){
+					this.form=this.baseData;
+				}
 				this.$axios.get(request.testUrl+"/platform/auth2/platformBanner/getOne",{
 					params:{
 						id:id
@@ -403,7 +423,7 @@ export default {
 							this.editVisible=false;
 							this.form={};
 							this.showBannerList();
-							// this.reload();
+							this.reload();
 							this.$message({
 								type: 'success',
 								message: '编辑成功'
@@ -420,16 +440,11 @@ export default {
             
         	//删除这一行
            	deleteMember(index,id){
-				// alert(id);
-				// this.bannerTable.splice(index,1);
-				// console.log(this.bannerTable);
            		this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
-				// 	var id=this.tableData[index].id;
-				// 	//console.log(id);
 				var params = new URLSearchParams();
 				params.append('id', id);
 				this.$axios.post(request.testUrl+"/platform/auth2/platformBanner/doDelete ",params)
@@ -444,11 +459,6 @@ export default {
 					});
 				});
            	},
-            
-		    
-					
-			
-			
            	//分页功能
            	// 初始页currentPage、初始每页数据数pagesize和数据data
 		    // handleCurrentChange(currentPage) {
@@ -460,16 +470,28 @@ export default {
             // 	// this.save()
 			// },
 			//页码的变化值
-			currentChange(currentPage){
-				// alert(currentPage);
-				this.currentPage=currentPage;
-				this.showBannerList();
-			}
+			// currentChange(currentPage){
+			// 	// alert(currentPage);
+			// 	this.currentPage=currentPage;
+			// 	this.showBannerList();
+			// }
+			// 分页
+			handleSizeChange (val) {
+				console.log(`每页 ${val} 条`)
+			},
+			handleCurrentChange (val) {
+				console.log(`当前页: ${val}`)
+				this.current=val
+				this.showBannerList()
+			},
     }
 
 }
 </script>
 <style scoped>
+	/* .bannnn >>>  .el-pagination.is-background .el-pager li:not(.disabled).active {
+		background-color:red;
+	} */
     h2{
         text-align: left;
         padding-left:40px;

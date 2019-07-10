@@ -213,11 +213,9 @@ export default {
         });
     },
     currentChange(currentPage){
-        // alert(currentPage);
         this.currentPage=currentPage;
     },
-    sizeChange(){
-        // alert(pageSize);
+    sizeChange(pageSize){
         this.pageSize=pageSize;
     },
   }

@@ -7,7 +7,7 @@
       <div class="content">
         <transition name="move" mode="out-in">
           <keep-alive :include="tagsList">
-            <router-view></router-view>
+            <router-view ></router-view>
           </keep-alive>
         </transition>
       </div>
@@ -31,6 +31,11 @@ export default {
     vSidebar,
     vTags
   },
+  // computed:{
+  //     key() {
+  //     return this.$route.name !== undefined? this.$route.name +new Date(): this.$route +new Date()
+  //   }
+  // },
   created() {
     bus.$on("collapse", msg => {
       this.collapse = msg;
@@ -45,12 +50,19 @@ export default {
       this.tagsList = arr;
     });
   },
+  // watch:{
+  //           $route(to,from){
+  //               console.log(from);
+  //               // if (from.path == "/零钱提现") {
+  //               //         this.renderData(this.$route.query.id)
+  //               // }
+  //           }
+  // },
   activated () {
     // if (this.lastCity !== this.city) {
     //   this.lastCity = this.city
     //   this.getHomeInfo()
     // }
-    console.log('1111');
   }
 };
 </script>
