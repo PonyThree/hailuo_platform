@@ -34,7 +34,8 @@ export default {
           lat:'' ,
           localSearch:"", 
           map:'',
-          result_:''
+          result_:'',
+          page:this.$route.query.page
         }
     },
     methods:{
@@ -79,9 +80,15 @@ export default {
             });
             localSearch.search(keyword);
             var lock=setTimeout(()=>{
-                // this.$router.go(-1)
+                var obj={};
+                obj.address=this.address;
+                obj.lng=this.lng;
+                obj.lat=this.lat;
+                localStorage.setItem('businessAdress',JSON.stringify(obj))
+                console.log(this.page)
+                var page=this.page
                 this.$router.push({
-                    path:'项目管理',
+                    path:`${page}`,
                     query:{
                         lng:this.lng,
                         lat:this.lat,
@@ -95,14 +102,13 @@ export default {
     },
     mounted(){
         this.getMapData()
-        
     },
     // created(){
     //     this.getData()
     // }
     watch:{
         $route(to,from){
-            console.log(to,from)
+            // console.log(from)
         }
     }
 }

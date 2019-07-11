@@ -91,8 +91,8 @@
             <el-form ref="formList" :model="formList" label-width="80px" :label-position="labelPosition" :rules='rules'>
 				<el-form-item label="图片上传:" style="width:92%;" prop='image'>
                     <div style="width: 80%;height: 100px;display: block;float: left;position: relative;" id="aa">
-                        <img src="../../../assets/img/banner1.png" alt="">
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:156px;top:-4px;" @click="show"/>
+                        <img :src="formList.imgUrl" alt=""  style="width: 280px;height: 110px;display: block;">
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:91px;top:-4px;" @click="show"/>
                     </div>
                     
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">
@@ -148,7 +148,9 @@ export default {
 			size: 0,
             bannerTable:[],
 			// 新增
-            formList: {},
+            formList: {
+				imgUrl:'https://www.china185.com/static/image/che121215.jpg'
+			},
             //新增图片列表
 			fileList:[],
 			//编辑

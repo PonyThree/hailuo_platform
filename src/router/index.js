@@ -25,6 +25,18 @@ export default new Router({
                     meta: { title: '项目管理' }
                 },
                 {
+                    name:'新增商家',
+                    path:'/新增商家',
+                    component:resolve=>require(['../components/page/ProjectManagement/新增商家.vue'],resolve),
+                    meta: { title: '新增商家' }
+                },
+                {
+                    name:'修改商家',
+                    path:'/修改商家',
+                    component:resolve=>require(['../components/page/ProjectManagement/修改商家.vue'],resolve),
+                    meta: { title: '修改商家' }
+                },
+                {
                     path: '/项目详情',
                     name:'项目详情',
                     component: resolve => require(['../components/page/ProjectManagement/项目详情.vue'], resolve),
@@ -126,7 +138,17 @@ export default new Router({
             component:resolve=>{
                 require(["../components/common/BaiduMap.vue"],resolve)
             }
-        }
+        },
+        // {
+        //     name:'新增商家',
+        //     path:'/新增商家',
+        //     component:resolve=>require(['../components/page/ProjectManagement/新增商家.vue'],resolve)
+        // },
+        // {
+        //     name:'修改商家',
+        //     path:'/修改商家',
+        //     component:resolve=>require(['../components/page/ProjectManagement/修改商家.vue'],resolve)
+        // },
         
     ]
 })

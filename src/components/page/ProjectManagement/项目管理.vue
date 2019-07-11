@@ -89,134 +89,9 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<!-- 新增的对话框 创建商家 form5-->
-			<el-dialog title='创建商家' :visible.sync="DialogAdd" width="466px" center @close="close">
-				<el-form  ref='form5' :model="form5" label-width="120px" :rules='rules'>
-					<el-form-item label="项目名称:" prop='name'>
-						<el-input placeholder="请输入内容" v-model="form5.name" ></el-input>
-                	</el-form-item>
-					<el-form-item label="项目负责人:" prop='principal'>
-						<el-input placeholder="请输入内容" v-model="form5.principal" ></el-input>
-                	</el-form-item>
-					<el-form-item label="手机号码:" prop="mobile">
-						<el-input placeholder="请输入内容" v-model="form5.mobile" ></el-input>
-                	</el-form-item>
-					<el-form-item label="项目地址:" >
-						<el-input placeholder="请输入内容" v-model="form5.address"  disabled></el-input>
-                	</el-form-item>
-					<el-row>
-						<el-col :span="11">
-							<el-form-item  label="经度:">
-								<el-input  v-model="form5.latitudes" placeholder="请输入经度" style='width:100px' disabled></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="11" style='margin-left:-16px;'>
-							<el-form-item label="纬度:">
-								<el-input  v-model="form5.longitudes" placeholder="请输入纬度" style='width:100px' disabled></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="2">
-							<i class="el-icon-location" @click="getLocation"></i>
-						</el-col>
-					</el-row>
-					<el-form-item label="收款账号:" prop='account'>
-						<el-input  v-model="form5.account" ></el-input>
-                	</el-form-item>
-					<div class='txt'>------以下资料仅限于企业内部管理,对外完全保密------</div>
-					<el-form-item label="登录账号:" prop='username'>
-						<el-input  v-model="form5.username" ></el-input>
-                	</el-form-item>
-					<el-form-item label="登录密码:" prop='password' >
-						<el-input  v-model="form5.password" type='password'></el-input>
-                	</el-form-item>
-					<el-form-item>
-						<template>
-							<div>
-								<span slot="footer" class="dialog-footer">
-									<el-button type="primary" @click="save('form5')">确 定</el-button>
-									<el-button type="primary" @click="cancel">取 消</el-button>
-								</span>
-							</div>
-						</template>
-					</el-form-item>
-				</el-form>
-				<!-- 百度地图对话框 -->
-				<!-- <el-dialog
-					width="60%"
-					title="百度地图小窗"
-					:visible.sync="baiDuVisible"
-					append-to-body style="width:1600px;height:750px;overflow:hidden;margin:30px auto 0;box-sizing:border-box;" @close="closeMap" ref="formMap" :model="formMap">
-						<div style="width:100%;height:700px;margin:0 auto;background-color:#CBE1FF;">   
-								要查询的地址：<input id="text_" type="text" value="宁波天一广场" style="margin-right:100px;" v-model="formMap.address"/>
-								查询结果(经纬度)：<input id="result_" type="text" v-model="formMap.result_"/>
-								<input type="button" value="查询" @click="searchByStationName();"/>
-								<div id="container" 
-									style="position: absolute;
-										width: 95%; 
-										height: 480px; 
-										top: 50; 
-										border: 1px solid gray;
-										overflow:hidden;">
-								</div>
-						</div>
-				</el-dialog> -->
-			</el-dialog>
-			<!-- 修改的对话框 form3-->
-			<el-dialog title="修改信息" :visible.sync="DialogUpdate"  center width="466px" @close="close1">
-				<el-form ref='form3' :model="form3" label-width="120px" :rules='rules1'>
-					<el-form-item label="项目名称:" prop='name' >
-						<el-input placeholder="请输入内容" v-model="form3.name" ></el-input>
-                	</el-form-item>
-					<el-form-item label="项目负责人:" prop='principal'>
-						<el-input placeholder="请输入内容" v-model="form3.principal" ></el-input>
-                	</el-form-item>
-					<el-form-item label="手机号码:">
-						<el-input placeholder="请输入内容" v-model="form3.mobile" ></el-input>
-                	</el-form-item>
-					<el-form-item label="项目地址:">
-						<el-input placeholder="请输入内容" v-model="form3.address" ></el-input>
-                	</el-form-item>
-					<el-row>
-						<el-col :span="11">
-							<el-form-item  label="经度:">
-								<el-input  v-model="form3.latitudes" placeholder="请输入经度" style='width:120px'></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="13" style='margin-left:-16px;'>
-							<el-form-item label="纬度:">
-								<el-input  v-model="form3.longitudes" placeholder="请输入纬度" style='width:120px'></el-input>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-form-item label="收款账号:" prop='account'>
-						<el-input  v-model="form3.account" ></el-input>
-                	</el-form-item>
-					<div class='txt'>------以下资料仅限于企业内部管理,对外完全保密------</div>
-					<el-form-item label="登录账号:" prop='username'>
-						<!-- <el-input>{{form3.username}}</el-input> -->
-						<span>{{form3.username}}</span>
-                	</el-form-item>
-					<el-form-item label="登录密码:" prop='password'>
-						<!-- <el-input>{{form3.password}}</el-input> -->
-						<span>{{form3.password}}</span>
-                	</el-form-item>
-				</el-form>
-				<span slot="footer" class="dialog-footer">
-					<el-button type="primary" @click="saveInfo">确 定</el-button>
-					<el-button type="primary" @click="DialogUpdate=false">取 消</el-button>
-				</span>
-			</el-dialog>
 			<!--分页器-->
             <el-pagination background  :current-page.sync='currentPage' :page-sizes="[5, 10, 15]"  layout="total, sizes, prev, pager, next,jumper" :total="total" class='page' @size-change="sizeChange" @current-change="currentChange"> 
             </el-pagination>
-			<!-- <el-pagination
-				@size-change="sizeChange"
-				@current-change="currentChange"
-				:current-page.sync="currentPage"
-				:page-size="pageSize"
-				layout="prev, pager, next, jumper"
-				:total="total">
-			</el-pagination> -->
 		</div>	
     </div>
 </template>  
@@ -285,49 +160,6 @@ export default {
 		   total:15,
 		   pageSize:10,
 		   currentPage:1,
-		   //新增验证
-		   rules:{
-			   name:[
-				   { required:true, message:'请输入项目名称', trigger:'blur' },
-				   { min: 1, max: 160, message: '长度在 1 到 160个字符', trigger: 'blur' }
-			   ],
-			   principal:[
-				   {required:true,message:'请输入项目负责人',trigger:'blur'},
-				   { min: 1, max: 30, message: '长度在 1 到 30个字符', trigger: 'blur' }
-			   ],
-			   account:[
-				   {required:true,message:'请输入收款账号',trigger:'blur'}
-			   ],
-			   username:[
-				   {required:true,message:'请输入登录账号',trigger:'blur'}
-			   ],
-			   password:[
-				   {required:true,message:'请输入登录密码',trigger:'blur'}
-			   ],
-			  telPhone:[
-                    {validator: validatePhone, trigger: 'blur'}
-				]
-		   },
-		   //修改验证
-		   rules1:{
-			   name:[
-				   { required:true, message:'请输入项目名称', trigger:'blur' },
-				   { min: 1, max: 160, message: '长度在 1 到 160个字符', trigger: 'blur' }
-				],
-				principal:[
-					{required:true,message:'请输入项目负责人',trigger:'blur'},
-					{ min: 1, max: 30, message: '长度在 1 到 30个字符', trigger: 'blur' }
-				],
-				// username:[
-				//    {required:true,message:'请输入登录账号',trigger:'blur'}
-				// ],
-				account:[
-				   {required:true,message:'请输入收款账号',trigger:'blur'}
-			   	],
-			//    password:[
-			// 	   {required:true,message:'请输入登录密码',trigger:'blur'}
-			//    ],
-		   }   
         }
 	},
 	mounted(){
@@ -338,7 +170,9 @@ export default {
 		//列表数据渲染
 		this.renderData(this.pageSize,this.currentPage);
 		// console.log( this.lng+"====="+this.lat+"====="+this.formMap.address)
-		this.getMapData();
+		if(this.$route.query.address!=null){
+			this.getMapData();
+		}
 	},
 	methods:{
 		currentChange(currentPage){
@@ -376,20 +210,6 @@ export default {
 						type:'error'
 					});
 				}
-			})
-		},
-		//新增商家 点击X 号清空数据
-		close(){
-			this.DialogAdd=false;
-			this.$nextTick(()=>{
-				this.$refs.form5.resetFields();
-			})
-		},
-		//修改商家 点击X 号清空数据
-		close1(){
-			// this.DialogAdd=false;
-			this.$nextTick(()=>{
-				this.$refs.form3.resetFields();
 			})
 		},
 		addZero(n){
@@ -489,7 +309,9 @@ export default {
 			// this.$nextTick(()=>{
 			// 	this.$refs.form5.resetFields();
 			// })
-			this.DialogAdd=true;
+			this.$router.push({
+				path:'/新增商家'
+			})
 		},
 		// 新增保存按钮
 		save(form5){
@@ -585,24 +407,15 @@ export default {
 		},
 		//修改数据 form3 //渲染单个数据
 		update(i){
-			this.DialogUpdate=true;
+			// this.DialogUpdate=true;
 			var id=this.tableDatass[i].id;
-			this.$axios.get(request.testUrl+'/project/auth2/project/selectOne',{
-				params:{
-					projectId:id
+			console.log(id)
+			this.$router.push({
+				path:'/修改商家',
+				query:{
+					id:id,
+					page:'修改商家'
 				}
-			})
-			.then(res=>{
-				if(res.data.data.password=='null'||res.data.data.username=='null'){
-					
-					let data=res.data.data;
-					data.password="";
-					data.username="";
-					this.form3=data;
-				}else{
-					this.form3=res.data.data;
-				}
-			
 			})
 		},
 		//修改保存按钮
@@ -737,69 +550,10 @@ export default {
 		// 	this.$nextTick(()=>{
 		// 		this.$refs.formMap.resetFields();
 		// 	});
-		// 	this.baiDuVisible=false;
 		},
-		// renderMap(){
-		// 	this.map = new BMap.Map("container");
-		// 	var map=this.map;
-		// 	console.log(map)
-        //     // map.centerAndZoom("宁波", 12);
-        //     // map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
-        //     // map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
-        //     // map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
-        //     // map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
-        //     // map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
-        //     this.localSearch = new BMap.LocalSearch(map);
-        //     var localSearch=this.localSearch;
-        //     console.log(localSearch)
-        //     // localSearch.enableAutoViewport(); //允许自动调节窗体大小
-		// },
-		// getMapData(){
-        //     this.map = new BMap.Map("container");
-        //     var map=this.map;
-        //     // map.centerAndZoom("宁波", 12);
-        //     // map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
-        //     // map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
-
-        //     // map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
-        //     // map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
-        //     // map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
-
-        //     this.localSearch = new BMap.LocalSearch(map);
-        //     var localSearch=this.localSearch;
-        //     // console.log(localSearch)
-        //     localSearch.enableAutoViewport(); //允许自动调节窗体大小
-
-        // },
-		// searchByStationName() {
-        //     var map=this.map;
-        //     map.clearOverlays();//清空原来的标注
-        //     var keyword = document.getElementById("text_").value;
-        //     var localSearch=this.localSearch;
-        //     localSearch.setSearchCompleteCallback((searchResult)=>{
-        //     	// console.log(localSearch)
-        //         var poi = searchResult.getPoi(0);
-        //         document.getElementById("result_").value = poi.point.lng + "," + poi.point.lat;
-        //         this.formMap.result_=poi.point.lng + "," + poi.point.lat;
-        //         this.lng=poi.point.lng;
-        //         this.lat=poi.point.lat;
-        //         map.centerAndZoom(poi.point, 13);
-        //         var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
-        //         map.addOverlay(marker);
-        //         // var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
-        //         // var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
-        //         // marker.addEventListener("click", ()=>{  this.openInfoWindow(infoWindow);    } );
-        //         // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-        //     });
-		// 	localSearch.search(keyword)
-		// 	// var lock=setTimeout(()=>{
-		// 	// 	this.baiDuVisible=false;
-		// 	// },4000)
-        //     console.log( this.lng+"====="+this.lat+"====="+this.formMap.result_)
-		// }
 		getMapData(){
 			var obj={};
-			if(this.$route.query.address!=undefined){
+			if(this.$route.query.address!=null){
 				// console.log(this.$route.query.address)
 				var obj={};
 				obj.address=this.$route.query.address
@@ -808,10 +562,6 @@ export default {
 				console.log(obj)
 				localStorage.setItem('businessAdress',JSON.stringify(obj))
 			}
-			// obj.address=
-			// console.log(localStorage.setItem({
-
-			// }))
 			console.log(localStorage.getItem('businessAdress'))
 			this.form5.address=JSON.parse(localStorage.getItem('businessAdress')).address;
 			this.form5.latitudes=JSON.parse(localStorage.getItem('businessAdress')).lat;
@@ -838,7 +588,7 @@ export default {
 		background-color: rgb(25,158,216);
 	}
 	.btns{
-		width:280px;
+		width:354px;
 		float:right;
 		margin:20px 0;
 	}

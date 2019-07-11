@@ -103,6 +103,10 @@
                 //            id:oldValue.id
                 //        }
                 //    })
+                }else if(newValue.name=='新增商家'){
+                    
+                }else if(newValue.name=="修改商家"){
+
                 }else{
                     this.setTags(newValue);
                 }
