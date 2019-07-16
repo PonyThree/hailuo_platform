@@ -28,8 +28,9 @@ Vue.config.productionTip = false
 Vue.use(ElementUI, {
     size: 'small'
 });
-Vue.use(BaiduMap,{
-	ak:'RWH9ZFBykv6AjsDurEoj62wKvoVStp9P'
+Vue.use(BaiduMap, {
+	// ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
+	ak: 'RWH9ZFBykv6AjsDurEoj62wKvoVStp9P'
 })
 Vue.prototype.$axios = axios;
 

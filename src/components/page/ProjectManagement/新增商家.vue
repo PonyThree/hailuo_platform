@@ -12,17 +12,17 @@
 					<el-form-item label="手机号码:" prop="mobile">
 						<el-input placeholder="请输入内容" v-model="form5.mobile" ></el-input>
                 	</el-form-item>
-					<el-form-item label="项目地址:" >
-						<el-input placeholder="请输入内容" v-model="form5.address"  disabled></el-input>
+					<el-form-item label="项目地址:" prop="address">
+						<el-input placeholder="请输入内容" v-model="form5.address"></el-input>
                 	</el-form-item>
 					<el-row>
 						<el-col :span="11">
-							<el-form-item  label="经度:">
+							<el-form-item  label="经度:"  prop="latitudes">
 								<el-input  v-model="form5.latitudes" placeholder="请输入经度" style='width:120px' disabled></el-input>
 							</el-form-item>
 						</el-col>
-						<el-col :span="11" style='margin-left:-16px;'>
-							<el-form-item label="纬度:">
+						<el-col :span="11" style='margin-left:-16px;' prop="address">
+							<el-form-item label="纬度:" prop="longitudes" >
 								<el-input  v-model="form5.longitudes" placeholder="请输入纬度" style='width:120px' disabled></el-input>
 							</el-form-item>
 						</el-col>
@@ -50,6 +50,27 @@
 					</el-form-item>
         	</el-form>
 	   </div>
+	   <!-- :before-close="handleClose"  -->
+	   	<!-- 新增商家 -->
+	    <el-dialog
+			title="百度地图"
+			:visible.sync="dialogVisible"
+			center class="baiduSearch">
+			经度<input v-model.number="center.lng">
+			纬度<input v-model.number="center.lat">
+			<!-- 放大倍数<input v-model.number="zoom" class="map"> -->
+			关键字搜索<input v-model="keyword" class="baiduTxt" >
+			<!-- <div id="allmap"></div> -->
+			<div>
+				<baidu-map class="bm-view" :center="center" :zoom="zoom"  @click="synCenterAndZoom" @rightclick="rightclick">
+					<!-- 自动定位控制 -->
+					<bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true" @locationSuccess="locationSuccess"></bm-geolocation>
+					<!-- 关键字搜索 -->
+					
+					<bm-local-search :keyword="keyword" :pageCapacity="3" :autoViewport="true" @markersset="markersset" @infohtmlset="infohtmlset" class="baiduSea"></bm-local-search> 
+  				</baidu-map>	
+			</div>
+		</el-dialog>
     </div>
  </template>
 <script>
@@ -69,6 +90,13 @@ export default {
             }
     	};
         return {
+			//新增
+			center:{lng:106.536312,lat:29.599829},
+			zoom:13,
+			dialogVisible:false,
+			keyword:'重庆市',
+			location:'重庆',
+			searchTxt:'',
             form5:{
 				name:'',
 				principal:'',
@@ -100,27 +128,87 @@ export default {
 				   {required:true,message:'请输入登录密码',trigger:'blur'}
 			   ],
 			  mobile:[
-                    {validator: validatePhone, trigger: 'blur'}
-				]
+					{validator: validatePhone, trigger: 'blur'},
+					{required:true,message:'请输入经度',trigger:'blur'}
+				],
+			address:[
+				{required:true,message:'请输入经度',trigger:'blur'}
+			],
+			latitudes:[
+				{required:true,message:'请输入纬度',trigger:'blur'}
+			],
+			longitudes:[
+				{required:true,message:'请输入纬度',trigger:'blur'}
+			]
 		   },
 		   
         }
 	},
 	mounted() {
-		
+		// this.handler()
 	},
 	created(){
-		this.form5=JSON.parse(localStorage.getItem('cusMerchan')) || {}
-		let addressObj=JSON.parse(localStorage.getItem('businessAdress'))||{}
-		console.log(addressObj)
-		if(addressObj!={}){
-			this.form5.address=addressObj.address
-			this.form5.latitudes=addressObj.lat
-			this.form5.longitudes=addressObj.lng
-		}
-		console.log(this.form5)
+		// this.form5=JSON.parse(localStorage.getItem('cusMerchan')) || {}
+		// let addressObj=JSON.parse(localStorage.getItem('businessAdress'))||{}
+		// // console.log(addressObj)
+		// if(addressObj!={}){
+		// 	this.form5.address=addressObj.address
+		// 	this.form5.latitudes=addressObj.lat
+		// 	this.form5.longitudes=addressObj.lng
+		// }
+		// console.log(this.form5)
+		
 	},
     methods:{
+		rightclick(){
+			alert('右键单击了')
+		},
+		//脚注成功后的回调函数
+		markersset(pois){
+			console.log(pois)
+		},
+		//气泡完成之后的回调函数
+		infohtmlset(poi){
+			console.log(poi)
+			// 获取点击脚注的经度纬度
+			console.log(poi.point.lng,poi.point.lat)
+			//精确地址
+			// var detalAddress=poi.province+poi.city+poi.address;
+			var detalAddress=poi.address;
+			console.log(detalAddress)
+			this.center=poi.point;
+			// 保存到页面data中
+			this.form5.address=detalAddress;
+			this.form5.latitudes=poi.point.lat
+			this.form5.longitudes=poi.point.lng
+			this.dialogVisible=false;
+		},
+		//点击地图位置经纬度获取
+		synCenterAndZoom(e){
+			console.log(e.target)
+			const {lng,lat} =e.target.getCenter()
+			// this.center.lng=lng
+			// this.center.lat=lat
+			// console.log(lng,lat)
+			this.form5.latitudes=lat
+			this.form5.longitudes=lng
+			this.zoom=e.target.getZoom()
+			this.dialogVisible=false
+			console.log(this.form5)
+		},
+		//定位完成之后
+		locationSuccess(point, AddressComponent, marker){
+			// console.log(point, AddressComponent, marker)
+			// console.log(point.point)
+			this.center=point.point;	
+		},
+		//检索完成之后
+		searchcomplete(results){
+			// console.log(results)
+		},
+		// handler({BMap,map}){
+		// 	// console.log(BMap,map)
+		// },
 		//本地存储数据对象
 		saveLocalData(form5){
 			var obj={};
@@ -129,21 +217,17 @@ export default {
 		},
         //点击图标进行定位
 		getLocation(){
-			this.saveLocalData(this.form5)
-			this.baiDuVisible=true;
-			this.$router.push({
-				path:'/Map',
-				query:{
-					page:'新增商家'
-				}
-			})
+			this.dialogVisible=true
+			// this.saveLocalData(this.form5)
+			// this.baiDuVisible=true;
 		},
 		
         // 新增保存按钮
 		save(form5){
-			console.log(this.form5.latitudes)
-			console.log(this.form5.longitudes)
-			console.log(this.form5.address)
+			// console.log(this.form5.latitudes)
+			// console.log(this.form5.longitudes)
+			// console.log(this.form5.address)
+			console.log(this.form5)
 				var params=new URLSearchParams();
 					if(this.form5.name!=undefined){
 						if(this.form5.name!=''){
@@ -218,10 +302,10 @@ export default {
 							this.$router.push({
 								path:'/项目管理'
 							})
-							localStorage.removeItem('cusMerchan')
-							localStorage.removeItem('businessAdress')
-							console.log(localStorage.getItem('cusMerchan'))
-							console.log(localStorage.getItem('businessAdress'))
+							// localStorage.removeItem('cusMerchan')
+							// localStorage.removeItem('businessAdress')
+							// console.log(localStorage.getItem('cusMerchan'))
+							// console.log(localStorage.getItem('businessAdress'))
 						}else{
 							this.$message({
 								type:'error',
@@ -241,6 +325,29 @@ export default {
 }
 </script>
 <style>
+	/* .map{
+		position: relative;
+	}
+	.searchTxt{
+		position:absolute;
+		top:10px;
+		right:0px;
+		z-index:1000;
+	} */
+	.baiduSea{
+		position:absolute;
+		top:98px;
+		right:26px;
+		z-index: 1000;
+		width:300px;
+		/* height:200px; */
+		height: auto;
+		border:1px solid #000;
+	}
+	.bm-view{
+	width: 100%;
+	height: 400px;
+	}
 	.el-button--primary {
 		color: #fff!important;
 		background-color: #409EFF!important;
@@ -274,5 +381,7 @@ export default {
 		text-align: center;
 
 	}
-	
+	.addBusiness  .el-dialog{
+		height:auto !important;
+	}
 </style>

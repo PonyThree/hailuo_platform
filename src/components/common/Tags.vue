@@ -66,6 +66,15 @@
                         this.tagsList.shift();
                     }
                     if(route.meta.title=="项目详情"){
+                        if(route.meta.title=="新增商家"||route.meta.title=="修改商家"){
+
+                        }else{
+                            this.tagsList.push({
+                                title: route.meta.title,
+                                path: route.fullPath,
+                                name: route.matched[1].components.default.name
+                            })
+                        }
                     }else{
                         if(route.meta.title=="零钱提现" || route.meta.title=="钱包使用详情"){
                             

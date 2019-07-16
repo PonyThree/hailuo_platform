@@ -394,14 +394,20 @@ export default {
 				params.append('projectId',id);
 				params.append('publishStatus',this.tableDatass[i].publishStatus);
 				this.$axios.post(request.testUrl+'/project/auth2/project/updatePublishStatus',params).then(res=>{
+					if(res.data.code==0){
+						this.renderData(this.pageSize);this.renderData(this.pageSize,this.currentPage);
+					}
 				})
-				
+			}else{
 				//其他下线0下线变为1上线
 				this.tableDatass[i].publishStatus=1;
 				var params=new URLSearchParams();
 				params.append('projectId',id);
 				params.append('publishStatus',this.tableDatass[i].publishStatus);
 				this.$axios.post(request.testUrl+'/project/auth2/project/updatePublishStatus',params).then(res=>{
+					if(res.data.code==0){
+						this.renderData(this.pageSize);this.renderData(this.pageSize,this.currentPage);
+					}
 				})
 			}
 		},

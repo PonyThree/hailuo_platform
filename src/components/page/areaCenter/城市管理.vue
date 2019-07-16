@@ -60,7 +60,7 @@
                         <template>
                             <div>
                                 <el-input v-model='form.name'></el-input>
-                                <i class="el-icon-location" @click="getLocation"></i>
+                                <!-- <i class="el-icon-location" @click="getLocation"></i> -->
                             </div>
                         </template>
                     </el-form-item>
@@ -189,10 +189,10 @@ export default {
         exportData(){
             alert('导出');
         },
-        getLocation(){
-            alert('得到位置');
-            this.showMap=true;
-        },
+        // getLocation(){
+        //     alert('得到位置');
+        //     this.showMap=true;
+        // },
         //条件查询
         search(){
             var obj={};

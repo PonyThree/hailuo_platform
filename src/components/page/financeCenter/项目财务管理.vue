@@ -14,7 +14,7 @@
         </el-col>
         <el-col :span="3">
             <div class="walletBorder">
-                落位总退款<span>({{tkMoney}})</span>
+                总退款<span>({{tkMoney}})</span>
             </div>
         </el-col>
         <el-col :span="3">
@@ -178,15 +178,18 @@ export default {
             setTimeout(()=>{
                 this.loading=false;
                 console.log(res.data.data.records);
-                if(res.data.data.records!=null){
-                    this.tableData=res.data.data.records;
-                    this.total=res.data.data.total;
-                }else{
-                    this.$message({
-                    type:'info',
-                    message:'数据已经加载完毕'
-                    })
+                if(res.data.data!=null){
+                    if(res.data.data.records!=null){
+                        this.tableData=res.data.data.records;
+                        this.total=res.data.data.total;
+                    }else{
+                        this.$message({
+                        type:'info',
+                        message:'数据已经加载完毕'
+                        })
+                    }
                 }
+                
             },1000)   
         })
     },
@@ -217,7 +220,7 @@ export default {
         this.currentPage=currentPage;
         this.renderDate();
     },
-    sizeChange(){
+    sizeChange(pageSize){
         this.pageSize=pageSize;
         this.renderDate();
     },
@@ -239,6 +242,7 @@ export default {
             }).then(res=>{
                 console.log(res.data.data.records)
                 this.tableData=res.data.data.records;
+                this.total=res.data.data.total;
                 this.form.input5="";
             })
         }

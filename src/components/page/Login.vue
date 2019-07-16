@@ -31,8 +31,8 @@
         data: function(){
             return {
                 ruleForm: {
-                    username: 'yyy',
-                    password: 'yyy'
+                    username: 'admin',
+                    password: '123456'
                 },
                 rules: {
                     username: [
