@@ -78,7 +78,10 @@
                     }else{
                         if(route.meta.title=="零钱提现" || route.meta.title=="钱包使用详情"){
                             
-                        }else{
+                        }else if(route.meta.title=="项目申请提现" || route.meta.title=="审核提现"||route.meta.title=="审核状态"){
+
+                        }
+                        else{
                             this.tagsList.push({
                                 title: route.meta.title,
                                 path: route.fullPath,
@@ -116,7 +119,14 @@
                     
                 }else if(newValue.name=="修改商家"){
 
-                }else{
+                }else if(newValue.name=="零钱提现"){
+                // }
+                }else if(newValue.name=="钱包使用详情"){
+
+                }else if(newValue.name=="项目申请提现"){
+
+                }
+                else{
                     this.setTags(newValue);
                 }
             }

@@ -18,12 +18,12 @@
 					<el-row>
 						<el-col :span="11">
 							<el-form-item  label="经度:"  prop="latitudes">
-								<el-input  v-model="form5.latitudes" placeholder="请输入经度" style='width:120px' disabled></el-input>
+								<el-input  v-model="form5.latitudes" placeholder="请选择经度" style='width:120px' disabled></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="11" style='margin-left:-16px;' prop="address">
 							<el-form-item label="纬度:" prop="longitudes" >
-								<el-input  v-model="form5.longitudes" placeholder="请输入纬度" style='width:120px' disabled></el-input>
+								<el-input  v-model="form5.longitudes" placeholder="请选择纬度" style='width:120px' disabled></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="2">
@@ -31,7 +31,7 @@
 						</el-col>
 					</el-row>
 					<el-form-item label="收款账号:" prop='account'>
-						<el-input  v-model="form5.account" ></el-input>
+						<el-input  v-model="form5.account" @blur="jugeNum"></el-input>
                 	</el-form-item>
 					<div class='txt'>------以下资料仅限于企业内部管理,对外完全保密------</div>
 					<el-form-item label="登录账号:" prop='username'>
@@ -56,19 +56,22 @@
 			title="百度地图"
 			:visible.sync="dialogVisible"
 			center class="baiduSearch">
-			经度<input v-model.number="center.lng">
-			纬度<input v-model.number="center.lat">
+			经度<input v-model.number="center.lat">
+			纬度<input v-model.number="center.lng">
 			<!-- 放大倍数<input v-model.number="zoom" class="map"> -->
 			关键字搜索<input v-model="keyword" class="baiduTxt" >
 			<!-- <div id="allmap"></div> -->
 			<div>
-				<baidu-map class="bm-view" :center="center" :zoom="zoom"  @click="synCenterAndZoom" @rightclick="rightclick">
+				<baidu-map class="bm-view" :center="center" :zoom="zoom"   @click="rightclick" :scroll-wheel-zoom="true">
 					<!-- 自动定位控制 -->
 					<bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true" @locationSuccess="locationSuccess"></bm-geolocation>
 					<!-- 关键字搜索 -->
 					
-					<bm-local-search :keyword="keyword" :pageCapacity="3" :autoViewport="true" @markersset="markersset" @infohtmlset="infohtmlset" class="baiduSea"></bm-local-search> 
-  				</baidu-map>	
+					<bm-local-search :keyword="keyword" :pageCapacity="3" :autoViewport="true" :location="location" @markersset="markersset" @infohtmlset="infohtmlset" class="baiduSea"></bm-local-search> 
+					<bm-marker :position="positionMap" :dragging="true" @click="infoWindowOpen">
+						<bm-info-window :show="true">我爱北京天安门</bm-info-window>
+					</bm-marker>
+				</baidu-map>
 			</div>
 		</el-dialog>
     </div>
@@ -90,6 +93,7 @@ export default {
             }
     	};
         return {
+			positionMap:{},
 			//新增
 			center:{lng:106.536312,lat:29.599829},
 			zoom:13,
@@ -119,7 +123,8 @@ export default {
 				   { min: 1, max: 30, message: '长度在 1 到 30个字符', trigger: 'blur' }
 			   ],
 			   account:[
-				   {required:true,message:'请输入收款账号',trigger:'blur'}
+				   {required:true,message:'请输入收款账号',trigger:'change'},
+				//    { type: 'number', message: '只能输入数字', trigger: 'blur' },
 			   ],
 			   username:[
 				   {required:true,message:'请输入登录账号',trigger:'blur'}
@@ -145,23 +150,31 @@ export default {
         }
 	},
 	mounted() {
-		// this.handler()
 	},
 	created(){
-		// this.form5=JSON.parse(localStorage.getItem('cusMerchan')) || {}
-		// let addressObj=JSON.parse(localStorage.getItem('businessAdress'))||{}
-		// // console.log(addressObj)
-		// if(addressObj!={}){
-		// 	this.form5.address=addressObj.address
-		// 	this.form5.latitudes=addressObj.lat
-		// 	this.form5.longitudes=addressObj.lng
-		// }
-		// console.log(this.form5)
-		
 	},
     methods:{
-		rightclick(){
-			alert('右键单击了')
+		//账号数字验证
+		jugeNum(){
+			if(this.form5.account!=''){
+				console.log(Number(this.form5.account))
+				if(!Number(this.form5.account)){
+					this.$message({
+						type:'error',
+						message:'请输入数字的收款账号'
+					})
+					return
+				}
+			}
+			// console.log(Number(this.form5.account))	
+		},
+		rightclick(type, target, point, pixel, overlay){
+			this.form5.longitudes=type.point.lng;
+			this.form5.latitudes=type.point.lat;
+			var loc={}
+			loc.lat=type.point.lat
+			loc.lng=type.point.lng
+			this.positionMap=loc
 		},
 		//脚注成功后的回调函数
 		markersset(pois){
@@ -183,19 +196,7 @@ export default {
 			this.form5.longitudes=poi.point.lng
 			this.dialogVisible=false;
 		},
-		//点击地图位置经纬度获取
-		synCenterAndZoom(e){
-			console.log(e.target)
-			const {lng,lat} =e.target.getCenter()
-			// this.center.lng=lng
-			// this.center.lat=lat
-			// console.log(lng,lat)
-			this.form5.latitudes=lat
-			this.form5.longitudes=lng
-			this.zoom=e.target.getZoom()
-			this.dialogVisible=false
-			console.log(this.form5)
-		},
+		
 		//定位完成之后
 		locationSuccess(point, AddressComponent, marker){
 			// console.log(point, AddressComponent, marker)
@@ -219,14 +220,10 @@ export default {
 		getLocation(){
 			this.dialogVisible=true
 			// this.saveLocalData(this.form5)
-			// this.baiDuVisible=true;
 		},
 		
         // 新增保存按钮
 		save(form5){
-			// console.log(this.form5.latitudes)
-			// console.log(this.form5.longitudes)
-			// console.log(this.form5.address)
 			console.log(this.form5)
 				var params=new URLSearchParams();
 					if(this.form5.name!=undefined){
@@ -299,13 +296,10 @@ export default {
 								type:'success',
 								message:'添加成功'
 							})
-							this.$router.push({
-								path:'/项目管理'
-							})
-							// localStorage.removeItem('cusMerchan')
-							// localStorage.removeItem('businessAdress')
-							// console.log(localStorage.getItem('cusMerchan'))
-							// console.log(localStorage.getItem('businessAdress'))
+							// this.$router.push({
+							// 	path:'/项目管理'
+							// })
+							this.$router.go(-1);
 						}else{
 							this.$message({
 								type:'error',
@@ -321,7 +315,34 @@ export default {
 			})
 			this.DialogAdd=false;
 		},
-    }
+		//脚注事件
+		infoWindowOpen(e){
+			let geocoder= new BMap.Geocoder();  //创建地址解析器的实例
+			geocoder.getLocation(e.point,rs=>{
+				console.log(rs.address)
+				var address=rs.address;
+				// console.log(address)
+				this.form5.address=address
+				this.dialogVisible=false
+			})
+		},
+		//点击地图位置经纬度获取
+		synCenterAndZoom(e){
+			// alert(e)
+			// console.log(e.target.BC)
+			const {lng,lat} =e.target.getCenter()
+			// this.center.lng=lng
+			// this.center.lat=lat
+			// console.log(lng,lat)
+			this.postionMap=e.target.BC;
+			this.form5.latitudes=e.target.BC.lat
+			this.form5.longitudes=e.target.BC.lng
+			// this.infoWindowOpen();
+			// this.zoom=e.target.getZoom()
+			// this.dialogVisible=false
+			// console.log(this.form5)
+		},
+	}
 }
 </script>
 <style>
@@ -345,8 +366,8 @@ export default {
 		border:1px solid #000;
 	}
 	.bm-view{
-	width: 100%;
-	height: 400px;
+		width: 100%;
+		height: 400px;
 	}
 	.el-button--primary {
 		color: #fff!important;

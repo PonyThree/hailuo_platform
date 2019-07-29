@@ -7,7 +7,6 @@
       background-color="#87ceff"
       text-color="#ffffff"
       active-text-color="#ff0"
-      unique-opened
       router>
       <template v-for="item in items">
         <template v-if="item.subs">

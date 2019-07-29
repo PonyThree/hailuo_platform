@@ -120,7 +120,7 @@ export default {
         loading:false,
         form: {},
         tableData: [],
-        total:1000,
+        total:100,
         pageSize:10,
         currentPage:1,
         tNums: 0,
@@ -157,20 +157,30 @@ export default {
             pageSize:this.pageSize,
             current:this.currentPage
         })).then(res=>{
+            if(res.data.code==0){
+                res.data.data.records.forEach(item=>{
+                    item.createTime=this.transformDate(item.createTime)
+                    item.modifyTime=this.transformDate(item.modifyTime)
+                })
+                this.total=res.data.data.total
+                this.tableData=res.data.data.records;
+            }else{
+                this.$message({
+                    type:'error',
+                    message:res.data.msg
+                })
+            }
             // console.log(res.data.data.records);
-            res.data.data.records.forEach(item=>{
-                item.createTime=this.transformDate(item.createTime)
-                item.modifyTime=this.transformDate(item.modifyTime)
-            })
-            this.tableData=res.data.data.records;
+           
         })
     },
     getTime(){
         this.staTime=this.form.dateStartEnd[0];
         this.endTime=this.form.dateStartEnd[1];
-        console.log(this.staTime,this.endTime);
+        // console.log(this.staTime,this.endTime);
        
     },
+    // 查询
     onSubmit () {
         // alert('submit!');
         this.$axios.post(request.testUrl+"/finance/auth2/applyMoney/getPageByPlatfrom",JSON.stringify({
@@ -181,7 +191,16 @@ export default {
             endTime:this.endTime
         })).then(res=>{
             // console.log(res.data.data.records);
-            this.tableData=res.data.data.records;
+            if(res.data.code==0){
+                this.total=res.data.data.total;
+                this.tableData=res.data.data.records;
+            }else{
+                this.$message({
+                    type:'error',
+                    message:res.data.msg
+                })
+            }
+            
         })
     },
     
@@ -214,9 +233,11 @@ export default {
     },
     currentChange(currentPage){
         this.currentPage=currentPage;
+        this.renderTable()
     },
     sizeChange(pageSize){
         this.pageSize=pageSize;
+        this.renderTable()
     },
   }
 }

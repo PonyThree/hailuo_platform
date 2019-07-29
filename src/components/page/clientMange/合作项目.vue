@@ -44,7 +44,7 @@ export default {
             //查询的文本
             searchTxt:'',
             currentPage:1,
-            pageSize:6,
+            pageSize:5,
             total:100,
             loadCoperationList:false,
             //合作项目列表
@@ -129,12 +129,14 @@ export default {
             }
         },
         currentChange(currentPage){
-            alert(currentPage);
+            // alert(currentPage);
             this.currentPage=currentPage;
-            // this.renderUnShow();
+            this.renderUnShow();
         },
         sizeChange(pageSize){
-            alert(pageSize);
+            // alert(pageSize);
+            this.pageSize=pageSize;
+            this.renderUnShow();
         }
     }
 
@@ -145,11 +147,9 @@ export default {
         overflow: hidden;
         width:69%;
         height:auto;
-        /* margin:0 auto; */
         border:1px solid #bbb;
         margin-left:40px;
         margin:0 auto;
-        /* margin-bottom: 30px !important; */
     }
     .title{
         overflow: hidden;
@@ -164,7 +164,6 @@ export default {
     }
     .content{
         width:100%;
-        /* height:300px; */
         height:auto;
         padding-bottom:30px;
         overflow: hidden;
@@ -172,13 +171,11 @@ export default {
     .publishPro{
         overflow: hidden;
         width:69%;
-        /* margin-left:40px; */
         margin:50px auto 0;
         border:1px solid #bbb;
     }
     .publishPro .content{
         width:100%;
-        /* height:360px; */
         height:auto;
     }
     .content .list{
@@ -218,11 +215,7 @@ export default {
     }
     .search{
         width:100%;
-        /* width:370px; */
         height:36px;
-        /* float:right; */
-        /* background-color: pink; */
-        /* margin-left: 20px !important; */
         margin-top:20px;
     }
     .search::after{
@@ -236,9 +229,6 @@ export default {
     .search .searchIpt{
         float:right;
     }
-    /* .search input.searchTxt{
-        float:right !important;
-    } */
     .publishPro .list p:nth-child(2){
         width:60%;
         margin:30px auto 10px;
@@ -248,7 +238,6 @@ export default {
     }
     /* 分页样式 */
     .page{
-        /* background-color: pink; */
         background-color: rgb(25,158,216);
         text-align: center;
         padding:10px 0;

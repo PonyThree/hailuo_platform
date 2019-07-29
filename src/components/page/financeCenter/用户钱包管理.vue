@@ -30,23 +30,6 @@
     </el-row>
     <!-- 条件查询 -->
     <el-form :inline="true" :model="form" class="queryPiece">
-        <!-- <el-form-item label="交易时间">
-            <el-date-picker
-                v-model="form.dateStartEnd"
-                type="daterange"
-                class="datePicker"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                default-value="2019-01-01">
-            </el-date-picker>
-        </el-form-item>
-        <el-form-item label="交易形式">
-            <el-select v-model="form.transaction">
-                <el-option label="全部" value="all"></el-option>
-                <el-option label="零钱充值" value="recharge"></el-option>
-                <el-option label="落位退款" value="refund"></el-option>
-            </el-select>
-        </el-form-item> -->
         <el-form-item class="information">
             <el-input placeholder="请输入用户昵称/手机号码" v-model="form.input5" class="input-with-select">
                 <el-select v-model="form.select" slot="prepend" placeholder="请选择">
@@ -127,7 +110,7 @@ export default {
       return {
         form: {},
         tableData: [],
-        total:100,
+        total:10,
         pageSize:10,
         currentPage:1,
         moneyCount: 0,

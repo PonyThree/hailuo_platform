@@ -12,17 +12,17 @@
 					<el-form-item label="手机号码:" prop="mobile" @blur="jugeMobile">
 						<el-input placeholder="请输入内容" v-model="form.mobile" ></el-input>
                 	</el-form-item>
-					<el-form-item label="项目地址:" >
+					<el-form-item label="项目地址:" prop="address">
 						<el-input placeholder="请输入内容" v-model="form.address"></el-input>
                 	</el-form-item>
 					<el-row>
 						<el-col :span="11">
-							<el-form-item  label="经度:">
+							<el-form-item  label="经度:" prop='latitudes'>
 								<el-input  v-model="form.latitudes" placeholder="请输入经度" style='width:120px' disabled></el-input>
 							</el-form-item>
 						</el-col>
-						<el-col :span="11" style='margin-left:-16px;'>
-							<el-form-item label="纬度:">
+						<el-col :span="11" style='margin-left:-16px;' >
+							<el-form-item label="纬度:" prop="longitudes">
 								<el-input  v-model="form.longitudes" placeholder="请输入纬度" style='width:120px' disabled></el-input>
 							</el-form-item>
 						</el-col>
@@ -31,7 +31,7 @@
 						</el-col>
 					</el-row>
 					<el-form-item label="收款账号:" prop='account'>
-						<el-input  v-model="form.account" ></el-input>
+						<el-input  v-model="form.account" @blur="jugeNum"></el-input>
                 	</el-form-item>
 					<div class='txt'>------以下资料仅限于企业内部管理,对外完全保密------</div>
 					<el-form-item label="登录账号:" prop='username'>
@@ -113,7 +113,7 @@ export default {
 				username:'',
 				password:''
 			},
-            //新增验证
+            //修改验证
 		   rules:{
 			    name:[
 				   { required:true, message:'请输入项目名称', trigger:'blur' },
@@ -124,7 +124,9 @@ export default {
 				   { min: 1, max: 30, message: '长度在 1 到 30个字符', trigger: 'blur' }
 			   ],
 			    account:[
-				   {required:true,message:'请输入收款账号',trigger:'blur'}
+				   {required:true,message:'请输入收款账号',trigger:'blur'},
+				//    { type: 'number', message: '只能输入数字', trigger: 'blur' },
+
 			   ],
 			    username:[
 				   {required:true,message:'请输入登录账号',trigger:'blur'}
@@ -151,27 +153,28 @@ export default {
 	},
 	created(){
 		this.renderData(this.id)
-		// this.form=JSON.parse(localStorage.getItem('cusMerchan1'))
-		// let addressObj=JSON.parse(localStorage.getItem('businessAdress'))||{
-		// 	address:'',
-		// 	lat:0,
-		// 	lng:0
-		// }
-		// console.log(addressObj)
-		// if(addressObj!={}){
-		// 	this.form.address=addressObj.address
-		// 	this.form.latitudes=addressObj.lat
-		// 	this.form.longitudes=addressObj.lng
-		// }
-		// this.form=localStorage.getItem('cusMerchan')|| 
 	},
     methods:{
+		//账号数字验证
+		jugeNum(){
+			if(this.form.account!=''){
+				console.log(Number(this.form.account))
+				if(!Number(this.form.account)){
+					this.$message({
+						type:'error',
+						message:'请输入数字的收款账号'
+					})
+					return
+				}
+			}
+			// console.log(Number(this.form5.account))	
+		},
 		rightclick(){
-			alert('右键单击了')
+			// alert('右键单击了')
 		},
 		//脚注成功后的回调函数
 		markersset(pois){
-			console.log(pois)
+			// console.log(pois)
 		},
 		jugeMobile(){
 			if(this.form.mobile==''){
@@ -226,22 +229,13 @@ export default {
         //点击图标进行定位
 		getLocation(){
 			this.dialogUpVisible=true
-			// alert('查询')
-			// localStorage.setItem('cusMerchan1',JSON.stringify(this.form))
-			// this.renderMap()
-			// this.$router.push({
-			// 	path:'/Map',
-			// 	query:{
-			// 		page:'修改商家'
-			// 	}
-			// })
 		},
 		//点击地图位置经纬度获取
 		synCenterAndZoom(e){
 			console.log(e.target)
 			const {lng,lat} =e.target.getCenter()
-			// this.center.lng=lng
-			// this.center.lat=lat
+			this.center.lng=lng
+			this.center.lat=lat
 			// console.log(lng,lat)
 			this.form5.latitudes=lat
 			this.form5.longitudes=lng
@@ -251,8 +245,6 @@ export default {
 		},
 		//定位完成之后
 		locationSuccess(point, AddressComponent, marker){
-			// console.log(point, AddressComponent, marker)
-			// console.log(point.point)
 			this.center=point.point;	
 		},
 		infohtmlset1(poi){
@@ -264,11 +256,8 @@ export default {
 			this.dialogUpVisible=false;
 		},
 		//修改保存按钮
-		saveInfo(){
-			this.$refs.form.validate((valid) => {
-                if (valid) {
+		saveInfo(form){
 					var params=new URLSearchParams();
-					console.log(this.form)
 					if(this.form!=null){
 						if(this.form.name!='null'){
 							if(this.form.name!=''){
@@ -333,8 +322,6 @@ export default {
 										message:'修改成功'
 									});
 									this.renderData(this.id);
-									localStorage.removeItem('cusMerchan1')
-									localStorage.removeItem('cusMerchan1')
 									this.$router.push({
 										path:'/项目管理'
 									})
@@ -345,11 +332,11 @@ export default {
 									});
 								}
 						})
-					}	
+					// }	
 				} else {
                     return false;
                 }
-			});
+			// });
 		},
 		//取消按钮清空数据
 		cancel(){

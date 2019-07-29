@@ -5,8 +5,12 @@
                <div class="title">
                     <span>平台后端</span>
                     <div class='head'>
+                        <div class="headName" @click="showLogout">
+                            <span>{{realname}}</span>
+                            <el-icon class="el-icon-caret-bottom"></el-icon>
+                        </div>
                         <img src='../../assets/img/boy.jpg' class='headPic'/>
-                        <p>{{realname}}</p>
+                        <el-button class="logout" v-if="show" @click="logot">退出登录</el-button>
                     </div>
                 </div> 
                 <!-- 内容区域 -->
@@ -28,6 +32,7 @@
 export default {
     data(){
         return{
+            show:false,
             realname:'',
             projectList:[
                 {
@@ -62,6 +67,14 @@ export default {
         this.renderRealName(); 
     },
     methods:{
+        showLogout(){
+            this.show=!this.show;
+        },
+        logot(){
+            localStorage.removeItem("realname");
+            localStorage.removeItem("token");
+            this.$router.push("/login");
+        },
         renderRealName(){
             this.realname=localStorage.getItem('realname');
             console.log(this.realname);
@@ -100,7 +113,6 @@ export default {
        margin:30px auto 0;
        background-color: #fff;
        padding:0 50px;
-       /* border:1px solid #f00; */
        overflow: hidden;
     }
     /* 头部信息 */
@@ -114,41 +126,41 @@ export default {
         padding-right:30px;
         margin:0 auto;
         background-color: #f3f3f3;
-        
         font-size:14px;
         line-height:80px;
         border:1px solid #bbb;
-        /* margin-top:30px; */
     }
-    .headPic{
-        display: block;
+    .title .head{
+        position: relative;
+        float: right;
+        width:300px;
+        height:80px;
+    }
+    .headName{
+        float:right;
+        margin-top:17px;
+        height:60px;
+    }
+    .title .head img{
+        float:right;
         width:50px;
         height:50px;
+        margin-right:6px;
         border-radius:5px;
+        margin-top:17px;
     }
-    .title .head p{
-        text-align: center;
-        line-height: 20px;
-        font-size:14px;
-        margin-top:8px;
-        height:20px;
+    .logout{
+        position:absolute;
+        right:0;
+        top:84px;
     }
     /* 内容区域 */
     .content{
         width:60%;
-        /* margin-top:30px; */
-        margin:0 auto;
+        margin:60px auto 0;
         height:auto;
         overflow: hidden;
-        border:1pa solid #ff0;
-        /* background-color: pink; */
     }
-    .content::after{
-        display: block;
-        content:'';
-        clear: both;   
-    }
-    
     .list{
         float:left;
         width:220px;
@@ -165,13 +177,10 @@ export default {
         width:220px;;
         height:140px;
         padding-top:30px;
-        /* border:1px solid #000; */
         background-color: #fff;
-        /* background-color: #ff0; */
     }
     .list .desc p:nth-child(1){
         font-size:20px;
-        /* margin:30px 0; */
         color:#606266;
     }
     .list .desc p:nth-child(2){

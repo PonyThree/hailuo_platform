@@ -39,12 +39,12 @@
         </el-col>
     </el-row>
     <!-- 条件查询 -->
-    <el-form :inline="true" :model="form" class="queryPiece">
-        <el-form-item class="information">
-            <el-input placeholder="请输入项目名称" v-model="form.input5"></el-input>
-        </el-form-item>
-        <el-form-item>
+    <el-form :inline="true" :model="form" class="queryPiece" >
+        <el-form-item style="float:right">
             <el-button @click="onSubmit">查询</el-button>
+        </el-form-item>
+        <el-form-item class="information" style="float:right">
+            <el-input placeholder="请输入项目名称" v-model="form.input5"></el-input>
         </el-form-item>
     </el-form>
     <!-- 表格 -->
@@ -78,16 +78,10 @@
         label="所有退款（元）"
         align='center'>
         </el-table-column>
-        <el-table-column  label="平台总收入（元）" align='center' prop="ptTolMoney">
-            <template slot-scope="scope">
-                <div>
-                    <span>{{tableData[scope.$index].lwMoney+Number(tableData[scope.$index].rgMoney-Number(tableData[scope.$index].tkMoney))}}</span>
-                    <!-- <span>{{ptTolMoney}}</span> -->
-                </div>
-            </template>
+        <el-table-column  label="平台总收入（元）" align='center' prop="ptMoney">
         </el-table-column>
         <el-table-column
-        prop="xmMoney"
+        prop="ptMoney"
         label="项目总收入（元）"
         align='center'>
         </el-table-column>
@@ -116,17 +110,18 @@
         label="提现申请"
         align='center'>
             <template slot-scope="scope">
-                <el-button @click.native.prevent="viewWithdrawal(tableData[scope.$index].paid)" type="text" size="small" style='color:#409EFF;' v-if="tableData[scope.$index].stype==0">
-                    查看
-                </el-button>
-                <el-button type="text" size="small" style='color:#ccc;' v-else>
+                <el-button  type="text" size="small"  style='color:#ccc;' v-if="tableData[scope.$index].stype==0">
                     暂无
+                </el-button>
+                <el-button type="text" size="small" style='color:#409EFF;' v-else @click.native.prevent="viewWithdrawal(tableData[scope.$index].appId)">
+                    查看
                 </el-button>
             </template>
         </el-table-column>
+        
     </el-table>
     <!--分页器-->
-    <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pageSize" @current-change="currentChange" @size-change="sizeChange" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page'>
+    <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pageSize" :total="total" layout="total, sizes, prev, pager, next,jumper"  class='page' @size-change="sizeChange" @current-change="currentChange"> 
     </el-pagination>
   </div>
 </template>
@@ -140,10 +135,11 @@ export default {
         form: {},
         tableData: [],
         tableData1: [],
-        total:100,
-        pageSize:10,
+        total:0,
+        pageSize:5,
         currentPage:1,
         tNums: 0,
+        appId:'',
         //落位总收入
         lwMoney:0,
         //认购总收入
@@ -167,53 +163,60 @@ export default {
   methods: {
     // 渲染项目财务管理表数据
     renderDate(){
-        this.$axios.get(request.testUrl+"/finance/auth2/platformMoney/pageDate",{
-            params:{
-                current:this.currentPage,
-                pageSize:this.pageSize
-
-            }
-        }).then(res=>{
-            this.loading=true;
-            setTimeout(()=>{
-                this.loading=false;
-                console.log(res.data.data.records);
-                if(res.data.data!=null){
-                    if(res.data.data.records!=null){
-                        this.tableData=res.data.data.records;
-                        this.total=res.data.data.total;
-                    }else{
-                        this.$message({
-                        type:'info',
-                        message:'数据已经加载完毕'
-                        })
+        var params=new URLSearchParams();
+        params.append('currntPage',this.currentPage)
+        params.append('pageSize',this.pageSize)
+        this.$axios.post(request.testUrl+"/order/auth2/orderForm/getPlaSumData",params).then(res=>{
+            if(res.data.code==0){
+                    this.loading=true;
+                    var lock=setTimeout(()=>{
+                    this.loading=false;
+                    this.total=res.data.data.total;
+                    if(res.data.data!=null){
+                        if(res.data.data.records!=null){
+                            this.tableData=res.data.data.records;
+                            clearTimeout(lock)
+                        }else{
+                            this.$message({
+                                type:'info',
+                                message:'数据已经加载完毕'
+                            })
+                        }
                     }
-                }
-                
-            },1000)   
+                },1000)   
+            }   
         })
     },
     //列表上金额统计数据加载
     renderMoney(){
-        this.$axios.post(request.testUrl+"/finance/auth2/platformMoney/selPlaSumMoney")
-        .then(res=>{
-            // console.log(res.data.data);
-            if(res.data.data!=null){
-                this.total=res.data.data.total;
-                this.lwMoney=res.data.data.lwMoney;
-                this.rgMoney=res.data.data.rgMoney;
-                this.tkMoney=res.data.data.tkMoney;
-                this.xmProposed=res.data.data.xmProposed;
-                this.xmCanPropos=res.data.data.xmCanPropos;
-                this.ptMoney=res.data.data.ptMoney;
-                this.ptSurplusMoney=res.data.data.ptSurplusMoney;
+        this.$axios(
+            {
+                method:'post',
+                url:request.testUrl+'/order/auth2/orderForm/titleSunMoneyResp',
+                // data:{}
+            }
+        ).then(res=>{
+            if(res.data.code==0){
+                if(res.data.data!=null){
+                    this.lwMoney=res.data.data.lwMoney;
+                    this.rgMoney=res.data.data.rgMoney;
+                    this.tkMoney=res.data.data.tkMoney;
+                    this.xmProposed=res.data.data.xmProposed;
+                    this.xmCanPropos=res.data.data.xmCanPropos;
+                    this.ptMoney=res.data.data.ptMoney;
+                    this.ptSurplusMoney=res.data.data.ptSurplusMoney;
+                }else{
+                    this.$message({
+                        type:'info',
+                        message:'暂时没有数据'
+                    })
+                }
             }else{
                 this.$message({
-                    type:'info',
-                    message:'暂时没有数据'
+                    type:'error',
+                    message:res.data.msg
                 })
             }
-           
         })
     },
     currentChange(currentPage){
@@ -233,20 +236,29 @@ export default {
             })
         }else{
             //条件搜索
-            this.$axios.get(request.testUrl+"/finance/auth2/platformMoney/pageDate",{
-                params:{
-                    name:this.form.input5,
-                    current:1,
-                    pageSize:10
-                }
-            }).then(res=>{
+            var params=new URLSearchParams();
+            params.append('currntPage',1)
+            params.append('pageSize',this.pageSize)
+            if(this.form.input5!=''){
+                params.append('name',this.form.input5)
+            }
+            this.$axios.post(request.testUrl+"/order/auth2/orderForm/getPlaSumData",params).then(res=>{
                 console.log(res.data.data.records)
-                this.tableData=res.data.data.records;
-                this.total=res.data.data.total;
-                this.form.input5="";
+                if(res.data.code==0){
+                    this.total=res.data.data.total;
+                    this.tableData=res.data.data.records;
+                    this.form.input5="";
+                }else{
+                    this.$message({
+                        type:'error',
+                        message:res.data.msg
+                    })
+                }
+                
             })
         }
     },
+    // 提现详情到项目申请提现 projectId
     viewRecord (id) {
         this.$router.push({
             path: '/项目申请提现',
@@ -255,8 +267,8 @@ export default {
             }
         });
     },
+    //提现申请记录到审核提现 appId
     viewWithdrawal (id) {
-        alert(id);
         this.$router.push({
             path: '/审核提现',
             query:{
@@ -322,5 +334,13 @@ export default {
     #financeManagement >>> .el-form-item--small.el-form-item {
         margin-bottom: 0;
         margin-left: 20px;
+    }
+    .el-pagination.is-background .el-pager li:not(.disabled).active {
+        background-color: #409EFF;
+        color: #fff;
+    }
+    .el-pager li.active {
+        color: #409EFF;
+        cursor: default;
     }
 </style>

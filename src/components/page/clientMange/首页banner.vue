@@ -87,7 +87,7 @@
             
         </el-dialog>   
         <!-- 新增弹出框 -->
-        <el-dialog title="新增" :visible.sync="addVisible" width="30%">
+        <el-dialog title="新增" :visible.sync="addVisible" width="30%" @close="insertClose">
             <el-form ref="formList" :model="formList" label-width="80px" :label-position="labelPosition" :rules='rules'>
 				<el-form-item label="图片上传:" style="width:92%;" prop='image'>
                     <div style="width: 80%;height: 100px;display: block;float: left;position: relative;" id="aa">
@@ -118,7 +118,7 @@
 					<div>
 						<span slot="footer" class="dialog-footer">
 							<el-button type="primary" @click="addEdit('formList')" class="flag">保存</el-button>
-							<el-button @click="addVisible = false">取 消</el-button> 
+							<el-button @click="cancle('formList')">取 消</el-button> 
 						</span>
 					</div>
 				</el-form-item>
@@ -191,17 +191,12 @@ export default {
 					}
 				})
 				.then(res=>{
-					// console.log(res.data.data.records);
-					// console.log(res.data.data.total);
 					if(res.data.code==0){
 						var lock=setTimeout(()=>{
 						this.bannerTable = res.data.data.records;
-						// this.bannerTable.splice(0,0,this.baseData);
-						// if(res.data.data.records.length>=1){
 							this.size = res.data.data.size // 一页显示个数
 							this.current = res.data.data.current // 当前页
 							this.loading=false;
-						// }
 							this.total = res.data.data.total // 一共几页
 							clearTimeout(lock);
 						},1000)
@@ -219,6 +214,9 @@ export default {
 			if (!Number.isInteger(this.form.sort)) {
             callback(new Error('请输入数字值'));
          	 } 
+		},
+		insertClose(){
+			this.reload()
 		},
 		//新增
         add(){
@@ -268,7 +266,7 @@ export default {
 		        		this.$message({
 								type: 'info',
 								message: "图片上传成功！"
-							});	
+						});	
 		        	}  
 		        })
 		        .catch(error => {
@@ -286,32 +284,43 @@ export default {
 						return false;
 					}
 				});
-                var params = new URLSearchParams();	
-				params.append('imgUrl', this.formList.imgUrl);
+				var params = new URLSearchParams();	
                 params.append('href', this.formList.href);
                 params.append('description', this.formList.description);
-                params.append('sort', this.formList.sort);				
+                params.append('sort', this.formList.sort);
+				console.log(this.formList.imgUrl)
+				if(this.formList.imgUrl!==''){
+					params.append('imgUrl', this.formList.imgUrl);
+				}			
                 this.$axios.post(request.testUrl+"/platform/auth2/platformBanner/doInsert",params)
 					.then(res=>{
 		    			if(res.data.code==0){
 							this.addVisible=false;
 							this.$message({
 								type:'success',
-								message:'添加成功'
+								message:'新增成功'
 							})
-						this.formList={};
-						this.showBannerList();
-						this.reload();
+							// this.formList={};
+							this.showBannerList();
+							this.reload();
 		    			}else{
 		    				this.$message({
-				                type: 'info',
+				                type: 'error',
 				                message: res.data.msg,
 							});
-							this.formList={};
+							// this.formList={};
 		    			}
-					})
+				})
 					
-        	},
+			},
+			// 新增取消按钮
+			cancle(){
+				this.addVisible = false
+				// this.$nextTick(()=>{
+				// 	this.$refs.formList.resetFields();
+				// })
+				this.reload();
+			},
 			//编辑图片上传 form
 		    beforeUpload1(file) {
 		      var param = new FormData(); // FormData 对象
@@ -351,8 +360,10 @@ export default {
             	});
 		    },
         	show(){
-        		document.getElementById("aa").style.display="none";
+				document.getElementById("aa").style.display="none";
+				this.formList.imgUrl=''
         		document.getElementById("cc").style.display="block";
+				// console.log(this.formList.imgUrl)
         	},
         	
         	//编辑跳出弹框
@@ -412,7 +423,7 @@ export default {
 					}
 				});
 				this.editVisible=false;
-            	var params = new URLSearchParams();
+				var params = new URLSearchParams();
         		params.append('imgUrl', this.form.imgUrl);
         		params.append('href', this.form.href);
         		params.append('sort', this.form.sort);
@@ -461,39 +472,20 @@ export default {
 					});
 				});
            	},
-           	//分页功能
-           	// 初始页currentPage、初始每页数据数pagesize和数据data
-		    // handleCurrentChange(currentPage) {
-		    //     this.currentPage = currentPage; //点击第几页
-		    //     // this.save()
-		    // },
-            // handleSizeChange(pageSize){
-            // 	this.pagesize = pageSize; //每页下拉显示数据
-            // 	// this.save()
-			// },
-			//页码的变化值
-			// currentChange(currentPage){
-			// 	// alert(currentPage);
-			// 	this.currentPage=currentPage;
-			// 	this.showBannerList();
-			// }
 			// 分页
-			handleSizeChange (val) {
-				console.log(`每页 ${val} 条`)
-			},
-			handleCurrentChange (val) {
-				console.log(`当前页: ${val}`)
-				this.current=val
-				this.showBannerList()
-			},
+			// handleSizeChange (val) {
+			// 	console.log(`每页 ${val} 条`)
+			// },
+			// handleCurrentChange (val) {
+			// 	console.log(`当前页: ${val}`)
+			// 	this.current=val
+			// 	this.showBannerList()
+			// },
     }
 
 }
 </script>
 <style scoped>
-	/* .bannnn >>>  .el-pagination.is-background .el-pager li:not(.disabled).active {
-		background-color:red;
-	} */
     h2{
         text-align: left;
         padding-left:40px;

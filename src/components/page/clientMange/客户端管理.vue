@@ -31,15 +31,6 @@
                             </div> 
                             
                     </div>
-                    <!-- 分页 -->
-                    <!-- <div style='width:80%;margin-top:10px;text-align:center;margin-left: 100px;'>
-                                
-                                <el-pagination
-                                    background
-                                    layout="prev, pager, next"
-                                    :total='total' class='page'  @current-change="currentChange" :current-page="currentPage" :page-size="pageSize"  >
-                                </el-pagination>
-                    </div>  -->
             </div>
             <!-- 首页咨询 -->
             <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
@@ -47,7 +38,7 @@
                     <div class="content">
                             <!-- 头部标题 -->
                             <div class="conTil">
-                                <span>首页资讯</span>
+                                <span>热门主题</span>
                                 <el-button style='color:rgb(25,158,216)' size:='small' @click='addzx'>新增</el-button>
                             </div>
                             <!-- 咨询列表 -->
@@ -72,13 +63,13 @@
                             
                     </div>
             </div>
-                <!-- 平台软文 -->
+            <!-- 平台软文 -->
             <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
                 <!-- 平台软文   -->
                     <div class="content">
                             <!-- 头部标题 -->
                             <div class="conTil">
-                                <span>平台软文</span>
+                                <span>选位攻略</span>
                                 <el-button style='color:rgb(25,158,216)' size:='small' @click='addrw'>新增</el-button>
                             </div>
                             <!-- 平台软文列表 -->
@@ -93,7 +84,7 @@
                     </div>
                     <div style='width:80%;margin-top:10px;text-align:center;margin-left: 100px;'>
                                 <!--分页器-->
-                                <el-pagination background  :current-page.sync='currentPage1' :page-sizes="[5, 10, 15]"  layout="total, sizes, prev, pager, next,jumper" :total="total1" class='page' @size-change="sizeChange" @current-change="currentChange"> 
+                                <el-pagination background  :current-page.sync='currentPage1' :page-sizes="[5, 10, 15]"  layout="total, sizes, prev, pager, next,jumper" :total="total1" class='page' @size-change="sizeChange1" @current-change="currentChange1"> 
                                 </el-pagination>
                     </div> 
             </div>
@@ -103,9 +94,9 @@
                 <el-button @click='cancel' size='middle'>取消</el-button>
             </div>
         </div>
-        <!-- 平台软文新增对话框 -->
+        <!-- 选位攻略新增对话框 -->
         <el-dialog title="新增" :visible.sync="rweditVisible" width="25%" @close="rwClose">
-            <el-form  :model="form" ref="form" label-width="116px" :label-position="labelPosition" :rules='rules' >
+            <el-form  :model="form" ref="form" label-width="116px" :label-position="labelPosition" :rules='rules3' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form.linkName" ></el-input>
                 </el-form-item>
@@ -115,7 +106,7 @@
                 <el-form-item label="活动介绍图片:" style="width:92%;">
                     <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
                         <img :src="form.image" alt="" style="width: 280px;height: 150px;display: block;">
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-15px;top:-5px;" @click="show"/>
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-15px;top:-5px;" @click="show(1)"/>
                     </div>
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">
                         <el-upload action="auto" list-type="picture-card" :file-list="fileList" with-credentials :before-upload="beforeUpload" :http-request="uploadSectionFile" :on-remove="afterRemove" :on-exceed="handleExceed" :limit='1'>
@@ -143,9 +134,9 @@
             </el-form>
            
         </el-dialog> 
-        <!-- 软文修改对话框 -->
+        <!-- 选位攻略修改对话框 -->
         <el-dialog title="修改" :visible.sync="rwUpdateVisible" width="25%">
-            <el-form ref="form" :model="form" label-width="116px" :label-position="labelPosition" :rules='rules'>
+            <el-form ref="form" :model="form" label-width="116px" :label-position="labelPosition" :rules='rules3' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form.linkName"></el-input>
                 </el-form-item>
@@ -155,7 +146,7 @@
                 <el-form-item label="活动介绍图片:" style="width:92%;">
                     <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
                         <img :src="form.image" alt="" style="width: 280px;height: 150px;display: block;">
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:-2px;" @click="show"/>
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:-2px;" @click="show(1)"/>
                     </div>
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">
                         <el-upload action="auto" list-type="picture-card" :file-list="fileList" with-credentials :before-upload="beforeUpload" :http-request="uploadSectionFile" :on-remove="afterRemove" :on-exceed="handleExceed" :limit='1'>
@@ -184,7 +175,7 @@
         </el-dialog> 
         <!-- 链接新增对话框 -->
         <el-dialog title="新增" :visible.sync="linkeditVisible" width="25%" @close="ljClose">
-            <el-form ref="form1" :model="form1" label-width="116px" :label-position="labelPosition" :rules='rules'>
+            <el-form ref="form1" :model="form1" label-width="116px" :label-position="labelPosition" :rules='rules' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form1.linkName" ></el-input>
                 </el-form-item>
@@ -197,7 +188,7 @@
                 <el-form-item label="活动介绍图片:" style="width:92%;">
                     <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
                         <img :src="form1.image" alt="" style="width: 280px;height: 150px;display: block;">
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:3px;" @click="show"/>
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:3px;" @click="show(2)"/>
                     </div>
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">
                         <el-upload action="auto" list-type="picture-card" :file-list="fileList1" with-credentials :before-upload="beforeUpload1" :http-request="uploadSectionFile" :on-remove="afterRemove" :on-exceed="handleExceed" :limit='1'>
@@ -227,8 +218,8 @@
             
         </el-dialog> 
         <!-- 链接修改对话框 -->
-        <el-dialog title="新增" :visible.sync="linkupdateVisible" width="25%">
-            <el-form ref="form1" :model="form1" label-width="116px" :label-position="labelPosition" :rules='rules'>
+        <el-dialog title="修改" :visible.sync="linkupdateVisible" width="25%">
+            <el-form ref="form1" :model="form1" label-width="116px" :label-position="labelPosition" :rules='rules' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form1.linkName" ></el-input>
                 </el-form-item>
@@ -241,7 +232,7 @@
                 <el-form-item label="活动介绍图片:" style="width:92%;">
                     <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
                         <img :src="form1.image" alt="" style="width: 280px;height: 150px;display: block;"/>
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:-2px;" @click="show"/>
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:-2px;" @click="show(2)"/>
                     </div>
                     
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">
@@ -271,9 +262,9 @@
             </el-form>
             
         </el-dialog>
-        <!-- 咨询新增对话框 -->
+        <!-- 热门主题新增对话框 -->
         <el-dialog title="新增" :visible.sync="zxeditVisible" width="25%" @close="zxClose">
-            <el-form ref="form3" :model="form3" label-width="116px" :label-position="labelPosition" :rules='rules'>
+            <el-form ref="form3" :model="form3" label-width="116px" :label-position="labelPosition" :rules='rules2' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form3.linkName" ></el-input>
                 </el-form-item>
@@ -284,7 +275,7 @@
                 <el-form-item label="活动介绍图片:" style="width:92%;">
                     <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
                         <img :src="form3.image" alt="" style="width: 280px;height: 150px;display: block;">
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-12px;top:-5px;" @click="show"/>
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-12px;top:-5px;" @click="show(3)"/>
                     </div>
                     
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">
@@ -314,9 +305,9 @@
             </el-form>
             
         </el-dialog> 
-        <!-- 咨询修改对话框 -->
+        <!-- 热门主题修改对话框 -->
         <el-dialog title="修改" :visible.sync="zxupdateVisible" width="25%">
-            <el-form ref="form3" :model="form3" label-width="116px" :label-position="labelPosition" :rules='rules'>
+            <el-form ref="form3" :model="form3" label-width="116px" :label-position="labelPosition" :rules='rules2'>
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form3.linkName" ></el-input>
                 </el-form-item>
@@ -326,7 +317,7 @@
                 <el-form-item label="活动介绍图片:" style="width:92%;">
                     <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
                         <img :src="form3.image" alt="" style="width: 200px;height: 150px;display: block;">
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:-2px;" @click="show"/>
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:-2px;" @click="show(3)"/>
                     </div>
                     
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">
@@ -394,13 +385,14 @@ export default {
             // currentPage:1,
             linkList:[],
             // 咨询列表
-            advisoryList:[
-            ],
+            advisoryList:[],
             // 软文列表
             softTextList:[],
+            //
             rules:{
-                href:{ required: true, message: '请输入跳转链接', trigger: 'blur' },
-                // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                href:[
+                    { required: true, message: '请输入跳转链接', trigger: 'blur' },
+                ],
                 linkName:[
                     { required: true, message: '请输入图片描述', trigger: 'blur' },
                     { min: 1, max: 4, message: '长度在 1 到 4个字符', trigger: 'blur' }
@@ -412,7 +404,41 @@ export default {
                     {required:true,message:'请输入排序数字',trigger:'blur'},
                     // { type: 'number', message: '排序必须为数字值',trigger:'blur'}
                 ]
-			}
+            },
+            //选位攻略
+            rules3:{
+                href:[
+                    { required: true, message: '请输入跳转链接', trigger: 'blur' },
+                ],
+                linkName:[
+                    { required: true, message: '请输入图片描述', trigger: 'blur' },
+                    { min: 1, max: 34, message: '长度在 1 到 34个字符', trigger: 'blur' }
+                ],
+                // date1: [
+                // 	{ type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                // ],
+                sort:[
+                    {required:true,message:'请输入排序数字',trigger:'blur'},
+                    // { type: 'number', message: '排序必须为数字值',trigger:'blur'}
+                ]
+            },
+            //热门主题
+            rules2:{
+                href:[
+                    { required: true, message: '请输入跳转链接', trigger: 'blur' },
+                ],
+                linkName:[
+                    { required: true, message: '请输入图片描述', trigger: 'blur' },
+                    { min: 1, max: 10, message: '长度在 1 到 10个字符', trigger: 'blur' }
+                ],
+                // date1: [
+                // 	{ type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                // ],
+                sort:[
+                    {required:true,message:'请输入排序数字',trigger:'blur'},
+                    // { type: 'number', message: '排序必须为数字值',trigger:'blur'}
+                ]
+            },
         }
         
     },
@@ -420,13 +446,13 @@ export default {
         this.renderData();
     },
     methods:{
-        sizeChange(pageSize1){
+        sizeChange1(pageSize1){
             // alert(pageSize1)
             this.pageSize1=pageSize1
             console.log(this.pageSize1)
             this.showrwList(this.currentPage1,this.pageSize1);
         },
-        currentChange(currentPage1){
+        currentChange1(currentPage1){
             // alert(currentPage1)
             this.currentPage1=currentPage1;
             console.log(this.currentPage1)
@@ -467,8 +493,8 @@ export default {
         showLinkList(){
              this.$axios.get(request.testUrl+'/platform/auth2/thirdLinks/pageFind',{
                 params:{
-                    page:this.currentPage,
-                    pageSize:this.pageSize
+                    page:1,
+                    pageSize:10
                 }
             })
             .then(res=>{
@@ -593,32 +619,33 @@ export default {
                 this.$refs.form1.validate((valid) => {
                         if (valid) {
                             this.linkupdateVisible=false;
+                            var params = new URLSearchParams();
+                            params.append('image', this.form1.image);
+                            params.append('id', this.form1.id);
+                            params.append('href', this.form1.href);
+                            params.append('linkName', this.form1.linkName);
+                            params.append('sort', this.form1.sort);
+                            this.$axios.post(request.testUrl+"/platform/auth2/thirdLinks/doInsertOrUpdate",params)
+                                .then(res=>{
+                                    if(res.data.code==0){
+                                        //console.log(res)
+                                        this.linkupdateVisible=false;
+                                        this.reload();
+                                        this.showLinkList();
+                                    }else{
+                                        this.$message({
+                                            type: 'success',
+                                            message: '修改成功'
+                                        });
+                                    }
+                            })
+                            this.reload();
                         } else {
                             console.log('error submit!!');
                             return false;
                         }
                 });
-                var params = new URLSearchParams();
-                params.append('image', this.form1.image);
-                params.append('id', this.form1.id);
-                params.append('href', this.form1.href);
-                params.append('linkName', this.form1.linkName);
-                params.append('sort', this.form1.sort);
-                this.$axios.post(request.testUrl+"/platform/auth2/thirdLinks/doInsertOrUpdate",params)
-                	.then(res=>{
-                		if(res.data.code==0){
-                  			//console.log(res)
-                			this.linkupdateVisible=false;
-                            this.reload();
-                            this.showLinkList();
-                		}else{
-                			this.$message({
-                				type: 'success',
-                				message: '修改成功'
-                			});
-                		}
-                })
-                this.reload();
+                
 
             },
             // 咨询系列form3
@@ -812,7 +839,9 @@ export default {
                             // alert('新增成功!');
                             this.rweditVisible=false;
                             var params = new URLSearchParams();
-                            params.append('image', this.form.image);
+                            if(this.form.image!=""){
+                                params.append('image', this.form.image);
+                            }
                             params.append('href', this.form.href);
                             params.append('linkName', this.form.linkName);
                             this.$axios.post(request.testUrl+'/platform/auth2/softArticle/doInsertOrUpdate',params)
@@ -823,6 +852,11 @@ export default {
                                     this.$message({
                                         type:'success',
                                         message:'新增成功'
+                                    })
+                                }else{
+                                    this.$message({
+                                        type:'error',
+                                        message:res.data.msg
                                     })
                                 }
                             });
@@ -880,7 +914,9 @@ export default {
                     if (valid) {
                         // alert(valid);
                         var params = new URLSearchParams();
-                        params.append('image', this.form.image);
+                        if(this.form.image!=""){
+                            params.append('image', this.form.image);
+                        }
                         params.append('href', this.form.href);
                         params.append('linkName', this.form.linkName);
                         params.append('id', this.form.id);
@@ -895,7 +931,12 @@ export default {
                                         type:'success',
                                         message:'修改成功'
                                     });  	
-                                }     
+                                }else{
+                                    this.$message({
+                                        type:'error',
+                                        message:res.data.msg
+                                    })
+                                }    
                         })
                         this.reload();
                     } else {
@@ -928,8 +969,18 @@ export default {
                 this.reload();
             },
         //点击x 上传图片
-        show(){
-        		document.getElementById("aa").style.display="none";
+        show(num){
+                document.getElementById("aa").style.display="none";
+                console.log(num)
+                if(num==1){
+                    this.form.image='';
+                }
+                if(num==2){
+                    this.form1.image='';
+                }
+                if(num==3){
+                    this.form3.image
+                }
         		document.getElementById("cc").style.display="block";
         },
         //新增图片上传

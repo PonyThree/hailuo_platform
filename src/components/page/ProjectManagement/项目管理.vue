@@ -425,87 +425,87 @@ export default {
 			})
 		},
 		//修改保存按钮
-		saveInfo(){
-			this.$refs.form3.validate((valid) => {
-                if (valid) {
-					this.DialogUpdate=false;
-					var params=new URLSearchParams();
-					if(this.form3.name!='null'){
-						if(this.form3.name!=''){
-							params.append('name',this.form3.name);
-						}
-					}
-					if(this.form3.principal!='null'){
-						if(this.form3.principal!=''){
-							params.append('principal',this.form3.principal);
-						}
-					}
-					if(this.form3.latitudes!='null'){
-						if(this.form3.latitudes!=""){
-							params.append('latitudes',this.form3.latitudes);
-						}
-					}
-					if(this.form3.longitudes!="null"){
-						if(this.form3.longitudes!=""){
-							params.append('longitudes',this.form3.longitudes);
-						}
-					}
-					if(this.form3.account!="null"){
-						if(this.form3.account!=""){
-							params.append('account',this.form3.account);
-						}
-					}
-					if(this.form3.address!='null'){
-						if(this.form3.address!=""){
-							params.append('address',this.form3.address);
-						}else{
-							params.append('address','null');
-						}
-					}
-					if(this.form3.username!="null"){
-						if(this.form3.username!=""){
-							params.append('username',this.form3.username);
-						}
-					}
-					if(this.form3.password!="null"){
-						if(this.form3.password!=""){
-							params.append('password',this.form3.password);
-						}
-					}
-					if(this.form3.mobile!="null"){
-						if(this.form3.mobile!=""){
-							params.append('mobile',this.form3.mobile);
-						}else{
-							params.append('mobile','null');
-						}
-					}
-					if(this.form3.id!="null"){
-						if(this.form3.id!=""){
-							params.append('id',this.form3.id);
-						}
-					}
-					this.$axios.post(
-						request.testUrl+'/project/auth2/project/doUpdate',params)
-						.then(res=>{
-							if(res.data.code==0){
-								this.$message({
-									type:'success',
-									message:'修改成功'
-								});
-								this.DialogUpdate=false;
-								this.renderData();
-							}else{
-								this.$message({
-									type:'error',
-									message:res.data.msg
-								});
-							}
-					})
-                } else {
-                    return false;
-                }
-			});
-		},
+		// saveInfo(){
+		// 	this.$refs.form3.validate((valid) => {
+        //         if (valid) {
+		// 			this.DialogUpdate=false;
+		// 			var params=new URLSearchParams();
+		// 			if(this.form3.name!='null'){
+		// 				if(this.form3.name!=''){
+		// 					params.append('name',this.form3.name);
+		// 				}
+		// 			}
+		// 			if(this.form3.principal!='null'){
+		// 				if(this.form3.principal!=''){
+		// 					params.append('principal',this.form3.principal);
+		// 				}
+		// 			}
+		// 			if(this.form3.latitudes!='null'){
+		// 				if(this.form3.latitudes!=""){
+		// 					params.append('latitudes',this.form3.latitudes);
+		// 				}
+		// 			}
+		// 			if(this.form3.longitudes!="null"){
+		// 				if(this.form3.longitudes!=""){
+		// 					params.append('longitudes',this.form3.longitudes);
+		// 				}
+		// 			}
+		// 			if(this.form3.account!="null"){
+		// 				if(this.form3.account!=""){
+		// 					params.append('account',this.form3.account);
+		// 				}
+		// 			}
+		// 			if(this.form3.address!='null'){
+		// 				if(this.form3.address!=""){
+		// 					params.append('address',this.form3.address);
+		// 				}else{
+		// 					params.append('address','null');
+		// 				}
+		// 			}
+		// 			if(this.form3.username!="null"){
+		// 				if(this.form3.username!=""){
+		// 					params.append('username',this.form3.username);
+		// 				}
+		// 			}
+		// 			if(this.form3.password!="null"){
+		// 				if(this.form3.password!=""){
+		// 					params.append('password',this.form3.password);
+		// 				}
+		// 			}
+		// 			if(this.form3.mobile!="null"){
+		// 				if(this.form3.mobile!=""){
+		// 					params.append('mobile',this.form3.mobile);
+		// 				}else{
+		// 					params.append('mobile','null');
+		// 				}
+		// 			}
+		// 			if(this.form3.id!="null"){
+		// 				if(this.form3.id!=""){
+		// 					params.append('id',this.form3.id);
+		// 				}
+		// 			}
+		// 			this.$axios.post(
+		// 				request.testUrl+'/project/auth2/project/doUpdate',params)
+		// 				.then(res=>{
+		// 					if(res.data.code==0){
+		// 						this.$message({
+		// 							type:'success',
+		// 							message:'修改成功'
+		// 						});
+		// 						this.DialogUpdate=false;
+		// 						this.renderData();
+		// 					}else{
+		// 						this.$message({
+		// 							type:'error',
+		// 							message:res.data.msg
+		// 						});
+		// 					}
+		// 			})
+        //         } else {
+        //             return false;
+        //         }
+		// 	});
+		// },
 		export1(i){
 			// alert('导出了');
 		},

@@ -178,7 +178,7 @@ export default {
         },
         //取消
         handClickCancel () {
-            // this.$router.go(-1)
+            this.$router.go(-1)
         }
     }
 }

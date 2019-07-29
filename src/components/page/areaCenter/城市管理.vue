@@ -78,8 +78,11 @@
             </span>
         </el-dialog>
         <!--分页器-->
-        <el-pagination background  :current-page.sync='page' :page-sizes="[5, 10, 15]"  layout="total, sizes, prev, pager, next,jumper" :total="total" class='pageStyle' @size-change="sizeChange" @current-change="currentChange"> 
+        <el-pagination background  :current-page.sync='page' :page-sizes="[5, 10, 15]" :page-size="pageSize" layout="total, sizes, prev, pager, next,jumper" :total="total" class='pageStyle' @size-change="sizeChange" @current-change="currentChange"> 
         </el-pagination>
+        <!--分页器-->
+        <!-- <el-pagination background  :current-page='currentPage' :page-sizes="[5, 10, 15]" :page-size="pageSize" layout="total, sizes, prev, pager, next,jumper" :total="total" class='page' @size-change="sizeChange" @current-change="currentChange"> 
+        </el-pagination> -->
         <!-- <div class="map">
             <div id="allmap"></div>
             <div id="r-result">
@@ -131,10 +134,7 @@ export default {
     methods:{
         // 城市管理列表
         renderAreaList(n1,n2){
-            let data={
-             
-            }
-            this.$axios.get(request.testUrl+'/project/auth2/project/projectList?page=1&pageSize=10').then(res=>{
+            this.$axios.get(request.testUrl+`/project/auth2/project/projectList?page=${this.page}&pageSize=${this.pageSize}`).then(res=>{
                 console.log(res.data.data)
                 this.loading=true;
                 var lock=setTimeout(()=>{
@@ -150,28 +150,14 @@ export default {
         currentChange(page){
             // alert(page)
 			this.page=page;
-			this.renderAreaList(this.page,this.pageSize,);
+			this.renderAreaList(this.page,this.pageSize);
         },
         sizeChange(pageSize){
             // alert(pageSize)
 			this.pageSize=pageSize
 			this.renderAreaList(this.page,this.pageSize)
         },
-        
-        // initMap(){
-        //     loadBMap('qzN1OxHV2ozVYx12WsGD2I7Q0bdQDVo1')
-        //     .then(()=>{
-        //         //百度地图API功能
-        //         this.myMap=new BMap.Map('allmap');//创建Map实例
-        //         this.myMap.centerAndZoom(new BMap.point(116.404,39.915));//初始化地图，设置中心点坐标和地图级别
-        //         this.myMap.setCurrentCity('重庆');//设置地图显示的城市
-        //         this.myMap.enableScrollWheelZoom(true);
-        //     }).catch(err=>{
-        //         console.log('地图加载失败');
-        //     })
-        // },
         find(i,id){
-            // alert('查看更多'+id);
             this.dialogVisible=true;
             //获取初始化的数据
             this.$axios.get(request.testUrl+'/project/auth2/project/selectOne',{
@@ -214,6 +200,7 @@ export default {
                 params:obj
             }).then(res=>{
                 console.log(res.data.data)
+                this.pageSize=res.data.data.size;
                 this.areaData=res.data.data.records;
                 this.total=res.data.data.total
                 this.form={}
@@ -228,13 +215,10 @@ export default {
             }).then(res=>{
                 // console.log(res.data.data)
                 this.provinceList=res.data.data;
-                // console.log(this.provinceList)
             })
         },
         // 市区域渲染
         provinceChange(){
-            // alert('改变了');
-            // console.log(this.form.region);
             //得到城市列表
            this.$axios.get(request.testUrl+'/project/sysRegion/select',{
                 params:{
@@ -243,7 +227,6 @@ export default {
             }).then(res=>{
                 // console.log(res.data.data)
                 this.cityList=res.data.data;
-                console.log(this.cityList)
             })
         },
         //区域渲染
@@ -257,7 +240,6 @@ export default {
             }).then(res=>{
                 // console.log(res.data.data)
                 this.areaList=res.data.data;
-                console.log(this.areaList)
             })
         },
         //存取批量删除选中值数组
@@ -281,7 +263,7 @@ export default {
 			console.log(params);
 			this.$axios.post(request.testUrl+'/project/auth2/project/deleteProjectBatch',params)
 			.then(res=>{
-				console.log(res.data);
+				// console.log(res.data);
 				if(res.data.code==0){
 					this.$message({
 						type:'success',
@@ -308,11 +290,9 @@ export default {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        /* float:right; */
         width:100%;
         height:40px;
         margin-top:10px;
-        /* background-color:pink; */
     }
     .exportBtn button{
         float:right;
@@ -321,8 +301,6 @@ export default {
         width:79%;
         height:40px;
         margin-top:20px;
-        /* padding-left:24px; */
-        /* padding:5px; */
         padding:7px 8px 5px;
         background-color: rgb(25,158,216);
     }
@@ -338,7 +316,6 @@ export default {
         position:absolute;
         right:-20px;
         top:9px;
-        /* color:rgb(25,158,216); */
         color:rgb(13,167,63);
 
 	}

@@ -67,7 +67,7 @@
 						}else{
 							this.$message({
 								type: 'info',
-								message: '登录失败'
+								message: res.data.msg
 							});	
 						}		
 	        		}).catch(res=>{
