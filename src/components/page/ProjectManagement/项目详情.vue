@@ -171,7 +171,7 @@
                             <el-form-item prop='timing' style="color:#606266">
                                     落位后，可认购时间开始计时，若超过
                                     <span>{{form.controllRespDto.downExpireTime}}</span>
-                                    小时后未认购，则取消落位订单
+                                    秒后未认购，则取消落位订单
                             </el-form-item>
                         </el-col>
                     </el-row>

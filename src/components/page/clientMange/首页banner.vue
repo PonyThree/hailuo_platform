@@ -30,18 +30,6 @@
                     </template>
 			</el-table-column>	
 		</el-table>
-		<!-- <el-pagination
-			background
-			class='page'
-			@size-change="handleSizeChange"
-			@current-change="handleCurrentChange"
-			:current-page.sync="current"
-			:page-size="size"
-			layout="prev, pager, next, jumper"
-			:total="total">
-		</el-pagination> -->
-		
-		
 		<!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="26%">
             <el-form ref="form" :model="form" label-width="80px" :label-position="labelPosition" :rules='rules'>
@@ -74,14 +62,14 @@
                     <el-input v-model="form.id" v-show="1==2"></el-input>
                 </el-form-item>
 				<el-form-item>
-					<template>
+					<!-- <template>
 						<div>
 							<span slot="footer" class="dialog-footer">
 								<el-button type="primary" @click="savePic('form')">保存</el-button>
 								<el-button @click="editVisible = false">取 消</el-button> 
 							</span>
 						</div>
-					</template>
+					</template> -->
 				</el-form-item>
             </el-form>
             
@@ -252,6 +240,7 @@ export default {
 		    },
 		    //新增图片上传 formList
 		    beforeUpload(file) {
+				console.log(file)
 		      var param = new FormData(); // FormData 对象
 		      param.append("file", file); // 文件对象
 		      this.$axios({

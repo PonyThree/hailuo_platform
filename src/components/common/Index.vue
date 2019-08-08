@@ -1,8 +1,8 @@
 <template>
        <div>
            <div class="indexPage">
-               <!-- 头部信息 -->
-               <div class="title">
+                <!-- 头部信息 -->
+                <div class="title">
                     <span>平台后端</span>
                     <div class='head'>
                         <div class="headName" @click="showLogout">

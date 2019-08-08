@@ -56,7 +56,7 @@
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="account" label="项目账号" align="center" ></el-table-column>
+				<!-- <el-table-column prop="account" label="项目账号" align="center" ></el-table-column> -->
 				<el-table-column prop="provinceName" label="项目片区" align="center" ></el-table-column> 
 				<el-table-column prop="details" label="项目详情" align="center" >
 					<template slot-scope="scope">
@@ -395,7 +395,9 @@ export default {
 				params.append('publishStatus',this.tableDatass[i].publishStatus);
 				this.$axios.post(request.testUrl+'/project/auth2/project/updatePublishStatus',params).then(res=>{
 					if(res.data.code==0){
-						this.renderData(this.pageSize);this.renderData(this.pageSize,this.currentPage);
+						// this.renderData(this.pageSize);
+						// this.renderData(this.pageSize,this.currentPage);
+						console.log(this.tableDatass);
 					}
 				})
 			}else{
@@ -406,7 +408,9 @@ export default {
 				params.append('publishStatus',this.tableDatass[i].publishStatus);
 				this.$axios.post(request.testUrl+'/project/auth2/project/updatePublishStatus',params).then(res=>{
 					if(res.data.code==0){
-						this.renderData(this.pageSize);this.renderData(this.pageSize,this.currentPage);
+						console.log(this.tableDatass);
+						// this.renderData(this.pageSize);
+						// this.renderData(this.pageSize,this.currentPage);
 					}
 				})
 			}

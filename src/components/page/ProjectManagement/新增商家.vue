@@ -12,8 +12,8 @@
 					<el-form-item label="手机号码:" prop="mobile">
 						<el-input placeholder="请输入内容" v-model="form5.mobile" ></el-input>
                 	</el-form-item>
-					<el-form-item label="项目地址:" prop="address">
-						<el-input placeholder="请输入内容" v-model="form5.address"></el-input>
+					<el-form-item label="项目地址:"  >
+						<el-input placeholder="请输入内容" v-model="form5.address" @blur="dugeAdress()"></el-input>
                 	</el-form-item>
 					<el-row>
 						<el-col :span="11">
@@ -134,11 +134,11 @@ export default {
 			   ],
 			  mobile:[
 					{validator: validatePhone, trigger: 'blur'},
-					{required:true,message:'请输入经度',trigger:'blur'}
+					{required:true,message:'请输入手机号',trigger:'blur'}
 				],
-			address:[
-				{required:true,message:'请输入经度',trigger:'blur'}
-			],
+			// address:[
+			// 	// {required:true,message:'请输入地址',trigger:'blur'}
+			// ],
 			latitudes:[
 				{required:true,message:'请输入纬度',trigger:'blur'}
 			],
@@ -154,6 +154,17 @@ export default {
 	created(){
 	},
     methods:{
+		//地址非空验证
+		dugeAdress(){
+			// console.log(this.form5.address);
+			if(this.form5.address==''){
+				this.$message({
+						type:'error',
+						message:'请输入项目地址',
+						duration:4000
+				})
+			}
+		},
 		//账号数字验证
 		jugeNum(){
 			if(this.form5.account!=''){
