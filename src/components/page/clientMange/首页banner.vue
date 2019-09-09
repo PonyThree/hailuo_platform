@@ -75,12 +75,12 @@
             
         </el-dialog>   
         <!-- 新增弹出框 -->
-        <el-dialog title="新增" :visible.sync="addVisible" width="30%" @close="insertClose">
+        <el-dialog title="新增" :visible.sync="addVisible" width="26%" @close="insertClose">
             <el-form ref="formList" :model="formList" label-width="80px" :label-position="labelPosition" :rules='rules'>
 				<el-form-item label="图片上传:" style="width:92%;" prop='image'>
                     <div style="width: 80%;height: 100px;display: block;float: left;position: relative;" id="aa">
                         <img :src="formList.imgUrl" alt=""  style="width: 280px;height: 110px;display: block;">
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:91px;top:-4px;" @click="show"/>
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:-4px;" @click="show"/>
                     </div>
                     
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">

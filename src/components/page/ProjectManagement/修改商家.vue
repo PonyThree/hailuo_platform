@@ -49,7 +49,6 @@
 						</template>
 					</el-form-item>
         	</el-form>
-			<!-- 修改商家 -->
 			<el-dialog
 				title="百度地图"
 				:visible.sync="dialogUpVisible"
@@ -76,7 +75,7 @@
 export default {
     data(){
         // 手机验证
-        var isvalidPhone=/^1[3|4|5|7|8][0-9]\d{8}$/;
+        var isvalidPhone=/^1[3|4|5|7|8|9][0-9]\d{8}$/;
         var validatePhone=(rule,value,callback)=>{
             if(value===''){
                 callback(new Error('请输入手机号'));
@@ -257,8 +256,14 @@ export default {
 		},
 		//修改保存按钮
 		saveInfo(form){
-					var params=new URLSearchParams();
-					if(this.form!=null){
+				// this.$refs.form.validate(vadite=>{
+				// 	console.log(vadite)
+				// 	if(!vadite){
+				// 		return ;
+				// 	}
+				// })
+				var params=new URLSearchParams();
+				if(this.form!=null){
 						if(this.form.name!='null'){
 							if(this.form.name!=''){
 								params.append('name',this.form.name);
@@ -313,6 +318,13 @@ export default {
 								params.append('id',this.form.id);
 							}
 						}
+						if(!(/^1[3|4|5|7|8|9][0-9]\d{8}$/.test(this.form.mobile))){
+							this.$message({
+								type:'warning',
+								message:'请输入正确的11位手机号码'
+							})
+							return ;
+						}
 						this.$axios.post(
 							request.testUrl+'/project/auth2/project/doUpdate',params)
 							.then(res=>{
@@ -331,12 +343,10 @@ export default {
 										message:res.data.msg
 									});
 								}
-						})
-					// }	
+						})	
 				} else {
                     return false;
                 }
-			// });
 		},
 		//取消按钮清空数据
 		cancel(){

@@ -1,7 +1,7 @@
 <template>
     <div class="login-wrap">
         <div class="ms-login">
-            <div class="ms-title">车位宝后台管理系统</div>
+            <div class="ms-title">海螺找位平台端</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
                     <el-input v-model="ruleForm.username" placeholder="请输入账号">
@@ -31,8 +31,8 @@
         data: function(){
             return {
                 ruleForm: {
-                    username: 'admin',
-                    password: '123456'
+                    username: '',
+                    password: ''
                 },
                 rules: {
                     username: [

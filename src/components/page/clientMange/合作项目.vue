@@ -48,8 +48,8 @@
             <el-form ref="formList" :model="formList" label-width="80px" :label-position="labelPosition" :rules='rules'>
 				<el-form-item label="" style="width:92%;" prop='image'>
                     <div style="width: 80%;height: 100px;display: block;float: left;position: relative;" id="aa">
-                        <img :src="formList.imgUrl" alt=""  style="width: 280px;height: 110px;display: block;">
-                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:4px;top:0px;" @click="show"/>
+                        <img :src="imgUrl" alt=""  style="width: 280px;height: 110px;display: block;">
+                        <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-26px;top:0px;" @click="show"/>
                     </div>
                     
                     <div style="position: relative;float:left;display: none;" class="22222" id="cc">
@@ -70,7 +70,8 @@
 					</div>
 				</el-form-item>
             </el-form>   
-        </el-dialog> 
+        </el-dialog>   
+
     </div>
 </template>
 <script>
@@ -86,12 +87,14 @@ export default {
             fileList:[],
             dialogVisible: false,
             addVisible:false,
+            addVisible1:false,
             labelPosition: 'top',
             formList:{
-                imgUrl:'https://www.china185.com/static/image/che121215.jpg'
+                imgUrl:''
             },
             index:'',
-            imageUrl:'',
+            imgUrl:'https://china185.com/file/image/20190821/6e1cec7f4d0f4e19b590f36e42926632.blob',
+
             //查询的文本
             searchTxt:'',
             currentPage:1,
@@ -141,12 +144,23 @@ export default {
         submit(index){
             console.log(index)
         },
+        renderOnePic(id){
+            var params=new URLSearchParams();
+            params.append('projectId',id)
+            this.$axios.post(request.testUrl+"/project/auth2/project/findJoinHandsImageByProjectId",params).then(res=>{
+                if(res.data.code==0){
+                    // console.log(res.data.data)
+                    this.imgUrl=res.data.data.joinHandsImage||'https://china185.com/file/image/20190821/6e1cec7f4d0f4e19b590f36e42926632.blob';
+                }
+            })
+        },
+
         //图片上传加载弹窗
         upLoad(item){
             this.addVisible=true;
             this.projectId=item.id;
-            console.log(this.projectId)
-
+            // console.log(this.projectId)
+            this.renderOnePic(this.projectId)
         },
         //上传前的限制
         uploadSectionFile(param) {
@@ -185,8 +199,8 @@ export default {
                     console.log(res.data.data);
                     this.formList.imgUrl=res.data.data;
                     this.$message({
-                            type: 'info',
-                            message: "图片上传成功！"
+                        type: 'info',
+                        message: "图片上传成功！"
                     });	
                 }  
             })
@@ -208,10 +222,12 @@ export default {
                 message: '已删除原有图片',
                 duration: 6000
             });
+            this.formList.imgUrl='';
         },
         show(){
             document.getElementById("aa").style.display="none";
-            this.formList.imgUrl=''
+            this.formList.imgUrl='';
+            this.imgUrl='';
             document.getElementById("cc").style.display="block";
             // console.log(this.formList.imgUrl)
         },
@@ -231,10 +247,15 @@ export default {
             if(this.formList.imgUrl!==''){
                 params.append('joinHandsImage', this.formList.imgUrl);
             }else{
-                this.$message({
-                    type:'error',
-                    message:'请先上传一张图片'
-                })
+                if(this.formList.imgUrl==''&&this.imgUrl==""){
+                    this.$message({
+                        type:'error',
+                        message:'请先上传一张图片'
+                    })
+                    return;
+                }else if(this.formList.imgUrl==''&&this.imgUrl!=""){
+                    params.append('joinHandsImage', this.imgUrl);
+                }
             }
             params.append('projectId',this.projectId)	
             this.$axios.post(request.testUrl+"/project/auth2/project/addJoinHandsImage",params)
@@ -436,6 +457,7 @@ export default {
         /* color:red; */
         margin:6px auto;
     }
+
     .listItem p.address{
         width:80%;
         font-size:12px;

@@ -300,6 +300,13 @@ export default {
 					}else{
 						this.form5.mobile=''
 					}
+					if(!(/^1[3|4|5|7|8|9][0-9]\d{8}$/.test(this.form5.mobile))){
+							this.$message({
+								type:'warning',
+								message:'请输入正确的11位手机号码'
+							})
+							return ;
+					}
 					this.$axios.post(request.testUrl+'/project/auth2/project/insert',params)
 					.then(res=>{
 						if(res.data.code==0){
@@ -307,9 +314,6 @@ export default {
 								type:'success',
 								message:'添加成功'
 							})
-							// this.$router.push({
-							// 	path:'/项目管理'
-							// })
 							this.$router.go(-1);
 						}else{
 							this.$message({
