@@ -92,6 +92,11 @@
 			<!--分页器-->
             <el-pagination background  :current-page.sync='currentPage' :page-sizes="[5, 10, 15]"  layout="total, sizes, prev, pager, next,jumper" :total="total" class='page' @size-change="sizeChange" @current-change="currentChange"> 
             </el-pagination>
+			<div class="userAgree">
+				<h2 style="margin-bottom:30px;">新增用户协议</h2>
+				<el-button type="primary" @click="saveAgree" style="display:block;float:right;">保存</el-button>
+				<el-input v-model="userAgreement" placeholder="请输用户协议" type="textarea" :rows="20" style="width: 1200px;margin-left: 45px;margin-top: 20px;margin-bottom: 20px;"></el-input>
+			</div>
 		</div>	
     </div>
 </template>  
@@ -160,6 +165,8 @@ export default {
 		   total:15,
 		   pageSize:10,
 		   currentPage:1,
+		   userAgreement:'默認用戶協議',
+		   id:'',
         }
 	},
 	mounted(){
@@ -173,8 +180,48 @@ export default {
 		if(this.$route.query.address!=null){
 			this.getMapData();
 		}
+		this.renderUserAgree();
 	},
 	methods:{
+		saveAgree(){
+			var params=new URLSearchParams();
+			params.append('id',this.id)
+			params.append('info',this.userAgreement)
+			this.$axios.post(request.testUrl+"/platform/auth2/agreementTab/addInfo",params).then(res=>{
+				if(res.data.code==0){
+					this.$message({
+						type:'success',
+						message:'新增成功'
+					})
+				}else{
+					this.$message({
+						type:'error',
+						message:res.data.msg
+					})
+				}
+			})
+			// var data={};
+			// data.id=this.id;
+			// data.info=this.userAgreement;
+			// console.log(data)
+			// this.$axios({
+			// 	method:'post',
+			// 	url:request.testUrl+"/platform/auth2/agreementTab/addInfo",
+			// 	data:JSON.stringify(data)
+			// }).then(res=>{
+			// 	if(res.data.code==0){
+			// 		this.$message({
+			// 			type:'success',
+			// 			message:'新增成功'
+			// 		})
+			// 	}else{
+			// 		this.$message({
+			// 			type:'error',
+			// 			message:res.data.msg
+			// 		})
+			// 	}
+			// })
+		},
 		currentChange(currentPage){
 			this.currentPage=currentPage;
 			this.renderData(this.pageSize,this.currentPage);
@@ -209,6 +256,15 @@ export default {
 						message:res.data.msg,
 						type:'error'
 					});
+				}
+			})
+		},
+		//用户协议
+		renderUserAgree(){
+			this.$axios.post(request.testUrl+"/platform/auth2/agreementTab/selPlaInfo").then(res=>{
+				if(res.data.code==0){
+					this.userAgreement=res.data.data.agreementBody
+					this.id=res.data.data.id;
 				}
 			})
 		},
@@ -679,6 +735,11 @@ export default {
 	position:absolute;
 	top:0;
 	right:0;
+}
+.userAgree{
+	width: 100%;
+	margin:0 auto;
+	/* background-color: pink; */
 }
 .manage >>> .el-pagination{
 	text-align:right;
