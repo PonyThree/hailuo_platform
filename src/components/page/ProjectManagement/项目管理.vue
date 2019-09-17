@@ -200,27 +200,6 @@ export default {
 					})
 				}
 			})
-			// var data={};
-			// data.id=this.id;
-			// data.info=this.userAgreement;
-			// console.log(data)
-			// this.$axios({
-			// 	method:'post',
-			// 	url:request.testUrl+"/platform/auth2/agreementTab/addInfo",
-			// 	data:JSON.stringify(data)
-			// }).then(res=>{
-			// 	if(res.data.code==0){
-			// 		this.$message({
-			// 			type:'success',
-			// 			message:'新增成功'
-			// 		})
-			// 	}else{
-			// 		this.$message({
-			// 			type:'error',
-			// 			message:res.data.msg
-			// 		})
-			// 	}
-			// })
 		},
 		currentChange(currentPage){
 			this.currentPage=currentPage;
