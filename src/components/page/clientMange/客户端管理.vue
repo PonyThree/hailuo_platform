@@ -12,7 +12,7 @@
                             </div>
                             <!-- 链接列表 -->
                             <div class="conList" >
-                                <div class="list" v-for="(item,index) in linkList" :key="index" v-if="linkList.length<=6">
+                                <div class="list" v-for="(item,index) in linkList" :key="index">
                                     <div class="pic">
                                         <!-- <image :src='item.imgUrl'></image> -->
                                         <img :src="item.image" alt="跳转地址"/>
@@ -179,6 +179,11 @@
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form1.linkName" ></el-input>
                 </el-form-item>
+                <el-form-item label="跳转类型:" prop="jumpAddress ">
+                    <el-select v-model="form1.jumpAddress ">
+                        <el-option  :label="item.label" :value="item.id" v-for='(item,index) in jumpList' :key="index"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="跳转链接地址:" prop='href'>
                     <el-input v-model="form1.href" ></el-input>
                 </el-form-item>
@@ -222,6 +227,11 @@
             <el-form ref="form1" :model="form1" label-width="116px" :label-position="labelPosition" :rules='rules' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form1.linkName" ></el-input>
+                </el-form-item>
+                <el-form-item label="跳转类型:" prop="jumpAddress ">
+                    <el-select v-model="form1.jumpAddress ">
+                        <el-option  :label="item.label" :value="item.id" v-for='(item,index) in jumpList' :key="index"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="跳转链接地址:" prop='href'>
                     <el-input v-model="form1.href" ></el-input>
@@ -358,15 +368,19 @@ export default {
             form:{
                 image:'https://www.china185.com/static/image/che121215.jpg'
             },
-            
+            linkList:[],
             fileList:[],
             // 链接form1
             // page1:1,
             // pageSize1:6,
             currentPage:1,
-            pageSize:10,
+            pageSize:100,
             linkeditVisible:false,
             linkupdateVisible:false,
+            jumpList:[
+                {id:1,label:'内部跳转'},
+                {id:0,label:'外部跳转'},
+            ],
             form1:{
                 image:'https://www.china185.com/static/image/che121215.jpg'
             },
@@ -383,13 +397,15 @@ export default {
             zxupdateVisible:false,
             labelPosition: 'left',
             // currentPage:1,
-            linkList:[],
             // 咨询列表
             advisoryList:[],
             // 软文列表
             softTextList:[],
             //
             rules:{
+                jumpAddress:[
+                    { required: true, message: '请选择跳转类型', trigger: 'blur' },
+                ],
                 href:[
                     { required: true, message: '请输入跳转链接', trigger: 'blur' },
                 ],
@@ -494,7 +510,7 @@ export default {
              this.$axios.get(request.testUrl+'/platform/auth2/thirdLinks/pageFind',{
                 params:{
                     page:1,
-                    pageSize:10
+                    pageSize:100
                 }
             })
             .then(res=>{
@@ -533,8 +549,17 @@ export default {
             },
             //链接新增保存
             savePic1(form1) {
-                console.log(this.linkList.length);
-                if(this.linkList.length<6){
+                // console.log(this.linkList.length);
+                // if(this.linkList.length<6){
+                    console.log(this.form1.jumpAddress)
+                    if(this.form1.jumpAddress==undefined){
+                        this.$message({
+                            type:'warning',
+                            message:'请先选择合适的跳转类型'
+                        })
+                        return ;
+                    }
+                  
                     this.$refs.form1.validate((valid) => {
                             if (valid) {
                                 // this.form1={};
@@ -544,7 +569,9 @@ export default {
                                 console.log(this.form1.image);
                                 params.append('href', this.form1.href);
                                 params.append('linkName', this.form1.linkName);
-                                params.append('sort', this.form1.sort);
+                                params.append('sort', Number(this.form1.sort));
+                                params.append('jumpAddress', Number(this.form1.jumpAddress));
+                                console.log(this.form1)
                                 this.$axios.post(request.testUrl+"/platform/auth2/thirdLinks/doInsertOrUpdate",params)
                                     .then(res=>{
                                         if(res.data.code==0){
@@ -562,13 +589,13 @@ export default {
                                 return false;
                             }
                     });
-                }else{
-                    this.linkeditVisible=false;
-                    this.$message({
-                        type:'warning',
-                        message:'最多上传6个链接，如果想继续新增，请删掉前面的!'
-                    })
-                }
+                // }else{
+                //     this.linkeditVisible=false;
+                    // this.$message({
+                    //     type:'warning',
+                    //     message:'最多上传6个链接，如果想继续新增，请删掉前面的!'
+                    // })
+                // }
             },
             dellj(id){
                 var params=new URLSearchParams();
@@ -616,6 +643,13 @@ export default {
             },
             //链接修改保存
             savePic1Update(form1,id){
+                 if(this.form1.jumpAddress==undefined){
+                        this.$message({
+                            type:'warning',
+                            message:'请先选择合适的跳转类型'
+                        })
+                        return ;
+                }
                 this.$refs.form1.validate((valid) => {
                         if (valid) {
                             this.linkupdateVisible=false;
@@ -624,7 +658,8 @@ export default {
                             params.append('id', this.form1.id);
                             params.append('href', this.form1.href);
                             params.append('linkName', this.form1.linkName);
-                            params.append('sort', this.form1.sort);
+                            params.append('sort', Number(this.form1.sort));
+                            params.append('jumpAddress', Number(this.form1.jumpAddress));
                             this.$axios.post(request.testUrl+"/platform/auth2/thirdLinks/doInsertOrUpdate",params)
                                 .then(res=>{
                                     if(res.data.code==0){
