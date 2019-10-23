@@ -33,7 +33,7 @@
 		<!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="26%">
             <el-form ref="form" :model="form" label-width="80px" :label-position="labelPosition" :rules='rules'>
-                <el-form-item label="图片" style="width:86%;" prop='imgUrl'>
+                <el-form-item label="图片" style="width:86%;">
                     <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
                         <img :src="form.imgUrl" alt="" style="width: 100%;height: 150px;display: block;"/>
                         <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:0px;top:-3px;" @click="show"/>
@@ -62,14 +62,14 @@
                     <el-input v-model="form.id" v-show="1==2"></el-input>
                 </el-form-item>
 				<el-form-item>
-					<template>
+					<!-- <template>
 						<div>
 							<span slot="footer" class="dialog-footer">
 								<el-button type="primary" @click="savePic('form')">保存</el-button>
 								<el-button @click="editVisible = false">取 消</el-button> 
 							</span>
 						</div>
-					</template>
+					</template> -->
 				</el-form-item>
             </el-form>
             
@@ -78,12 +78,12 @@
         <el-dialog title="新增" :visible.sync="addVisible" width="26%" @close="insertClose">
             <el-form ref="formList" :model="formList" label-width="80px" :label-position="labelPosition" :rules='rules'>
 				<el-form-item label="图片上传:" style="width:92%;" prop='image'>
-                    <!-- <div style="width: 80%;height: 100px;display: block;float: left;position: relative;" id="aa">
+                    <div style="width: 80%;height: 100px;display: block;float: left;position: relative;" id="aa">
                         <img :src="formList.imgUrl" alt=""  style="width: 280px;height: 110px;display: block;">
                         <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:-4px;" @click="show"/>
-                    </div> -->
+                    </div>
                     
-                    <div style="position: relative;float:left;display: block;" class="22222" id="cc">
+                    <div style="position: relative;float:left;display: none;" class="22222" id="cc">
                         <el-upload action="auto" list-type="picture-card" :file-list="fileList" with-credentials :before-upload="beforeUpload" :http-request="uploadSectionFile" :on-remove="afterRemove" :on-exceed="handleExceed" :limit='1'>
                             <i class="el-icon-plus"></i>
                         </el-upload>
@@ -137,8 +137,7 @@ export default {
             bannerTable:[],
 			// 新增
             formList: {
-				imgUrl:''
-				// imgUrl:'https://www.china185.com/static/image/che121215.jpg'
+				imgUrl:'https://www.china185.com/static/image/che121215.jpg'
 			},
             //新增图片列表
 			fileList:[],
@@ -160,9 +159,6 @@ export default {
 					{required:true,message:'请输入排序数字',trigger:'blur'},
 					// {}
 					// { type: 'number', message: '排序必须为数字值',trigger:'blur'}
-				],
-				imgUrl:[
-					{required:true,message:'请上传图片',trigger:'blur'},
 				]
 
 			}
@@ -282,13 +278,8 @@ export default {
                 params.append('description', this.formList.description);
                 params.append('sort', this.formList.sort);
 				console.log(this.formList.imgUrl)
-				if(!this.formList.imgUrl){
-					this.$message({
-						type:'warning',
-						message:'请先上传图片'
-					})
-				}else{
-					params.append('imgUrl', this.formList.imgUrl)
+				if(this.formList.imgUrl!==''){
+					params.append('imgUrl', this.formList.imgUrl);
 				}			
                 this.$axios.post(request.testUrl+"/platform/auth2/platformBanner/doInsert",params)
 					.then(res=>{
@@ -410,16 +401,6 @@ export default {
 			},
 		    // 修改编辑保存按钮
             savePic(form) {
-				var params = new URLSearchParams();
-				if(!this.form.imgUrl){
-					this.$message({
-						type:'warning',
-						message:'请先上传图片'
-					})
-					return;
-				}else{
-					params.append('imgUrl', this.form.imgUrl);
-				}	
 				this.$refs.form.validate((valid) => {
 					if (valid) {
 						// alert('修改成功!');
@@ -429,8 +410,10 @@ export default {
 						console.log('error submit!!');
 						return false;
 					}
-				})
+				});
 				this.editVisible=false;
+				var params = new URLSearchParams();
+        		params.append('imgUrl', this.form.imgUrl);
         		params.append('href', this.form.href);
         		params.append('sort', this.form.sort);
         		params.append('description', this.form.description);

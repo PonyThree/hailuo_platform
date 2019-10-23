@@ -3,7 +3,7 @@
         <!-- 合作项目展示 -->
         <div class="coperationPro">
             <div class="title">
-                <p>前端已展示合作项目</p>
+                <p>前端已展示优质小区</p>
             </div>
             <div class='content' >
                 <div v-for='(item,index) in coperationList' :key="index" class="list">
@@ -344,6 +344,7 @@ export default {
                             console.log(res.data.data)
                             this.renderUnShow();
                             this.renderCoperation();
+                            this.reload()
                         })
                 }else{
                     this.$message({
@@ -365,6 +366,7 @@ export default {
                     console.log(res.data.data)
                     this.renderUnShow();
                     this.renderCoperation();
+                    this.reload()
                 })
         },
         currentChange(currentPage){

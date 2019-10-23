@@ -61,10 +61,10 @@ export default new Router({
                     meta: { title: '首页banner' }
                 },
                 {
-                    name:'合作项目',
-                    path: '/合作项目',
-                    component: resolve => require(['../components/page/clientMange/合作项目.vue'], resolve),
-                    meta: { title: '合作项目' }
+                    name:'优质小区',
+                    path: '/优质小区',
+                    component: resolve => require(['../components/page/clientMange/优质小区.vue'], resolve),
+                    meta: { title: '优质小区' }
                 },
                 {
                     name:'客户端管理',

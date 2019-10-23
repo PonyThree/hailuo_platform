@@ -7,7 +7,7 @@
                     <div class="content">
                             <!-- 头部标题 -->
                             <div class="conTil">
-                                <span>第三方链接</span>
+                                <span>首页金刚区</span>
                                 <el-button style='color:rgb(25,158,216)' size:='small' @click='addlj'>新增</el-button>
                             </div>
                             <!-- 链接列表 -->
@@ -64,15 +64,12 @@
                     </div>
             </div>
             <!-- 平台软文 -->
-            <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
-                <!-- 平台软文   -->
+            <!-- <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
                     <div class="content">
-                            <!-- 头部标题 -->
                             <div class="conTil">
                                 <span>选位攻略</span>
                                 <el-button style='color:rgb(25,158,216)' size:='small' @click='addrw'>新增</el-button>
                             </div>
-                            <!-- 平台软文列表 -->
                             <div class="softTxt">
                                 <div v-for='(item,index) in softTextList' class='softList' :key="index">
                                     <span>{{index+1}}.{{item.linkName}}</span>
@@ -83,11 +80,10 @@
                             </div>   
                     </div>
                     <div style='width:80%;margin-top:10px;text-align:center;margin-left: 100px;'>
-                                <!--分页器-->
                                 <el-pagination background  :current-page.sync='currentPage1' :page-sizes="[5, 10, 15]"  layout="total, sizes, prev, pager, next,jumper" :total="total1" class='page' @size-change="sizeChange1" @current-change="currentChange1"> 
                                 </el-pagination>
                     </div> 
-            </div>
+            </div> -->
             <!-- 确定和取消按钮 -->
             <div class="bomBtns">
                 <el-button type='primary' @click='determine()' size='middle'>确定</el-button>
@@ -95,7 +91,7 @@
             </div>
         </div>
         <!-- 选位攻略新增对话框 -->
-        <el-dialog title="新增" :visible.sync="rweditVisible" width="25%" @close="rwClose">
+        <!-- <el-dialog title="新增" :visible.sync="rweditVisible" width="25%" @close="rwClose">
             <el-form  :model="form" ref="form" label-width="116px" :label-position="labelPosition" :rules='rules3' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form.linkName" ></el-input>
@@ -108,7 +104,7 @@
                         <img :src="form.image" alt="" style="width: 280px;height: 150px;display: block;">
                         <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-15px;top:-5px;" @click="show(1)"/>
                     </div>
-                    <div style="position: relative;float:left;display: none;" class="22222" id="cc">
+                    <div style="position: relative;float:left;display: block;" class="22222" id="cc">
                         <el-upload action="auto" list-type="picture-card" :file-list="fileList" with-credentials :before-upload="beforeUpload" :http-request="uploadSectionFile" :on-remove="afterRemove" :on-exceed="handleExceed" :limit='1'>
                             <i class="el-icon-plus"></i>
                         </el-upload>
@@ -133,9 +129,9 @@
                 </el-form-item>
             </el-form>
            
-        </el-dialog> 
+        </el-dialog>  -->
         <!-- 选位攻略修改对话框 -->
-        <el-dialog title="修改" :visible.sync="rwUpdateVisible" width="25%">
+        <!-- <el-dialog title="修改" :visible.sync="rwUpdateVisible" width="25%">
             <el-form ref="form" :model="form" label-width="116px" :label-position="labelPosition" :rules='rules3' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
                     <el-input v-model="form.linkName"></el-input>
@@ -172,7 +168,7 @@
                     </template>
                 </el-form-item>
             </el-form>
-        </el-dialog> 
+        </el-dialog>  -->
         <!-- 链接新增对话框 -->
         <el-dialog title="新增" :visible.sync="linkeditVisible" width="25%" @close="ljClose">
             <el-form ref="form1" :model="form1" label-width="116px" :label-position="labelPosition" :rules='rules' style="overflow:hidden;">
@@ -191,11 +187,11 @@
                     <el-input v-model="form1.sort"></el-input>
                 </el-form-item>
                 <el-form-item label="活动介绍图片:" style="width:92%;">
-                    <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
+                    <!-- <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
                         <img :src="form1.image" alt="" style="width: 280px;height: 150px;display: block;">
                         <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-7px;top:3px;" @click="show(2)"/>
-                    </div>
-                    <div style="position: relative;float:left;display: none;" class="22222" id="cc">
+                    </div> -->
+                    <div style="position: relative;float:left;display: block;" class="22222" id="cc">
                         <el-upload action="auto" list-type="picture-card" :file-list="fileList1" with-credentials :before-upload="beforeUpload1" :http-request="uploadSectionFile" :on-remove="afterRemove" :on-exceed="handleExceed" :limit='1'>
                             <i class="el-icon-plus"></i>
                         </el-upload>
@@ -283,12 +279,12 @@
                     <el-input v-model="form3.href" ></el-input>
                 </el-form-item>
                 <el-form-item label="活动介绍图片:" style="width:92%;">
-                    <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
+                    <!-- <div style="width: 80%;height: 150px;display: block;float: left;position: relative;" id="aa">
                         <img :src="form3.image" alt="" style="width: 280px;height: 150px;display: block;">
                         <img src="../../../assets/img/2.png" alt="" style="width:10%;height:25%;position: absolute; right:-12px;top:-5px;" @click="show(3)"/>
-                    </div>
+                    </div> -->
                     
-                    <div style="position: relative;float:left;display: none;" class="22222" id="cc">
+                    <div style="position: relative;float:left;display: block;" class="22222" id="cc">
                         <el-upload action="auto" list-type="picture-card" :file-list="fileList3" with-credentials :before-upload="beforeUpload3" :http-request="uploadSectionFile" :on-remove="afterRemove" :on-exceed="handleExceed" :limit='1'>
                             <i class="el-icon-plus"></i>
                         </el-upload>
@@ -559,7 +555,13 @@ export default {
                         })
                         return ;
                     }
-                  
+                    if(!this.form1.image){
+                        this.$message({
+                            type:'warning',
+                            message:'请先上传图片'
+                        })
+                        return ;
+                    }
                     this.$refs.form1.validate((valid) => {
                             if (valid) {
                                 // this.form1={};

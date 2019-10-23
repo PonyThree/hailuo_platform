@@ -104,8 +104,8 @@ export default {
               title: "客户端管理"
             },
             {
-              index: "合作项目",
-              title: "合作项目"
+              index: "优质小区",
+              title: "优质小区"
             }
           ]
         },
