@@ -157,7 +157,7 @@ export default {
 		//账号数字验证
 		jugeNum(){
 			if(this.form.account!=''){
-				console.log(Number(this.form.account))
+				// console.log(Number(this.form.account))
 				if(!Number(this.form.account)){
 					this.$message({
 						type:'error',
@@ -195,7 +195,7 @@ export default {
             }
 		},
 		renderData(id){
-			console.log(id)
+			// console.log(id)
 			if(id!='undefined'){
 				//渲染数据
 				this.$axios.get(request.testUrl+'/project/auth2/project/selectOne',{
@@ -204,7 +204,7 @@ export default {
 					}
 					})
 					.then(res=>{
-					console.log(res.data.data)
+					// console.log(res.data.data)
 					if(res.data.data!=null){
 						if(res.data.data.password=='null'||res.data.data.username=='null'){
 							let data=res.data.data;
@@ -231,7 +231,7 @@ export default {
 		},
 		//点击地图位置经纬度获取
 		synCenterAndZoom(e){
-			console.log(e.target)
+			// console.log(e.target)
 			const {lng,lat} =e.target.getCenter()
 			this.center.lng=lng
 			this.center.lat=lat
@@ -240,7 +240,7 @@ export default {
 			this.form5.longitudes=lng
 			this.zoom=e.target.getZoom()
 			this.dialogVisible=false
-			console.log(this.form5)
+			// console.log(this.form5)
 		},
 		//定位完成之后
 		locationSuccess(point, AddressComponent, marker){

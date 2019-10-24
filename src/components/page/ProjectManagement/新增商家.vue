@@ -168,7 +168,7 @@ export default {
 		//账号数字验证
 		jugeNum(){
 			if(this.form5.account!=''){
-				console.log(Number(this.form5.account))
+				// console.log(Number(this.form5.account))
 				if(!Number(this.form5.account)){
 					this.$message({
 						type:'error',
@@ -189,17 +189,17 @@ export default {
 		},
 		//脚注成功后的回调函数
 		markersset(pois){
-			console.log(pois)
+			// console.log(pois)
 		},
 		//气泡完成之后的回调函数
 		infohtmlset(poi){
-			console.log(poi)
+			// console.log(poi)
 			// 获取点击脚注的经度纬度
-			console.log(poi.point.lng,poi.point.lat)
+			// console.log(poi.point.lng,poi.point.lat)
 			//精确地址
 			// var detalAddress=poi.province+poi.city+poi.address;
 			var detalAddress=poi.address;
-			console.log(detalAddress)
+			// console.log(detalAddress)
 			this.center=poi.point;
 			// 保存到页面data中
 			this.form5.address=detalAddress;
@@ -235,7 +235,7 @@ export default {
 		
         // 新增保存按钮
 		save(form5){
-			console.log(this.form5)
+			// console.log(this.form5)
 				var params=new URLSearchParams();
 					if(this.form5.name!=undefined){
 						if(this.form5.name!=''){
@@ -334,7 +334,7 @@ export default {
 		infoWindowOpen(e){
 			let geocoder= new BMap.Geocoder();  //创建地址解析器的实例
 			geocoder.getLocation(e.point,rs=>{
-				console.log(rs.address)
+				// console.log(rs.address)
 				var address=rs.address;
 				// console.log(address)
 				this.form5.address=address

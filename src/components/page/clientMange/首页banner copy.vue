@@ -240,7 +240,7 @@ export default {
 		    },
 		    //新增图片上传 formList
 		    beforeUpload(file) {
-				console.log(file)
+				// console.log(file)
 		      var param = new FormData(); // FormData 对象
 		      param.append("file", file); // 文件对象
 		      this.$axios({
@@ -250,7 +250,7 @@ export default {
 		      })
 		        .then(res => {
 		        	if(res.data.code==0){
-						console.log(res.data.data);
+						// console.log(res.data.data);
 		        		this.formList.imgUrl=res.data.data;
 		        		this.$message({
 								type: 'info',
@@ -259,7 +259,7 @@ export default {
 		        	}  
 		        })
 		        .catch(error => {
-		          console.log(error)
+		        //   console.log(error)
 		        });
 			},
 			//新增banner保存按钮
@@ -269,7 +269,7 @@ export default {
 						// this.formList={};
 						this.addVisible=false;
 					} else {
-						console.log('error submit!!');
+						// console.log('error submit!!');
 						return false;
 					}
 				});
@@ -277,7 +277,7 @@ export default {
                 params.append('href', this.formList.href);
                 params.append('description', this.formList.description);
                 params.append('sort', this.formList.sort);
-				console.log(this.formList.imgUrl)
+				// console.log(this.formList.imgUrl)
 				if(this.formList.imgUrl!==''){
 					params.append('imgUrl', this.formList.imgUrl);
 				}			
@@ -368,7 +368,7 @@ export default {
 					}
 				})
 				.then(res=>{
-					console.log(res.data.data)
+					// console.log(res.data.data)
 					if(res.data.code==0){
 						this.editVisible=true;
 						this.form=res.data.data;
@@ -407,7 +407,7 @@ export default {
 						// this.form={};
 						this.editVisible=false;
 					} else {
-						console.log('error submit!!');
+						// console.log('error submit!!');
 						return false;
 					}
 				});
@@ -451,7 +451,7 @@ export default {
 				params.append('id', id);
 				this.$axios.post(request.testUrl+"/platform/auth2/platformBanner/doDelete ",params)
 				.then(res=>{
-					console.log(res.data)
+					// console.log(res.data)
 					this.showBannerList();
 				})
 				}).catch(() => {

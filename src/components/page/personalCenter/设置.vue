@@ -575,7 +575,7 @@ export default {
         //手机号验证
         handleTel(){
             // this.reload();
-            console.log(this.checked);
+            // console.log(this.checked);
             if(this.checked==true){
                 this.dialogVisible=true;
                 // this.form.telPhone=this.personData.telPhone;
@@ -693,7 +693,7 @@ export default {
         },
         //修改密码
         updatePwd(){
-            console.log('修改密码');
+            // console.log('修改密码');
             this.show=false;
             this.tagTitle='账号安全';
             this.show1=true;
@@ -734,7 +734,7 @@ export default {
                     },1000);
                     
                 } else {
-                    console.log('error submit!!');
+                    // console.log('error submit!!');
                     return false;
                 }
             });

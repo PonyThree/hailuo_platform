@@ -273,7 +273,7 @@
 								this.editVisible=true;
 
 								this.form=res.data.data;
-								console.log(this.form.imgUrl)
+								// console.log(this.form.imgUrl)
 							}
 						})
            	},

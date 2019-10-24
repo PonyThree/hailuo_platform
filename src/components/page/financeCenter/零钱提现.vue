@@ -142,7 +142,7 @@ export default {
         var timeArr=this.form.dateStartEnd;
         this.startTime=this.transformDate(timeArr[0].getTime());
         this.endTime=this.transformDate(timeArr[1].getTime());
-        console.log(this.startTime+"---"+this.endTime);
+        // console.log(this.startTime+"---"+this.endTime);
         var obj={};
         obj.pageSize=this.pageSize;
         obj.page=this.currentPage;
@@ -156,7 +156,7 @@ export default {
         this.$axios.get(request.testUrl+"/user/auth2/userCashRecording/userCashRecordList",{
             params:obj
         }).then(res=>{
-            console.log(res.data.data.records);
+            // console.log(res.data.data.records);
             this.tableData=res.data.data.records;
         })
         

@@ -86,7 +86,7 @@ export default {
                     id:this.id
                 }
             }).then(res=>{
-                console.log(res.data.data);
+                // console.log(res.data.data);
                 this.form={};
                 // console.log(this.form);
                 this.form=res.data.data;
@@ -105,7 +105,7 @@ export default {
                 params.append("id",this.id);
                 params.append("status",1);
                 this.$axios.post(request.testUrl+"/finance/auth2/applyMoney/updApplyStatus",params).then(res=>{
-                    console.log(res.data);
+                    // console.log(res.data);
                     if(res.data.code==0){
                         this.form.status=1;
                         this.$message({
@@ -133,7 +133,7 @@ export default {
                 params.append("id",this.id);
                 params.append("status",2);
                 this.$axios.post(request.testUrl+"/finance/auth2/applyMoney/updApplyStatus",params).then(res=>{
-                    console.log(res.data);
+                    // console.log(res.data);
                     if(res.data.code==0){
                         this.form.status=2;
                         this.$message({
@@ -160,7 +160,7 @@ export default {
                 params.append("id",this.id);
                 params.append("status",1);
                 this.$axios.post(request.testUrl+"/finance/auth2/applyMoney/updApplyStatus",params).then(res=>{
-                    console.log(res.data);
+                    // console.log(res.data);
                     if(res.data.code==0){
                         this.form.status=1;
                         this.$message({

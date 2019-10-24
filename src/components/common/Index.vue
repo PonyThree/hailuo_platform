@@ -77,7 +77,7 @@ export default {
         },
         renderRealName(){
             this.realname=localStorage.getItem('realname');
-            console.log(this.realname);
+            // console.log(this.realname);
         },
         jumpPage(i){
             // alert(i);

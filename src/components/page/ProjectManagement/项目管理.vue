@@ -432,7 +432,7 @@ export default {
 					if(res.data.code==0){
 						// this.renderData(this.pageSize);
 						// this.renderData(this.pageSize,this.currentPage);
-						console.log(this.tableDatass);
+						// console.log(this.tableDatass);
 					}
 				})
 			}else{
@@ -443,7 +443,7 @@ export default {
 				params.append('publishStatus',this.tableDatass[i].publishStatus);
 				this.$axios.post(request.testUrl+'/project/auth2/project/updatePublishStatus',params).then(res=>{
 					if(res.data.code==0){
-						console.log(this.tableDatass);
+						// console.log(this.tableDatass);
 						// this.renderData(this.pageSize);
 						// this.renderData(this.pageSize,this.currentPage);
 					}
@@ -454,7 +454,7 @@ export default {
 		update(i){
 			// this.DialogUpdate=true;
 			var id=this.tableDatass[i].id;
-			console.log(id)
+			// console.log(id)
 			this.$router.push({
 				path:'/修改商家',
 				query:{
@@ -604,10 +604,10 @@ export default {
 				obj.address=this.$route.query.address
 				obj.lng=this.$route.query.lng
 				obj.lat=this.$route.query.lat
-				console.log(obj)
+				// console.log(obj)
 				localStorage.setItem('businessAdress',JSON.stringify(obj))
 			}
-			console.log(localStorage.getItem('businessAdress'))
+			// console.log(localStorage.getItem('businessAdress'))
 			this.form5.address=JSON.parse(localStorage.getItem('businessAdress')).address;
 			this.form5.latitudes=JSON.parse(localStorage.getItem('businessAdress')).lat;
 			this.form5.longitudes=JSON.parse(localStorage.getItem('businessAdress')).lng;

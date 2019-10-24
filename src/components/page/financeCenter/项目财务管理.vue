@@ -243,7 +243,7 @@ export default {
                 params.append('name',this.form.input5)
             }
             this.$axios.post(request.testUrl+"/order/auth2/orderForm/getPlaSumData",params).then(res=>{
-                console.log(res.data.data.records)
+                // console.log(res.data.data.records)
                 if(res.data.code==0){
                     this.total=res.data.data.total;
                     this.tableData=res.data.data.records;

@@ -3,7 +3,7 @@
        <h2>客户端管理</h2>
         <div v-loading="loading">
             <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0' >
-                <!-- 第三方链接 -->
+                <!--首页金刚区 -->
                     <div class="content">
                             <!-- 头部标题 -->
                             <div class="conTil">
@@ -32,7 +32,7 @@
                             
                     </div>
             </div>
-            <!-- 首页咨询 -->
+            <!-- 热门主题 -->
             <div style='border:1px solid rgba(25, 158, 216, 1);width:80%;overflow: hidden;margin:30px auto 0'>
                 <!-- 首页咨询   -->
                     <div class="content">
@@ -362,7 +362,7 @@ export default {
             pageSize1:10,
             total1:100,
             form:{
-                image:'https://www.china185.com/static/image/che121215.jpg'
+                image:''
             },
             linkList:[],
             fileList:[],
@@ -378,7 +378,7 @@ export default {
                 {id:0,label:'外部跳转'},
             ],
             form1:{
-                image:'https://www.china185.com/static/image/che121215.jpg'
+                image:''
             },
             total:10,
             fileList1:[],
@@ -386,7 +386,7 @@ export default {
             form3:{
                 linkName:'',
                 href:'',
-                image:'https://www.china185.com/static/image/che121215.jpg'
+                image:''
             },
             fileList3:[],
             zxeditVisible:false,
@@ -461,13 +461,13 @@ export default {
         sizeChange1(pageSize1){
             // alert(pageSize1)
             this.pageSize1=pageSize1
-            console.log(this.pageSize1)
+            // console.log(this.pageSize1)
             this.showrwList(this.currentPage1,this.pageSize1);
         },
         currentChange1(currentPage1){
             // alert(currentPage1)
             this.currentPage1=currentPage1;
-            console.log(this.currentPage1)
+            // console.log(this.currentPage1)
             this.showrwList(this.currentPage1,this.pageSize1);
         },
         renderData(){
@@ -498,7 +498,7 @@ export default {
             .then(res=>{
                     this.total1=res.data.data.total;
                     this.softTextList=res.data.data.records;
-                    console.log(this.softTextList)
+                    // console.log(this.softTextList)
             })
         },
         // 链接列表渲染
@@ -511,7 +511,7 @@ export default {
             })
             .then(res=>{
                     this.linkList=res.data.data.records;
-                    console.log(this.linkList)
+                    // console.log(this.linkList)
                     this.total=res.data.data.total;
             })
         },
@@ -540,14 +540,22 @@ export default {
                     }  
                 })
                 .catch(error => {
-                    console.log(error)
+                    // console.log(error)
                 });
             },
             //链接新增保存
             savePic1(form1) {
                 // console.log(this.linkList.length);
                 // if(this.linkList.length<6){
-                    console.log(this.form1.jumpAddress)
+                    if(this.linkList.length>=4){
+                        this.$message({
+                            type:'warning',
+                            message:'首页金刚区最多添加四条数据'
+                        })
+                        this.linkeditVisible=false;
+                        return ;
+                    }
+                    // console.log(this.form1.jumpAddress)
                     if(this.form1.jumpAddress==undefined){
                         this.$message({
                             type:'warning',
@@ -568,12 +576,12 @@ export default {
                                 this.linkeditVisible=false;
                                 var params = new URLSearchParams();
                                 params.append('image', this.form1.image);
-                                console.log(this.form1.image);
+                                // console.log(this.form1.image);
                                 params.append('href', this.form1.href);
                                 params.append('linkName', this.form1.linkName);
                                 params.append('sort', Number(this.form1.sort));
                                 params.append('jumpAddress', Number(this.form1.jumpAddress));
-                                console.log(this.form1)
+                                // console.log(this.form1)
                                 this.$axios.post(request.testUrl+"/platform/auth2/thirdLinks/doInsertOrUpdate",params)
                                     .then(res=>{
                                         if(res.data.code==0){
@@ -587,7 +595,7 @@ export default {
                                         }
                                 })
                             } else {
-                                console.log('error submit!!');
+                                // console.log('error submit!!');
                                 return false;
                             }
                     });
@@ -678,7 +686,7 @@ export default {
                             })
                             this.reload();
                         } else {
-                            console.log('error submit!!');
+                            // console.log('error submit!!');
                             return false;
                         }
                 });
@@ -706,7 +714,7 @@ export default {
                     }  
                 })
                 .catch(error => {
-                    console.log(error)
+                    // console.log(error)
                 });
             },
             addzx(){
@@ -722,7 +730,7 @@ export default {
                 params.append('id',id);
                 this.$axios.post(request.testUrl+'/platform/auth2/information/doDelete',params)
                 .then(res=>{
-                    console.log(res.data.code);
+                    // console.log(res.data.code);
                     this.showzxList();
                     if(res.data.code==0){
                         this.$message({
@@ -769,13 +777,20 @@ export default {
                 this.$refs.form3.validate((valid) => {
                         if (valid) {
                             // this.form3={};
+                            if(!this.form3.image){
+                                this.$message({
+                                    type:'warning',
+                                    message:'请先上传图片'
+                                })
+                                return ;
+                            }
                              var params = new URLSearchParams();
                                 params.append('image', this.form3.image);
                                 params.append('href', this.form3.href);
                                 params.append('linkName', this.form3.linkName);
                                 this.$axios.post(request.testUrl+"/platform/auth2/information/doInsertOrUpdate",params)
                                     .then(res=>{
-                                        console.log(res.data);
+                                        // console.log(res.data);
                                         if(res.data.code==0){
                                             this.zxeditVisible=false;
                                             this.showzxList();
@@ -794,7 +809,7 @@ export default {
                                 })
                             this.zxeditVisible=false;
                         } else {
-                            console.log('error submit!!');
+                            // console.log('error submit!!');
                             return false;
                         }
                 });
@@ -825,7 +840,7 @@ export default {
                             })
                         
                         } else {
-                            console.log('error submit!!');
+                            // console.log('error submit!!');
                             return false;
                         }
                 });
@@ -836,18 +851,18 @@ export default {
             beforeUpload(file) {
                 var param = new FormData(); // FormData 对象
                 param.append("file", file); // 文件对象
-                console.log(file);
-                console.log(request.testUrl);
+                // console.log(file);
+                // console.log(request.testUrl);
                 this.$axios({
                 method: "post",
                 url: request.testUrl+"/project/auth2/image/upload",
                 data: param
                 })
                 .then(res => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     if(res.data.code==0){
                         this.form.image=res.data.data;
-                        console.log(this.form.image);
+                        // console.log(this.form.image);
                         this.$message({
                                 type: 'info',
                                 message: "图片上传成功！"
@@ -855,7 +870,7 @@ export default {
                     }  
                 })
                 .catch(error => {
-                    console.log(error)
+                    // console.log(error)
                 });
             },
             //新增软文
@@ -900,7 +915,7 @@ export default {
                             // this.form={};
                             this.reload();
                         } else {
-                            console.log('error submit!!');
+                            // console.log('error submit!!');
                             return false;
                         }
                 });
@@ -941,7 +956,7 @@ export default {
                     }
                 })
                 .then(res=>{
-                    console.log(res.data.data)
+                    // console.log(res.data.data)
                     this.form=res.data.data;
                 })
             },
@@ -963,7 +978,7 @@ export default {
                                 if(res.data.code==0){
                                     this.rwUpdateVisible=false;
                                     this.showrwList(this.currentPage1,this.pageSize1);
-                                    console.log(this.form);
+                                    // console.log(this.form);
                                     this.$message({
                                         type:'success',
                                         message:'修改成功'
@@ -977,7 +992,7 @@ export default {
                         })
                         this.reload();
                     } else {
-                        console.log('error submit!!');
+                        // console.log('error submit!!');
                         return false;
                     }
                 });
@@ -1008,7 +1023,7 @@ export default {
         //点击x 上传图片
         show(num){
                 document.getElementById("aa").style.display="none";
-                console.log(num)
+                // console.log(num)
                 if(num==1){
                     this.form.image='';
                 }

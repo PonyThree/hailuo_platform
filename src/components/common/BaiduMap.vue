@@ -53,7 +53,7 @@ export default {
 
             this.localSearch = new BMap.LocalSearch(map);
             var localSearch=this.localSearch;
-            console.log(localSearch)
+            // console.log(localSearch)
             localSearch.enableAutoViewport(); //允许自动调节窗体大小
 
         },
@@ -63,7 +63,7 @@ export default {
             var keyword = document.getElementById("text_").value;
             var localSearch=this.localSearch;
             localSearch.setSearchCompleteCallback((searchResult)=>{
-            console.log(localSearch)
+            // console.log(localSearch)
                 var poi = searchResult.getPoi(0);
                 // document.getElementById("result_").value = poi.point.lng + "," + poi.point.lat;
                 this.result_=poi.point.lng + "," + poi.point.lat;
@@ -76,7 +76,7 @@ export default {
                 var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
                 marker.addEventListener("click", ()=>{  this.openInfoWindow(infoWindow);    } );
                 // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-                console.log( this.lng+"====="+this.lat+"====="+this.address)
+                // console.log( this.lng+"====="+this.lat+"====="+this.address)
             });
             localSearch.search(keyword);
             var lock=setTimeout(()=>{
@@ -85,7 +85,7 @@ export default {
                 obj.lng=this.lng;
                 obj.lat=this.lat;
                 localStorage.setItem('businessAdress',JSON.stringify(obj))
-                console.log(this.page)
+                // console.log(this.page)
                 var page=this.page
                 this.$router.push({
                     path:`${page}`,

@@ -80,7 +80,7 @@ export default {
                   id:id
               }
           }).then(res=>{
-              console.log(res.data.data);
+            //   console.log(res.data.data);
               this.userName=res.data.data.userName;
               this.mobile=res.data.data.mobile;
               this.cashMoney=res.data.data.cashMoney;
@@ -91,7 +91,7 @@ export default {
               this.statusName=res.data.data.statusName;
               this.arriveAddress=res.data.data.arriveAddress;
               this.arriveTime=res.data.data.arriveTime;
-              console.log(this.status);
+            //   console.log(this.status);
           })
       },
     addZero(n){
@@ -122,7 +122,7 @@ export default {
   },
   watch:{
       $route(to,from){
-          console.log(from);
+        //   console.log(from);
           if (from.path == "/零钱提现") {
                 this.renderData(this.$route.query.id)
           }

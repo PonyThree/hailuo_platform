@@ -105,7 +105,7 @@
         },
         watch:{
             $route(newValue, oldValue){
-                console.log(newValue,oldValue)
+                // console.log(newValue,oldValue)
                 // alert(newValue=="项目详情"&&oldValue=="项目详情")
                 if(newValue.name=="项目详情"){
                     // this.$router.go(-1);
