@@ -169,7 +169,7 @@
                 </el-form-item>
             </el-form>
         </el-dialog>  -->
-        <!-- 链接新增对话框 -->
+        <!-- 金刚区新增对话框 -->
         <el-dialog title="新增" :visible.sync="linkeditVisible" width="25%" @close="ljClose">
             <el-form ref="form1" :model="form1" label-width="116px" :label-position="labelPosition" :rules='rules' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
@@ -218,7 +218,7 @@
             </el-form>
             
         </el-dialog> 
-        <!-- 链接修改对话框 -->
+        <!-- 金刚区修改对话框 -->
         <el-dialog title="修改" :visible.sync="linkupdateVisible" width="25%">
             <el-form ref="form1" :model="form1" label-width="116px" :label-position="labelPosition" :rules='rules' style="overflow:hidden;">
                 <el-form-item label="链接名称:" prop='linkName'>
@@ -376,6 +376,7 @@ export default {
             jumpList:[
                 {id:1,label:'内部跳转'},
                 {id:0,label:'外部跳转'},
+                {id:2,label:'其他小程序跳转'},
             ],
             form1:{
                 image:''
@@ -547,14 +548,7 @@ export default {
             savePic1(form1) {
                 // console.log(this.linkList.length);
                 // if(this.linkList.length<6){
-                    if(this.linkList.length>=4){
-                        this.$message({
-                            type:'warning',
-                            message:'首页金刚区最多添加四条数据'
-                        })
-                        this.linkeditVisible=false;
-                        return ;
-                    }
+                   
                     // console.log(this.form1.jumpAddress)
                     if(this.form1.jumpAddress==undefined){
                         this.$message({
@@ -568,6 +562,14 @@ export default {
                             type:'warning',
                             message:'请先上传图片'
                         })
+                        return ;
+                    }
+                    if(this.linkList.length>=4){
+                        this.$message({
+                            type:'warning',
+                            message:'首页金刚区最多添加四条数据'
+                        })
+                        this.linkeditVisible=false;
                         return ;
                     }
                     this.$refs.form1.validate((valid) => {
@@ -817,9 +819,17 @@ export default {
             },
             //咨询修改保存
             savePic3Update(form3){
+                console.log(this.form3.image)
                 this.$refs.form3.validate((valid) => {
                         if (valid) {
                             var params = new URLSearchParams();
+                            if(!this.form3.image){
+                                this.$message({
+                                    type:'warning',
+                                    message:'请先上传图片'
+                                })
+                                return ;
+                            }
                             params.append('image', this.form3.image);
                             params.append('href', this.form3.href);
                             params.append('linkName', this.form3.linkName);
