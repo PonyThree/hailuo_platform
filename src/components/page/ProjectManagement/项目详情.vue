@@ -41,12 +41,12 @@
                             <span>{{scope.$index+1}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop='img_url' label='图片' width='320px'  align='center'>
+                    <el-table-column prop='imgUrl' label='图片' width='320px'  align='center'>
                         <template slot-scope="scope">
                             <!-- <span v-show='false'>{{scope.$index}}</span>
                             <span>{{bannerTable[scope.$index].bannerPic}}</span> -->
                             <!-- <image :src='bannerTable[scope.$index].bannerPic'></image> -->
-                            <img :src="bannerTable[scope.$index].img_url" alt="" style="width:200px;height:100px;">
+                            <img :src="bannerTable[scope.$index].imgUrl" alt="" style="width:200px;height:100px;">
                         </template>
                     </el-table-column>
                     <el-table-column prop='href' label='跳转链接设置' width='220px'  align='center'>
