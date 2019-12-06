@@ -12,11 +12,11 @@
                 认购总收入<span>({{rgMoney}})</span>
             </div>
         </el-col>
-        <el-col :span="3">
+        <!-- <el-col :span="3">
             <div class="walletBorder">
                 总退款<span>({{tkMoney}})</span>
             </div>
-        </el-col>
+        </el-col> -->
         <el-col :span="3">
             <div class="walletBorder">
                 商家已提现<span>({{xmProposed}})</span>
